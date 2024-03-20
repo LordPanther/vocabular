@@ -2,7 +2,7 @@ import 'package:vocab_app/data/models/daily_word_model.dart';
 import 'package:vocab_app/data/models/word_api_model.dart';
 
 abstract class WordRepository {
-  //Load current word to environment
+  String get firestoreException;
 
   Future<WordModel> fetchDailyWord();
 

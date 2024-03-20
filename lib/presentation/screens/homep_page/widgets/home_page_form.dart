@@ -2,11 +2,19 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/presentation/screens/add_word/add_word_screen.dart';
 import 'package:vocab_app/presentation/screens/home_screen/home_screen.dart';
 import 'package:vocab_app/presentation/screens/homep_page/bloc/home_page_bloc.dart';
+=======
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vocab_app/data/models/daily_word_model.dart';
+import 'package:vocab_app/presentation/screens/home_screen/home_screen.dart';
+import 'package:vocab_app/presentation/screens/homep_page/bloc/home_page_bloc.dart';
+import 'package:vocab_app/presentation/screens/homep_page/bloc/home_page_event.dart';
+>>>>>>> 9d57f11 (Creating logic for adding new word to collection)
 import 'package:vocab_app/presentation/screens/search/search_screen.dart';
 import 'package:vocab_app/presentation/widgets/others/custom_bottom_navigation.dart';
 
@@ -21,6 +29,10 @@ class _HomePageFormState extends State<HomePageForm> {
   late HomePageBloc homePageBloc;
   int _currentIndex = 1;
 
+<<<<<<< HEAD
+=======
+  final formKey = GlobalKey<FormState>();
+>>>>>>> 9d57f11 (Creating logic for adding new word to collection)
   final TextEditingController word = TextEditingController();
   final TextEditingController definition = TextEditingController();
   final TextEditingController acronym = TextEditingController();
@@ -41,8 +53,12 @@ class _HomePageFormState extends State<HomePageForm> {
     super.dispose();
   }
 
+<<<<<<< HEAD
   bool get isPopulated =>
       word.text.isNotEmpty;
+=======
+  bool get isPopulated => word.text.isNotEmpty;
+>>>>>>> 9d57f11 (Creating logic for adding new word to collection)
 
   bool isLoadWordButtonEnabled() {
     return homePageBloc.state.isFormValid &&
@@ -51,8 +67,25 @@ class _HomePageFormState extends State<HomePageForm> {
   }
 
   void onLoadWord() {
+<<<<<<< HEAD
     if(isLoadWordButtonEnabled()) {
       homePageBloc.add(LoadW)
+=======
+    if (formKey.currentState!.validate()) {
+      WordModel wordModel = WordModel(
+        id: "",
+        audio: "",
+        definition: definition.text,
+        acronym: acronym.text,
+        partOfSpeech: "",
+        note: note.text,
+        word: word.text,
+      );
+
+      if (isLoadWordButtonEnabled()) {
+        homePageBloc.add(LoadWord(word: wordModel));
+      }
+>>>>>>> 9d57f11 (Creating logic for adding new word to collection)
     }
   }
 

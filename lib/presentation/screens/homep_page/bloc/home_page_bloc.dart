@@ -4,6 +4,10 @@ import 'package:vocab_app/data/models/daily_word_model.dart';
 import 'package:vocab_app/data/repository/app_repository.dart';
 import 'package:vocab_app/data/repository/word_repository/word_repo.dart';
 import 'package:vocab_app/presentation/screens/homep_page/bloc/home_page_event.dart';
+<<<<<<< HEAD
+=======
+import 'package:vocab_app/presentation/screens/homep_page/bloc/home_page_state.dart';
+>>>>>>> 9d57f11 (Creating logic for adding new word to collection)
 import 'package:vocab_app/utils/validator.dart';
 
 class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
@@ -54,8 +58,14 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       await _wordRepository.addNewDailyWord(word);
 
       emit(HomePageState.success());
+<<<<<<< HEAD
     } else {
       final message = _wordRepository.
+=======
+    } catch (e) {
+      final message = _wordRepository.firestoreException;
+      emit(HomePageState.failure(message));
+>>>>>>> 9d57f11 (Creating logic for adding new word to collection)
     }
   }
 

@@ -8,7 +8,6 @@ import 'api_url.dart';
 
 Map<MethodType, String> methods = {
   MethodType.GET: "GET",
-  MethodType.POST: "POST"
 };
 
 class Request {

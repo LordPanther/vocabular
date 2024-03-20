@@ -2,6 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:vocab_app/presentation/screens/collections/collection_screen.dart';
+<<<<<<< HEAD
+=======
+import 'package:vocab_app/presentation/screens/homep_page/home_page.dart';
+>>>>>>> 9d57f11 (Creating logic for adding new word to collection)
 import 'package:vocab_app/presentation/screens/homep_page/widgets/home_page_form.dart';
 // import 'package:vocab_app/presentation/screens/home_page/home_screen.dart';
 
@@ -27,6 +31,7 @@ class AppRouter {
   static const String CONFIRM_PASSWORD_RESET = '/confirm_password_reset';
   static const String NEW_PASSWORD = '/new_password';
   static const String COLLECTIONS = '/collections';
+  static const String HOME_PAGE = '/home_page';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -72,7 +77,13 @@ class AppRouter {
           builder: (_) => const VerificationScreen(),
         );
       case COLLECTIONS:
-        return MaterialPageRoute(builder: (_) => const CollectionScreen());
+        return MaterialPageRoute(
+          builder: (_) => const CollectionScreen(),
+        );
+      case HOME_PAGE:
+        return MaterialPageRoute(
+          builder: (_) => const HomePageScreen(),
+        );
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

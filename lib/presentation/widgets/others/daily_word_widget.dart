@@ -55,15 +55,14 @@ class _DailyWordWidgetState extends State<DailyWordWidget> {
                 _buildWord(),
               ],
             ),
-            _buildPhonetic(),
             const SizedBox(height: 5),
             _buildPartOfSpeech(),
             const SizedBox(height: 3),
-            _buildTenses(),
+            _buildDefinition(),
             const SizedBox(height: 3),
-            _buildMeaning(),
+            _buildAcronym(),
             const SizedBox(height: 3),
-            _buildExample(),
+            _buildNote(),
           ],
         ),
       ),
@@ -95,16 +94,6 @@ class _DailyWordWidgetState extends State<DailyWordWidget> {
     );
   }
 
-  _buildPhonetic() {
-    return Padding(
-      padding: EdgeInsets.only(left: SizeConfig.defaultSize * 5.5),
-      child: Text(
-        wordMap.phonetic,
-        style: FONT_CONST.REGULAR_DEFAULT_16,
-      ),
-    );
-  }
-
   _buildPartOfSpeech() {
     return Text(
       wordMap.partOfSpeech,
@@ -113,24 +102,17 @@ class _DailyWordWidgetState extends State<DailyWordWidget> {
     );
   }
 
-  _buildTenses() {
-    return Text(
-      "verb:         ;present tense:         ;past tense:         ",
-      style: FONT_CONST.BOLD_DEFAULT_16,
-    );
-  }
-
-  _buildMeaning() {
+  _buildAcronym() {
     return Padding(
       padding: EdgeInsets.only(left: SizeConfig.defaultSize * 1.5),
       child: Row(
         children: [
           Text(
-            "meaning: ",
+            "acronym: ",
             style: FONT_CONST.MEDIUM_DEFAULT_16,
           ),
           Text(
-            wordMap.meaning,
+            wordMap.acronym,
             style: FONT_CONST.REGULAR_DEFAULT_16,
           ),
         ],
@@ -138,17 +120,35 @@ class _DailyWordWidgetState extends State<DailyWordWidget> {
     );
   }
 
-  _buildExample() {
+  _buildDefinition() {
     return Padding(
       padding: EdgeInsets.only(left: SizeConfig.defaultSize * 1.5),
       child: Row(
         children: [
           Text(
-            "example: ",
+            "definition: ",
             style: FONT_CONST.MEDIUM_DEFAULT_16,
           ),
           Text(
-            wordMap.example,
+            wordMap.definition,
+            style: FONT_CONST.REGULAR_DEFAULT_16,
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildNote() {
+    return Padding(
+      padding: EdgeInsets.only(left: SizeConfig.defaultSize * 1.5),
+      child: Row(
+        children: [
+          Text(
+            "note: ",
+            style: FONT_CONST.MEDIUM_DEFAULT_16,
+          ),
+          Text(
+            wordMap.note,
             style: FONT_CONST.REGULAR_DEFAULT_16,
           ),
         ],
