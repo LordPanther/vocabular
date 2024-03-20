@@ -6,8 +6,8 @@ import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/daily_word_model.dart';
-import 'package:vocab_app/presentation/screens/home_page/home/home_bloc.dart';
-import 'package:vocab_app/presentation/screens/home_page/home/home_state.dart';
+import 'package:vocab_app/presentation/screens/home_screen/home/home_bloc.dart';
+import 'package:vocab_app/presentation/screens/home_screen/home/home_state.dart';
 import 'package:vocab_app/presentation/widgets/others/daily_word_widget.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
 import 'package:vocab_app/presentation/widgets/single_card/collections_card.dart';
@@ -71,7 +71,7 @@ class HomeBody extends StatelessWidget {
         ));
   }
 
-  _buildDailyWord(BuildContext context, DailyWordModel dailyWord) {
+  _buildDailyWord(BuildContext context, WordModel dailyWord) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,

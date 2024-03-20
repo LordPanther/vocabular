@@ -1,6 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
@@ -8,7 +7,7 @@ import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/daily_word_model.dart';
 
 class DailyWordWidget extends StatefulWidget {
-  final DailyWordModel wordMap;
+  final WordModel wordMap;
 
   const DailyWordWidget({
     super.key,
@@ -21,7 +20,7 @@ class DailyWordWidget extends StatefulWidget {
 
 class _DailyWordWidgetState extends State<DailyWordWidget> {
   AudioPlayer audioPlayer = AudioPlayer();
-  DailyWordModel get wordMap => widget.wordMap;
+  WordModel get wordMap => widget.wordMap;
 
   Future<void> _playAudio() async {
     if (await Permission.audio.isGranted) {

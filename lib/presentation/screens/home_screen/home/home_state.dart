@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:vocab_app/presentation/screens/home_page/home/home_bloc.dart';
+import 'package:vocab_app/presentation/screens/home_screen/home/home_bloc.dart';
 
 abstract class HomeState extends Equatable {
   const HomeState();

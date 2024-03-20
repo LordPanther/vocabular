@@ -1,8 +1,8 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:vocab_app/bottom_navigation.dart';
 import 'package:vocab_app/presentation/screens/collections/collection_screen.dart';
+import 'package:vocab_app/presentation/screens/homep_page/widgets/home_page_form.dart';
 // import 'package:vocab_app/presentation/screens/home_page/home_screen.dart';
 
 // import '../bottom_navigation.dart';
@@ -61,7 +61,7 @@ class AppRouter {
       case HOME:
         return MaterialPageRoute(
           // builder: (_) => const HomeScreen(),
-          builder: (_) => const BottomNavigation(),
+          builder: (_) => const HomePageForm(),
         );
       case INITIALIZE_INFO:
         return MaterialPageRoute(

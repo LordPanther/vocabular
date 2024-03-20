@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class DailyWordModel extends Equatable {
+class WordModel extends Equatable {
   final String id;
   final String audio;
   final String meaning;
@@ -9,7 +9,7 @@ class DailyWordModel extends Equatable {
   final String word;
   final String phonetic;
 
-  const DailyWordModel(
+  const WordModel(
       {required this.id,
       required this.audio,
       required this.meaning,
@@ -18,8 +18,8 @@ class DailyWordModel extends Equatable {
       required this.word,
       required this.phonetic});
 
-  static DailyWordModel fromMap(Map<String, dynamic> data) {
-    return DailyWordModel(
+  static WordModel fromMap(Map<String, dynamic> data) {
+    return WordModel(
       id: data["id"] ?? "",
       audio: data["audio"] ?? "",
       meaning: data["meaning"] ?? "",
@@ -42,7 +42,7 @@ class DailyWordModel extends Equatable {
     };
   }
 
-  DailyWordModel cloneWith({
+  WordModel cloneWith({
     id,
     audio,
     meaning,
@@ -51,7 +51,7 @@ class DailyWordModel extends Equatable {
     word,
     phonetic,
   }) {
-    return DailyWordModel(
+    return WordModel(
         id: id ?? this.id,
         audio: audio ?? this.audio,
         meaning: meaning ?? this.meaning,

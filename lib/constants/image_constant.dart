@@ -16,6 +16,6 @@ class IMAGE_CONST {
   static const TWITTER_LOGO = "assets/images/twitter-logo.png";
   static const APPLE_LOGO = "assets/images/apple-logo.png";
   static const REGISTER_HEADER = "assets/images/market_place_4.jpg";
-  static const LOGIN_BANNER = "assets/images/vocab_app-logo.png";
-  static const SPLASH_LOGO = "assets/images/vocab_app-logo.png";
+  static const LOGIN_BANNER = "assets/images/vocabular-logo.png";
+  static const SPLASH_LOGO = "assets/images/vocabular-logo.png";
 }

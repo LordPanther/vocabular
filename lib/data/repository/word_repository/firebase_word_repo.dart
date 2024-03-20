@@ -11,27 +11,27 @@ class FirebaseWordRepository implements WordRepository {
   final _words = FirebaseFirestore.instance.collection("words");
 
   @override
-  Future<DailyWordModel> fetchDailyWord() async {
+  Future<WordModel> fetchDailyWord() async {
+    User? user = _firebaseAuth.currentUser;
 
-      User? user = _firebaseAuth.currentUser;
-
-      return await _dailyWordModel
+    return await _dailyWordModel
         .doc(user!.uid)
         .get()
-        .then((doc) => DailyWordModel.fromMap(doc.data() as Map<String, dynamic>))
+        .then((doc) => WordModel.fromMap(doc.data() as Map<String, dynamic>))
         // ignore: body_might_complete_normally_catch_error
         .catchError((error) {
       if (kDebugMode) {
         print(error);
       }
-    },test: (error) {
+    }, test: (error) {
       return error is int && error >= 400;
-    });      
+    });
   }
 
   @override
-  Future<void> addNewDailyWord(UserModel user, DailyWordModel word) async {
-    await _dailyWordModel.doc(user.id).set(word.toMap()).catchError((error) {
+  Future<void> addNewDailyWord(WordModel word) async {
+    User? user;
+    await _dailyWordModel.doc(user!.uid).set(word.toMap()).catchError((error) {
       if (kDebugMode) {
         print(error);
       }
