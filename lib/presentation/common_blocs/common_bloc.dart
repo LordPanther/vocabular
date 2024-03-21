@@ -21,6 +21,9 @@ class CommonBloc {
     BlocProvider<AuthenticationBloc>(
       create: (context) => authencationBloc,
     ),
+    BlocProvider<VerificationBloc>(
+      create: (context) => verificationBloc,
+    ),
     BlocProvider<LanguageBloc>(
       create: (context) => languageBloc,
     ),
@@ -34,6 +37,7 @@ class CommonBloc {
     applicationBloc.close();
     authencationBloc.close();
     verificationBloc.close();
+    profileBloc.close();
     languageBloc.close();
   }
 

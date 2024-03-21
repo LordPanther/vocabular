@@ -13,9 +13,14 @@ import 'package:vocab_app/presentation/widgets/others/loading.dart';
 import 'package:vocab_app/presentation/widgets/single_card/collections_card.dart';
 import 'package:vocab_app/utils/translate.dart';
 
-class HomeBody extends StatelessWidget {
+class HomeBody extends StatefulWidget {
   const HomeBody({super.key});
 
+  @override
+  State<HomeBody> createState() => _HomeBodyState();
+}
+
+class _HomeBodyState extends State<HomeBody> {
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(

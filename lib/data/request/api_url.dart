@@ -12,6 +12,7 @@ class DevEnvironment {
 // }
 
 class WordApi {
+  // ignore: non_constant_identifier_names
   static String BASE_URL = "https://api.dictionaryapi.dev/api/v2/entries/en/<word>";
 }
 

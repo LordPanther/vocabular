@@ -11,7 +11,7 @@ class UtilValidators {
   );
 
   //Word of one or more chars with no special chars
-  static final RegExp _wordRegExp = RegExp(r'^[a-zA-Z]+$');
+  static final RegExp _wordRegExp = RegExp(r'^[a-zA-Z0-9-]+$');
 
   static final RegExp _phoneNumberRegExp =
       RegExp(r'^(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})$');

@@ -175,5 +175,6 @@
   "resend_email_link": "Re-verify",
   "daily_word": "Daily Word",
   "collections": "Collections",
-  "bottom_search": "Search"
+  "bottom_search": "Search",
+  "login_form": "Add a new word..."
 }

@@ -67,9 +67,9 @@ class _LoginFormState extends State<LoginForm> {
     Navigator.pushNamed(context, AppRouter.FORGOT_PASSWORD);
   }
 
-  // void onGoogleLogin() {
-  //   loginBloc.add(const LoginWithGoogleSignIn());
-  // }
+  void onGoogleLogin() {
+    loginBloc.add(const LoginWithGoogleSignIn());
+  }
 
   void onFacebookLogin() {
     UtilSnackBar.showSnackBarContent(context,

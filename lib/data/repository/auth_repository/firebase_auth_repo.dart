@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../models/user_model.dart';
 import '../user_repository/firebase_user_repo.dart';
@@ -83,24 +84,24 @@ class FirebaseAuthRepository extends AuthRepository {
     }
   }
 
-  // @override
-  // Future<void> logInWithGoogle() async {
-  //   if (kDebugMode) {
-  //     print('Method: GoogleSignIn()');
-  //   }
-  //   try {
-  //     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-  //     final GoogleSignInAuthentication? googleAuth =
-  //         await googleUser?.authentication;
-  //     final OAuthCredential credential = GoogleAuthProvider.credential(
-  //       accessToken: googleAuth?.accessToken,
-  //       idToken: googleAuth?.idToken,
-  //     );
-  //     await _firebaseAuth.signInWithCredential(credential);
-  //   } on FirebaseAuthException catch (e) {
-  //     _authException = e.message.toString();
-  //   }
-  // }
+  @override
+  Future<void> logInWithGoogle() async {
+    if (kDebugMode) {
+      print('Method: GoogleSignIn()');
+    }
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+      await _firebaseAuth.signInWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      _authException = e.message.toString();
+    }
+  }
 
   @override
   bool isVerified() => _firebaseAuth.currentUser!.emailVerified;

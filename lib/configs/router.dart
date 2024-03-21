@@ -1,15 +1,9 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:vocab_app/bottom_navigation.dart';
+import 'package:vocab_app/presentation/screens/add_word/add_word_screen.dart';
 import 'package:vocab_app/presentation/screens/collections/collection_screen.dart';
-<<<<<<< HEAD
-=======
-import 'package:vocab_app/presentation/screens/homep_page/home_page.dart';
->>>>>>> 9d57f11 (Creating logic for adding new word to collection)
-import 'package:vocab_app/presentation/screens/homep_page/widgets/home_page_form.dart';
-// import 'package:vocab_app/presentation/screens/home_page/home_screen.dart';
-
-// import '../bottom_navigation.dart';
 import '../data/models/user_model.dart';
 import '../presentation/screens/confirm_password_reset/confrim_password_reset.dart';
 import '../presentation/screens/forgot_password/forgot_password_screen.dart';
@@ -31,7 +25,7 @@ class AppRouter {
   static const String CONFIRM_PASSWORD_RESET = '/confirm_password_reset';
   static const String NEW_PASSWORD = '/new_password';
   static const String COLLECTIONS = '/collections';
-  static const String HOME_PAGE = '/home_page';
+  static const String ADD_WORD = '/add_word';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -65,9 +59,10 @@ class AppRouter {
         );
       case HOME:
         return MaterialPageRoute(
-          // builder: (_) => const HomeScreen(),
-          builder: (_) => const HomePageForm(),
+          builder: (_) => const BottomNavigation(),
         );
+      case ADD_WORD:
+        return MaterialPageRoute(builder: (_) => const AddWordScreen());
       case INITIALIZE_INFO:
         return MaterialPageRoute(
           builder: (_) => const InitializeInfoScreen(),
@@ -79,10 +74,6 @@ class AppRouter {
       case COLLECTIONS:
         return MaterialPageRoute(
           builder: (_) => const CollectionScreen(),
-        );
-      case HOME_PAGE:
-        return MaterialPageRoute(
-          builder: (_) => const HomePageScreen(),
         );
       default:
         return MaterialPageRoute(

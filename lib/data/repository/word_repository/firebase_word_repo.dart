@@ -13,18 +13,13 @@ class FirebaseWordRepository implements WordRepository {
   String _firestoreException = "Firestore exception";
 
   @override
-<<<<<<< HEAD
-  Future<WordModel> fetchDailyWord() async {
-    User? user = _firebaseAuth.currentUser;
 
-=======
   String get firestoreException => _firestoreException;
 
   @override
   Future<WordModel> fetchDailyWord() async {
     User? user = _firebaseAuth.currentUser;
 
->>>>>>> 9d57f11 (Creating logic for adding new word to collection)
     return await _dailyWordModel
         .doc(user!.uid)
         .get()
@@ -35,10 +30,6 @@ class FirebaseWordRepository implements WordRepository {
         print(error);
       }
     }, test: (error) {
-<<<<<<< HEAD
-=======
-      _firestoreException = error.toString();
->>>>>>> 9d57f11 (Creating logic for adding new word to collection)
       return error is int && error >= 400;
     });
   }
@@ -47,13 +38,7 @@ class FirebaseWordRepository implements WordRepository {
   Future<void> addNewDailyWord(WordModel word) async {
     User? user;
     await _dailyWordModel.doc(user!.uid).set(word.toMap()).catchError((error) {
-<<<<<<< HEAD
-      if (kDebugMode) {
-        print(error);
-      }
-=======
       _firestoreException = error.toString();
->>>>>>> 9d57f11 (Creating logic for adding new word to collection)
     });
   }
 

@@ -106,9 +106,9 @@ class ProfileHeader extends StatelessWidget {
           bottom: 0,
           child: CircleIconButton(
             onPressed: () => onUploadAvatar(context),
-            svgIcon: ICON_CONST.CAMERA,
+            svgIcon: ICON_CONST.ADD,
             color: COLOR_CONST.cardShadowColor,
-            size: SizeConfig.defaultSize * 3,
+            size: SizeConfig.defaultSize * 2,
           ),
         )
       ],

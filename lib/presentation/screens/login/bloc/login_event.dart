@@ -48,10 +48,10 @@ class LoginWithCredential extends LoginEvent {
   List<Object> get props => [email, password];
 }
 
-/// When user clicks to google login button
-// class LoginWithGoogleSignIn extends LoginEvent {
-//   const LoginWithGoogleSignIn();
+// When user clicks to google login button
+class LoginWithGoogleSignIn extends LoginEvent {
+  const LoginWithGoogleSignIn();
 
-//   @override
-//   List<Object> get props => [];
-// }
+  @override
+  List<Object> get props => [];
+}

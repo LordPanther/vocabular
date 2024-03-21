@@ -17,9 +17,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginWithCredential>((event, emit) async {
       await _mapLoginWithCredentialToState(event, emit);
     });
-    // on<LoginWithGoogleSignIn>((event, emit) async {
-    //   await _mapLoginWithGoogleSignInToState(event, emit);
-    // });
+    on<LoginWithGoogleSignIn>((event, emit) async {
+      await _mapLoginWithGoogleSignInToState(event, emit);
+    });
     on<EmailChanged>((event, emit) async {
       await _mapEmailChangedToState(event, emit);
     });
@@ -57,24 +57,24 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         isPasswordValid: UtilValidators.isValidPassword(password)));
   }
 
-  // Future<void> _mapLoginWithGoogleSignInToState(
-  //     event, Emitter<LoginState> emit) async {
-  //   try {
-  //     emit(LoginState.logging());
+  Future<void> _mapLoginWithGoogleSignInToState(
+      event, Emitter<LoginState> emit) async {
+    try {
+      emit(LoginState.logging());
 
-  //     await _authRepository.logInWithGoogle();
-  //     bool isLoggedIn = _authRepository.isLoggedIn();
-  //     if (isLoggedIn) {
-  //       emit(LoginState.success());
-  //     } else {
-  //       final message = _authRepository.authException;
-  //       emit(LoginState.failure(message));
-  //     }
-  //   } catch (e) {
-  //     final message = _authRepository.authException;
-  //     emit(LoginState.failure(message));
-  //   }
-  // }
+      await _authRepository.logInWithGoogle();
+      bool isLoggedIn = _authRepository.isLoggedIn();
+      if (isLoggedIn) {
+        emit(LoginState.success());
+      } else {
+        final message = _authRepository.authException;
+        emit(LoginState.failure(message));
+      }
+    } catch (e) {
+      final message = _authRepository.authException;
+      emit(LoginState.failure(message));
+    }
+  }
 
   /// Map from login event => states
   Future<void> _mapLoginWithCredentialToState(
