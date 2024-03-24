@@ -18,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeBloc()..add(LoadHome()),
+      create: (context) => HomeBloc(),
       child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Builder(

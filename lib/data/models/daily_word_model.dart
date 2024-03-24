@@ -68,12 +68,12 @@ class WordModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        audio,
-        definition,
-        acronym,
-        partOfSpeech,
-        note,
-        word,
-      ];
+    id,
+    audio,
+    definition,
+    acronym,
+    partOfSpeech,
+    note,
+    word,
+  ];
 }

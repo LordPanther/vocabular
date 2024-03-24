@@ -1,24 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vocab_app/configs/router.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/daily_word_model.dart';
-import 'package:vocab_app/presentation/screens/add_word/bloc/bloc.dart';
+import 'package:vocab_app/presentation/common_blocs/collections/bloc.dart';
+import 'package:vocab_app/utils/dialog.dart';
+import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
 
-class AddWordForm extends StatefulWidget {
-  const AddWordForm({super.key});
+class ListCollectionsModel extends StatefulWidget {
+  const ListCollectionsModel({super.key});
 
   @override
-  State<AddWordForm> createState() => _AddWordFormState();
+  State<ListCollectionsModel> createState() => _ListCollectionsModelState();
 }
 
-class _AddWordFormState extends State<AddWordForm> {
-  late AddWordBloc addWordBloc;
+class _ListCollectionsModelState extends State<ListCollectionsModel> {
+  late CollectionsBloc addWordBloc;
 
-  final formKey = GlobalKey<FormState>();
   final TextEditingController word = TextEditingController();
   final TextEditingController definition = TextEditingController();
   final TextEditingController acronym = TextEditingController();
@@ -26,7 +28,7 @@ class _AddWordFormState extends State<AddWordForm> {
 
   @override
   void initState() {
-    addWordBloc = BlocProvider.of<AddWordBloc>(context);
+    addWordBloc = BlocProvider.of<CollectionsBloc>(context);
     super.initState();
   }
 
@@ -42,17 +44,15 @@ class _AddWordFormState extends State<AddWordForm> {
   bool get isPopulated => word.text.isNotEmpty;
 
   bool isLoadWordButtonEnabled() {
-    return addWordBloc.state.isFormValid &&
-        !addWordBloc.state.isSubmitting &&
-        isPopulated;
+    return isPopulated;
   }
 
   onAddToCollection() {
-    print("Word added to collection");
+    addWordBloc.add(AddWordToCollection());
   }
 
-  void onAddWord() {
-    if (formKey.currentState!.validate()) {
+  void onAddWord() async {
+    if (isLoadWordButtonEnabled()) {
       WordModel wordModel = WordModel(
         id: "",
         audio: "",
@@ -62,47 +62,58 @@ class _AddWordFormState extends State<AddWordForm> {
         note: note.text,
         word: word.text,
       );
+      addWordBloc.add(AddWord(word: wordModel));
 
-      if (isLoadWordButtonEnabled()) {
-        addWordBloc.add(LoadWord(word: wordModel));
-      }
+      // Clear text field
+      // clearTextFields;
     }
   }
 
+  // clearTextFields() {
+  //   word.clear();
+  //   definition.clear();
+  //   acronym.clear();
+  //   note.clear();
+  //   setState(() {});
+  // }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: SizeConfig.defaultSize * 3,
-      ),
-      padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.defaultPadding,
-      ),
-      child: Form(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            _buildHeaderText(),
-            SizedBox(height: SizeConfig.defaultSize * 3),
-            _buildTextFieldWord(),
-            SizedBox(height: SizeConfig.defaultSize * 3),
-            _buildTextFieldDefinition(),
-            SizedBox(height: SizeConfig.defaultSize * 3),
-            _buildTextFieldAcronym(),
-            SizedBox(height: SizeConfig.defaultSize * 3),
-            _buildTextFieldNote(),
-            SizedBox(height: SizeConfig.defaultSize * 3),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildButtonAddToCollection(),
-                _buildButtonAddWord(),
-              ],
-            )
-          ],
+    return BlocBuilder<CollectionsBloc, CollectionsState>(
+        builder: (context, state) {
+      if (state is CollectionsLoading) {
+        return UtilDialog.showWaiting(context);
+      }
+      if (state is CollectionsLoaded) {
+        var collections = state.collection;
+      }
+      return Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: SizeConfig.defaultSize * 3,
         ),
-      ),
-    );
+        padding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.defaultPadding,
+        ),
+        child: Form(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              _buildHeaderText(),
+              SizedBox(height: SizeConfig.defaultSize * 3),
+              _buildTextFieldWord(),
+              SizedBox(height: SizeConfig.defaultSize * 3),
+              _buildTextFieldDefinition(),
+              SizedBox(height: SizeConfig.defaultSize * 3),
+              _buildTextFieldAcronym(),
+              SizedBox(height: SizeConfig.defaultSize * 3),
+              _buildTextFieldNote(),
+              SizedBox(height: SizeConfig.defaultSize * 3),
+              _buildButtonAddWord()
+            ],
+          ),
+        ),
+      );
+    });
   }
 
   _buildHeaderText() {
@@ -121,14 +132,6 @@ class _AddWordFormState extends State<AddWordForm> {
       cursorColor: COLOR_CONST.textColor,
       textInputAction: TextInputAction.next,
       controller: word,
-      onChanged: (value) {
-        addWordBloc.add(WordChanged(word: value));
-      },
-      validator: (_) {
-        return !addWordBloc.state.isWordValid
-            ? Translate.of(context).translate('invalid_word')
-            : null;
-      },
       autovalidateMode: AutovalidateMode.always,
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
@@ -149,16 +152,8 @@ class _AddWordFormState extends State<AddWordForm> {
       cursorColor: COLOR_CONST.textColor,
       textInputAction: TextInputAction.next,
       controller: definition,
-      onChanged: (value) {
-        addWordBloc.add(DefinitionChanged(definition: value));
-      },
-      validator: (_) {
-        return !addWordBloc.state.isDefinitionValid
-            ? Translate.of(context).translate('invalid_definition')
-            : null;
-      },
       autovalidateMode: AutovalidateMode.always,
-      keyboardType: TextInputType.text,
+      keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
           labelText: Translate.of(context).translate('add_definition'),
           labelStyle: const TextStyle(color: COLOR_CONST.textColor),
@@ -177,14 +172,6 @@ class _AddWordFormState extends State<AddWordForm> {
       cursorColor: COLOR_CONST.textColor,
       textInputAction: TextInputAction.next,
       controller: acronym,
-      onChanged: (value) {
-        addWordBloc.add(AcronymChanged(acronym: value));
-      },
-      validator: (_) {
-        return !addWordBloc.state.isAcronymValid
-            ? Translate.of(context).translate('invalid_acronym')
-            : null;
-      },
       autovalidateMode: AutovalidateMode.always,
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
@@ -205,16 +192,8 @@ class _AddWordFormState extends State<AddWordForm> {
       cursorColor: COLOR_CONST.textColor,
       textInputAction: TextInputAction.next,
       controller: note,
-      onChanged: (value) {
-        addWordBloc.add(NoteChanged(note: value));
-      },
-      validator: (_) {
-        return !addWordBloc.state.isNoteValid
-            ? Translate.of(context).translate('invalid_note')
-            : null;
-      },
       autovalidateMode: AutovalidateMode.always,
-      keyboardType: TextInputType.text,
+      keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
           labelText: Translate.of(context).translate('add_note'),
           labelStyle: const TextStyle(color: COLOR_CONST.textColor),
@@ -226,15 +205,10 @@ class _AddWordFormState extends State<AddWordForm> {
     );
   }
 
-  _buildButtonAddToCollection() {
-    return TextButton(
-      onPressed: onAddToCollection,
-      child: const Text("+ Add collection"),
-    );
-  }
-
   _buildButtonAddWord() {
     return IconButton(
-        onPressed: onAddWord, icon: const Icon(CupertinoIcons.arrow_right));
+      onPressed: onAddWord,
+      icon: const Icon(CupertinoIcons.arrow_right),
+    );
   }
 }

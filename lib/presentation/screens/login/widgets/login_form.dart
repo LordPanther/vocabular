@@ -92,7 +92,7 @@ class _LoginFormState extends State<LoginForm> {
       listener: (context, state) {
         /// Success
         if (state.isSuccess) {
-          UtilDialog.hideWaiting(context);
+          // UtilDialog.hideWaiting(context);
           BlocProvider.of<AuthenticationBloc>(context).add(LogIn());
         }
 
@@ -104,7 +104,7 @@ class _LoginFormState extends State<LoginForm> {
 
         /// Logging
         if (state.isSubmitting) {
-          UtilDialog.showWaiting(context);
+          // UtilDialog.showWaiting(context);
         }
       },
       child: BlocBuilder<LoginBloc, LoginState>(

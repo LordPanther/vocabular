@@ -1,40 +1,37 @@
 import 'package:equatable/equatable.dart';
 
-/// Cart item model
+/// Collections model
 class CollectionsModel extends Equatable {
-  /// Collection id
   final String id;
-
-  /// Product Id
-  final String collection;
+  final String name;
 
   /// Constructor
   const CollectionsModel({
     required this.id,
-    required this.collection,
+    required this.name,
   });
 
-  /// Json data from server turns into model data
-  static CollectionsModel fromMap(String id, Map<String, dynamic> data) {
+  // Json data from server turns into model data
+  static CollectionsModel fromMap(String uid, Map<String, dynamic> data) {
     return CollectionsModel(
-      id: data["id"] ?? "",
-      collection: data["word"] ?? "",
+      id: data["id"] ?? uid,
+      name: data["name"] ?? "defaultcollection",
     );
   }
 
-  /// From model data turns into json data => server
+  // From model data turns into json data => server
   Map<String, dynamic> toMap() {
     return {
       "id": id,
-      "word": collection,
+      "name": name,
     };
   }
 
   @override
   String toString() {
-    return collection;
+    return name;
   }
 
   @override
-  List<Object?> get props => [id, collection];
+  List<Object?> get props => [id, name];
 }

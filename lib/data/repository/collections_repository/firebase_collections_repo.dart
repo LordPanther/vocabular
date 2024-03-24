@@ -5,16 +5,46 @@ import 'package:vocab_app/data/repository/collections_repository/collections_rep
 
 class FirebaseCollectionsRepository implements CollectionsRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  var userCollection = FirebaseFirestore.instance;
+  var wordsCollection = FirebaseFirestore.instance;
 
+  // Create collection
   @override
-  Future<List<CollectionsModel>> fetchWordCollections() {
+  Future<void> createCollection(String collection) async {
     User? user = _firebaseAuth.currentUser;
-    return userCollection
-        .collection("collections/${user!.uid}/collections")
-        .get()
-        .then((snapshot) => snapshot.docs
-            .map((doc) => CollectionsModel.fromMap(doc.id, doc.data()))
-            .toList());
+    wordsCollection
+        .collection("collections/${user!.uid}/$collection")
+        .doc()
+        .set({});
   }
+
+  /// Method: fetches the list of all loggedIn users collections
+  @override
+  Stream<List<CollectionsModel>> fetchCollections(String uid) {
+    return wordsCollection
+        .collection("collections/$uid")
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) {
+              return CollectionsModel(id: "docid", name: doc.id);
+            }).toList());
+  }
+
+  // @override
+  // Future<void> addUserData(UserModel newUser) async {
+  //   await _userCollection
+  //       .doc(newUser.id)
+  //       .set(newUser.toMap())
+  //       // ignore: avoid_print
+  //       .catchError((error) => print(error));
+  // }
+
+  // @override
+  // Future<CollectionsModel> getCollectionById(String uid) async {
+  //   return await wordsCollection
+  //       .doc(uid)
+  //       .get()
+  //       .then((doc) => CollectionsModel.fromMap(doc.data()!))
+  //       .catchError((error) {
+  //     return error;
+  //   });
+  // }
 }

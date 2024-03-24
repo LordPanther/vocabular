@@ -6,10 +6,10 @@ import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/daily_word_model.dart';
+import 'package:vocab_app/presentation/screens/collections/widgets/collections_body.dart';
 import 'package:vocab_app/presentation/screens/home_screen/home/home_bloc.dart';
 import 'package:vocab_app/presentation/screens/home_screen/home/home_state.dart';
 import 'package:vocab_app/presentation/widgets/others/daily_word_widget.dart';
-import 'package:vocab_app/presentation/widgets/others/loading.dart';
 import 'package:vocab_app/presentation/widgets/single_card/collections_card.dart';
 import 'package:vocab_app/utils/translate.dart';
 
@@ -26,36 +26,7 @@ class _HomeBodyState extends State<HomeBody> {
     return SliverToBoxAdapter(
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, homeState) {
-          if (homeState is HomeLoaded) {
-            var homeResponse = homeState.homeResponse;
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  _buildDailyWordHeading(
-                    context,
-                  ),
-                  _buildDailyWord(
-                    context,
-                    homeResponse.dailyWord,
-                  ),
-                  _buildCollectionsHeading(
-                    context,
-                  ),
-                  _buildHomeCollections(
-                    context,
-                    homeResponse.collections,
-                  ),
-                ],
-              ),
-            );
-          }
-          if (homeState is HomeLoading) {
-            return const Loading();
-          }
-          if (homeState is HomeLoadFailure) {
-            return Center(child: Text(homeState.error));
-          }
-          return const Center(child: Text("Something went wrong."));
+          return const SingleChildScrollView(child: ListCollectionsModel());
         },
       ),
     );
@@ -103,7 +74,7 @@ class _HomeBodyState extends State<HomeBody> {
         alignment: Alignment.centerLeft,
         height: SizeConfig.defaultSize * 10,
         child: Text(
-          Translate.of(context).translate('collections'),
+          Translate.of(context).translate('word_collections'),
           style: FONT_CONST.MEDIUM_DEFAULT_18,
         ));
   }

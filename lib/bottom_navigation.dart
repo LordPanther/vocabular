@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/presentation/screens/home_screen/home_screen.dart';
-import 'package:vocab_app/presentation/screens/add_word/add_word_screen.dart';
+import 'package:vocab_app/presentation/screens/collections/collections_screen.dart';
 import 'package:vocab_app/presentation/screens/profile/profile_screen.dart';
 import 'package:vocab_app/utils/translate.dart';
 
@@ -49,7 +49,7 @@ class _BottomNavigationState extends State<BottomNavigation>
         children: const [
           ProfileScreen(),
           HomeScreen(),
-          AddWordScreen(),
+          CollectionScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
