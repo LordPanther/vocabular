@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/presentation/common_blocs/collections/collections_bloc.dart';
-import 'package:vocab_app/presentation/screens/collections/widgets/collections_body.dart';
+import 'package:vocab_app/presentation/screens/collections/collections_body.dart';
 
 class CollectionScreen extends StatelessWidget {
   const CollectionScreen({super.key});

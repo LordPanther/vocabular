@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/presentation/screens/home_screen/home_screen.dart';
-import 'package:vocab_app/presentation/screens/collections/collections_screen.dart';
 import 'package:vocab_app/presentation/screens/profile/profile_screen.dart';
 import 'package:vocab_app/utils/translate.dart';
 
@@ -49,7 +48,6 @@ class _BottomNavigationState extends State<BottomNavigation>
         children: const [
           ProfileScreen(),
           HomeScreen(),
-          CollectionScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -61,10 +59,6 @@ class _BottomNavigationState extends State<BottomNavigation>
           BottomNavigationBarItem(
             icon: const Icon(CupertinoIcons.home),
             label: Translate.of(context).translate('home'),
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(CupertinoIcons.add),
-            label: Translate.of(context).translate('word'),
           ),
         ],
         selectedLabelStyle: FONT_CONST.BOLD_DEFAULT,

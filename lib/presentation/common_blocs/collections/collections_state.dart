@@ -9,16 +9,16 @@ abstract class CollectionsState extends Equatable {
 class CollectionsLoading extends CollectionsState {}
 
 class CollectionsLoaded extends CollectionsState {
-  final CollectionsModel collection;
+  final List<CollectionModel> collections;
 
-  CollectionsLoaded(this.collection);
+  CollectionsLoaded({required this.collections});
 
   @override
-  List<Object> get props => [collection];
+  List<Object> get props => [collections];
 
   @override
   String toString() {
-    return "{CollectionLoaded: collection:${collection.toString()}}";
+    return "{CollectionLoaded: collection:${collections.toString()}}";
   }
 }
 

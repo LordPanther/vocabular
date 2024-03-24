@@ -4,5 +4,6 @@ import 'package:vocab_app/presentation/screens/home_screen/home/home_state.dart'
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
-  HomeBloc() : super(HomeLoading());
+  HomeBloc() : super(HomeLoading()) {}
+
 }

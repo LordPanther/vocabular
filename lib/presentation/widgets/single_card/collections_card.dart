@@ -10,7 +10,7 @@ class CollectionsModelCard extends StatelessWidget {
     this.onPressed,
   });
 
-  final CollectionsModel collection;
+  final CollectionModel collection;
   final Function()? onPressed;
 
   @override

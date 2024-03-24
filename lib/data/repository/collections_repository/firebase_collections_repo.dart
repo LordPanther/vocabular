@@ -1,50 +1,51 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
+import 'package:vocab_app/data/models/daily_word_model.dart';
 import 'package:vocab_app/data/repository/collections_repository/collections_repo.dart';
 
 class FirebaseCollectionsRepository implements CollectionsRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  var wordsCollection = FirebaseFirestore.instance;
+  final _userCollection = FirebaseFirestore.instance;
 
-  // Create collection
+  /// Create collection if it does not exist
   @override
   Future<void> createCollection(String collection) async {
     User? user = _firebaseAuth.currentUser;
-    wordsCollection
-        .collection("collections/${user!.uid}/$collection")
-        .doc()
-        .set({});
+    
+    try {
+      _userCollection.collection(collection).doc(user!.uid).set({}).catchError((error) {
+        if (kDebugMode) {
+          print(error);
+        }
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
+    }
+
   }
 
-  /// Method: fetches the list of all loggedIn users collections
   @override
-  Stream<List<CollectionsModel>> fetchCollections(String uid) {
-    return wordsCollection
-        .collection("collections/$uid")
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) {
-              return CollectionsModel(id: "docid", name: doc.id);
-            }).toList());
+  Future<void> updateCollections(String collection, WordModel wordData) async {
+    User? user = _firebaseAuth.currentUser;
+    _userCollection
+        .collection(collection)
+        .doc(user!.uid)
+        .update(wordData as Map<Object, Object?> );
   }
 
-  // @override
-  // Future<void> addUserData(UserModel newUser) async {
-  //   await _userCollection
-  //       .doc(newUser.id)
-  //       .set(newUser.toMap())
-  //       // ignore: avoid_print
-  //       .catchError((error) => print(error));
-  // }
+  /// Fetch the list of all loggedIn users collections
+  @override
+  Stream<List<CollectionModel>> fetchCollections(String uid) {
+    return 
+  }
 
-  // @override
-  // Future<CollectionsModel> getCollectionById(String uid) async {
-  //   return await wordsCollection
-  //       .doc(uid)
-  //       .get()
-  //       .then((doc) => CollectionsModel.fromMap(doc.data()!))
-  //       .catchError((error) {
-  //     return error;
-  //   });
-  // }
+  /// Fetch specififc oggedIn users collection
+  @override
+  Stream<List<CollectionModel>> fetchCollection(String uid, String collection) {
+    return 
+  }
 }

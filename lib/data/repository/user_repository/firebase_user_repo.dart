@@ -3,11 +3,13 @@ import 'dart:async';
 import 'package:vocab_app/data/repository/user_repository/user_repo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:vocab_app/presentation/widgets/single_card/collections_card.dart';
 
 import '../../models/user_model.dart';
 
 class FirebaseUserRepository implements UserRepository {
   final _userCollection = FirebaseFirestore.instance.collection("users");
+  final _userCollections = FirebaseFirestore.instance.collection("collections");
 
   @override
   Stream<UserModel> loggedUserStream(User loggedFirebaseUser) {
@@ -29,12 +31,17 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   @override
-  Future<void> addUserData(UserModel newUser) async {
+  Future<void> addUserData(
+      UserModel newUser) async {
     await _userCollection
         .doc(newUser.id)
         .set(newUser.toMap())
         // ignore: avoid_print
         .catchError((error) => print(error));
+
+    await _userCollections.doc(newUser.id).set({
+      "collections": ["defaultcollections"]
+    }).catchError((error) => (error));
   }
 
   @override

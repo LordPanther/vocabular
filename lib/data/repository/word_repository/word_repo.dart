@@ -7,9 +7,9 @@ abstract class WordRepository {
 
   Future<WordModel> fetchDailyWord();
 
-  Future<void> addNewWord(WordModel word);
-
   Future<void> getWordFromApi(WordApiModel word);
 
-  Future<void> addWordToCollection(WordModel word, CollectionsModel collection);
+  Future<void> addWordToCollection(WordModel word, CollectionModel collection);
 }
+
+  // Future<void> addNewWord(WordModel word);

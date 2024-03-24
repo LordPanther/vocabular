@@ -27,11 +27,20 @@ class AddWord extends CollectionsEvent {
   }
 }
 
-class AddWordToCollection extends CollectionsEvent {}
+class RemoveCartItemModel extends CollectionsEvent {
+  final CollectionModel collection;
+
+  const RemoveCartItemModel(this.collection);
+
+  @override
+  List<Object> get props => [collection];
+}
+
+// class AddWordToCollection extends CollectionsEvent {}
 
 /// Collection was updated
 class CollectionsUpdated extends CollectionsEvent {
-  final CollectionsModel updatedCollection;
+  final List<CollectionModel> updatedCollection;
 
   const CollectionsUpdated(this.updatedCollection);
 

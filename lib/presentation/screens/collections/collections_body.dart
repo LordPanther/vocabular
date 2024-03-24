@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vocab_app/configs/router.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
+import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/daily_word_model.dart';
 import 'package:vocab_app/presentation/common_blocs/collections/bloc.dart';
+import 'package:vocab_app/presentation/widgets/others/custom_dismissible.dart';
+import 'package:vocab_app/presentation/widgets/single_card/collections_card.dart';
 import 'package:vocab_app/utils/dialog.dart';
-import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
 
 class ListCollectionsModel extends StatefulWidget {
@@ -47,9 +48,9 @@ class _ListCollectionsModelState extends State<ListCollectionsModel> {
     return isPopulated;
   }
 
-  onAddToCollection() {
-    addWordBloc.add(AddWordToCollection());
-  }
+  // onAddToCollection() {
+  //   addWordBloc.add(AddWordToCollection());
+  // }
 
   void onAddWord() async {
     if (isLoadWordButtonEnabled()) {
@@ -69,51 +70,54 @@ class _ListCollectionsModelState extends State<ListCollectionsModel> {
     }
   }
 
-  // clearTextFields() {
-  //   word.clear();
-  //   definition.clear();
-  //   acronym.clear();
-  //   note.clear();
-  //   setState(() {});
-  // }
+  /// Remove collection at selected index
+  void _onDismissed(BuildContext context, CollectionModel collection) {
+    BlocProvider.of<CollectionsBloc>(context)
+        .add(RemoveCartItemModel(collection));
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CollectionsBloc, CollectionsState>(
-        builder: (context, state) {
-      if (state is CollectionsLoading) {
-        return UtilDialog.showWaiting(context);
-      }
-      if (state is CollectionsLoaded) {
-        var collections = state.collection;
-      }
-      return Container(
-        margin: EdgeInsets.symmetric(
-          horizontal: SizeConfig.defaultSize * 3,
-        ),
-        padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.defaultPadding,
-        ),
-        child: Form(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              _buildHeaderText(),
-              SizedBox(height: SizeConfig.defaultSize * 3),
-              _buildTextFieldWord(),
-              SizedBox(height: SizeConfig.defaultSize * 3),
-              _buildTextFieldDefinition(),
-              SizedBox(height: SizeConfig.defaultSize * 3),
-              _buildTextFieldAcronym(),
-              SizedBox(height: SizeConfig.defaultSize * 3),
-              _buildTextFieldNote(),
-              SizedBox(height: SizeConfig.defaultSize * 3),
-              _buildButtonAddWord()
-            ],
-          ),
-        ),
-      );
-    });
+      builder: (context, state) {
+        if (state is CollectionsLoading) {
+          return UtilDialog.showWaiting(context);
+        }
+        if (state is CollectionsLoaded) {
+          var collections = state.collections;
+          return Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.defaultPadding,
+              ),
+              child: collections.isNotEmpty
+                  ? ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: collections.length,
+                      itemBuilder: (context, index) {
+                        return CustomDismissible(
+                          key: Key(collections[index] as String),
+                          onDismissed: (direction) {
+                            _onDismissed(context, collections[index]);
+                          },
+                          child: CollectionsModelCard(
+                            collection: collections[index],
+                          ),
+                        );
+                      })
+                  : const Center(
+                      child: Text("You have no saved collections"),
+                    ));
+        }
+        if (state is CollectionsLoadFailure) {
+          return const Center(
+            child: Text("Load failure"),
+          );
+        }
+        return const Center(
+          child: Text("Something went wrong."),
+        );
+      },
+    );
   }
 
   _buildHeaderText() {

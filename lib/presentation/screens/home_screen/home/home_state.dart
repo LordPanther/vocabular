@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:vocab_app/presentation/screens/home_screen/home/home_bloc.dart';
 
 abstract class HomeState extends Equatable {
   const HomeState();
@@ -8,10 +7,10 @@ abstract class HomeState extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Loading
+/// Home Load State
 class HomeLoading extends HomeState {}
 
-/// Failure
+/// Home Load Failure
 class HomeLoadFailure extends HomeState {
   final String error;
 

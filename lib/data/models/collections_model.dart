@@ -1,20 +1,17 @@
 import 'package:equatable/equatable.dart';
 
 /// Collections model
-class CollectionsModel extends Equatable {
-  final String id;
+class CollectionModel extends Equatable {
   final String name;
 
   /// Constructor
-  const CollectionsModel({
-    required this.id,
+  const CollectionModel({
     required this.name,
   });
 
   // Json data from server turns into model data
-  static CollectionsModel fromMap(String uid, Map<String, dynamic> data) {
-    return CollectionsModel(
-      id: data["id"] ?? uid,
+  static CollectionModel fromMap(Map<String, dynamic> data) {
+    return CollectionModel(
       name: data["name"] ?? "defaultcollection",
     );
   }
@@ -22,7 +19,6 @@ class CollectionsModel extends Equatable {
   // From model data turns into json data => server
   Map<String, dynamic> toMap() {
     return {
-      "id": id,
       "name": name,
     };
   }
@@ -33,5 +29,5 @@ class CollectionsModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, name];
+  List<Object?> get props => [name];
 }
