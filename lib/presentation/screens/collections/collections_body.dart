@@ -13,23 +13,25 @@ import 'package:vocab_app/utils/dialog.dart';
 import 'package:vocab_app/utils/translate.dart';
 
 class ListCollectionsModel extends StatefulWidget {
-  const ListCollectionsModel({super.key});
+  final String option;
+
+  const ListCollectionsModel({super.key, required this.option});
 
   @override
   State<ListCollectionsModel> createState() => _ListCollectionsModelState();
 }
 
 class _ListCollectionsModelState extends State<ListCollectionsModel> {
-  late CollectionsBloc addWordBloc;
+  late CollectionsBloc collectionsBloc;
 
   final TextEditingController word = TextEditingController();
   final TextEditingController definition = TextEditingController();
-  final TextEditingController acronym = TextEditingController();
-  final TextEditingController note = TextEditingController();
+  final TextEditingController collectionId = TextEditingController();
+  final TextEditingController collectionName = TextEditingController();
 
   @override
   void initState() {
-    addWordBloc = BlocProvider.of<CollectionsBloc>(context);
+    collectionsBloc = BlocProvider.of<CollectionsBloc>(context);
     super.initState();
   }
 
@@ -37,8 +39,6 @@ class _ListCollectionsModelState extends State<ListCollectionsModel> {
   void dispose() {
     word.dispose();
     definition.dispose();
-    acronym.dispose();
-    note.dispose();
     super.dispose();
   }
 
@@ -48,32 +48,25 @@ class _ListCollectionsModelState extends State<ListCollectionsModel> {
     return isPopulated;
   }
 
-  // onAddToCollection() {
-  //   addWordBloc.add(AddWordToCollection());
-  // }
-
-  void onAddWord() async {
+  void addData(String option) async {
     if (isLoadWordButtonEnabled()) {
+      CollectionModel collectionModel = CollectionModel(
+        name: collectionName.text,
+        id: collectionId.text,
+      );
       WordModel wordModel = WordModel(
         id: "",
-        audio: "",
         definition: definition.text,
-        acronym: acronym.text,
-        partOfSpeech: "",
-        note: note.text,
         word: word.text,
       );
-      addWordBloc.add(AddWord(word: wordModel));
-
-      // Clear text field
-      // clearTextFields;
+      collectionsBloc.add(
+        PopulateCollections(
+          option: widget.option,
+          collectionModel: collectionModel,
+          wordModel: wordModel,
+        ),
+      );
     }
-  }
-
-  /// Remove collection at selected index
-  void _onDismissed(BuildContext context, CollectionModel collection) {
-    BlocProvider.of<CollectionsBloc>(context)
-        .add(RemoveCartItemModel(collection));
   }
 
   @override
@@ -84,29 +77,24 @@ class _ListCollectionsModelState extends State<ListCollectionsModel> {
           return UtilDialog.showWaiting(context);
         }
         if (state is CollectionsLoaded) {
-          var collections = state.collections;
-          return Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.defaultPadding,
-              ),
-              child: collections.isNotEmpty
-                  ? ListView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: collections.length,
-                      itemBuilder: (context, index) {
-                        return CustomDismissible(
-                          key: Key(collections[index] as String),
-                          onDismissed: (direction) {
-                            _onDismissed(context, collections[index]);
-                          },
-                          child: CollectionsModelCard(
-                            collection: collections[index],
-                          ),
-                        );
-                      })
-                  : const Center(
-                      child: Text("You have no saved collections"),
-                    ));
+          var userOption = widget.option;
+          return userOption == "word"
+              ? Column(
+                  children: [
+                    _buildHeaderText(userOption),
+                    _buildTextFieldWord(),
+                    _buildTextFieldDefinition(),
+                    _buildButtonAddWord()
+                  ],
+                )
+              : Column(
+                  children: [
+                    _buildHeaderText(userOption),
+                    _buildTextFieldId(),
+                    _buildTextFieldCollection(),
+                    _buildButtonAddWord()
+                  ],
+                );
         }
         if (state is CollectionsLoadFailure) {
           return const Center(
@@ -120,15 +108,17 @@ class _ListCollectionsModelState extends State<ListCollectionsModel> {
     );
   }
 
-  _buildHeaderText() {
+  /// Header text
+  _buildHeaderText(String userOption) {
     return Center(
       child: Text(
-        Translate.of(context).translate('add_word_form'),
+        Translate.of(context).translate(userOption),
         style: FONT_CONST.BOLD_DEFAULT_16,
       ),
     );
   }
 
+  /// Word
   _buildTextFieldWord() {
     return TextFormField(
       style: TextStyle(
@@ -149,6 +139,7 @@ class _ListCollectionsModelState extends State<ListCollectionsModel> {
     );
   }
 
+  /// Definition
   _buildTextFieldDefinition() {
     return TextFormField(
       style: TextStyle(
@@ -169,17 +160,18 @@ class _ListCollectionsModelState extends State<ListCollectionsModel> {
     );
   }
 
-  _buildTextFieldAcronym() {
+  /// Collection id
+  _buildTextFieldId() {
     return TextFormField(
       style: TextStyle(
           color: COLOR_CONST.textColor, fontSize: SizeConfig.defaultSize * 1.6),
       cursorColor: COLOR_CONST.textColor,
       textInputAction: TextInputAction.next,
-      controller: acronym,
+      controller: collectionId,
       autovalidateMode: AutovalidateMode.always,
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
-          labelText: Translate.of(context).translate('add_acronym'),
+          labelText: Translate.of(context).translate('collection_id'),
           labelStyle: const TextStyle(color: COLOR_CONST.textColor),
           // prefixIcon: const Icon(Icons.email_outlined, color: Colors.white),
           focusedBorder: const OutlineInputBorder(
@@ -189,17 +181,17 @@ class _ListCollectionsModelState extends State<ListCollectionsModel> {
     );
   }
 
-  _buildTextFieldNote() {
+  _buildTextFieldCollection() {
     return TextFormField(
       style: TextStyle(
           color: COLOR_CONST.textColor, fontSize: SizeConfig.defaultSize * 1.6),
       cursorColor: COLOR_CONST.textColor,
       textInputAction: TextInputAction.next,
-      controller: note,
+      controller: collectionName,
       autovalidateMode: AutovalidateMode.always,
       keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
-          labelText: Translate.of(context).translate('add_note'),
+          labelText: Translate.of(context).translate('collection_name'),
           labelStyle: const TextStyle(color: COLOR_CONST.textColor),
           // prefixIcon: const Icon(Icons.email_outlined, color: Colors.white),
           focusedBorder: const OutlineInputBorder(
@@ -211,7 +203,9 @@ class _ListCollectionsModelState extends State<ListCollectionsModel> {
 
   _buildButtonAddWord() {
     return IconButton(
-      onPressed: onAddWord,
+      onPressed: () {
+        addData(widget.option);
+      },
       icon: const Icon(CupertinoIcons.arrow_right),
     );
   }

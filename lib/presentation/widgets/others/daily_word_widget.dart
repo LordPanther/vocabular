@@ -1,6 +1,4 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
@@ -19,22 +17,7 @@ class DailyWordWidget extends StatefulWidget {
 }
 
 class _DailyWordWidgetState extends State<DailyWordWidget> {
-  AudioPlayer audioPlayer = AudioPlayer();
   WordModel get wordMap => widget.wordMap;
-
-  Future<void> _playAudio() async {
-    if (await Permission.audio.isGranted) {
-      await audioPlayer.setSourceUrl(wordMap.audio);
-    } else {
-      await Permission.audio.request();
-    }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    audioPlayer.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +43,6 @@ class _DailyWordWidgetState extends State<DailyWordWidget> {
             const SizedBox(height: 3),
             _buildDefinition(),
             const SizedBox(height: 3),
-            _buildAcronym(),
-            const SizedBox(height: 3),
-            _buildNote(),
           ],
         ),
       ),
@@ -71,7 +51,7 @@ class _DailyWordWidgetState extends State<DailyWordWidget> {
 
   _buildWordAudio() {
     return GestureDetector(
-      onTap: _playAudio,
+      onTap: (){},
       child: Container(
         height: 40,
         width: 40,
@@ -96,27 +76,9 @@ class _DailyWordWidgetState extends State<DailyWordWidget> {
 
   _buildPartOfSpeech() {
     return Text(
-      wordMap.partOfSpeech,
+      wordMap.definition,
       style: FONT_CONST.REGULAR_DEFAULT_16,
       maxLines: 2,
-    );
-  }
-
-  _buildAcronym() {
-    return Padding(
-      padding: EdgeInsets.only(left: SizeConfig.defaultSize * 1.5),
-      child: Row(
-        children: [
-          Text(
-            "acronym: ",
-            style: FONT_CONST.MEDIUM_DEFAULT_16,
-          ),
-          Text(
-            wordMap.acronym,
-            style: FONT_CONST.REGULAR_DEFAULT_16,
-          ),
-        ],
-      ),
     );
   }
 
@@ -131,24 +93,6 @@ class _DailyWordWidgetState extends State<DailyWordWidget> {
           ),
           Text(
             wordMap.definition,
-            style: FONT_CONST.REGULAR_DEFAULT_16,
-          ),
-        ],
-      ),
-    );
-  }
-
-  _buildNote() {
-    return Padding(
-      padding: EdgeInsets.only(left: SizeConfig.defaultSize * 1.5),
-      child: Row(
-        children: [
-          Text(
-            "note: ",
-            style: FONT_CONST.MEDIUM_DEFAULT_16,
-          ),
-          Text(
-            wordMap.note,
             style: FONT_CONST.REGULAR_DEFAULT_16,
           ),
         ],

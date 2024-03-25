@@ -51,7 +51,7 @@ class _AppViewState extends State<AppView> {
 
   void loadData() {
     BlocProvider.of<ProfileBloc>(context).add(LoadProfile());
-    BlocProvider.of<CollectionsBloc>(context).add(LoadCollections());
+    BlocProvider.of<CollectionsBloc>(context).add(const LoadUserCollections(collections: "collections"));
   }
 
   @override

@@ -7,6 +7,12 @@ class HomeEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class AddToCollection extends HomeEvent {
+  final String collection;
+
+  const AddToCollection({required this.collection});
+}
+
 class LoadCollections extends HomeEvent {}
 
 class LoadHome extends HomeEvent {}

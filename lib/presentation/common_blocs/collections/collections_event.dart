@@ -9,7 +9,14 @@ abstract class CollectionsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadCollections extends CollectionsEvent {}
+/// Load all collections created by user
+class LoadUserCollections extends CollectionsEvent {
+  final String collections;
+
+  const LoadUserCollections({
+    required this.collections,
+  });
+}
 
 class AddWord extends CollectionsEvent {
   final WordModel word;
@@ -27,6 +34,21 @@ class AddWord extends CollectionsEvent {
   }
 }
 
+/// Choose to add word or collection in collections screen
+class PopulateCollections extends CollectionsEvent {
+  final String option;
+  final CollectionModel collectionModel;
+  final WordModel wordModel;
+  const PopulateCollections({
+    required this.option,
+    required this.collectionModel,
+    required this.wordModel,
+  });
+
+  @override
+  List<Object> get props => [option, wordModel, collectionModel];
+}
+
 class RemoveCartItemModel extends CollectionsEvent {
   final CollectionModel collection;
 
@@ -39,10 +61,10 @@ class RemoveCartItemModel extends CollectionsEvent {
 // class AddWordToCollection extends CollectionsEvent {}
 
 /// Collection was updated
-class CollectionsUpdated extends CollectionsEvent {
+class MyCollectionsUpdated extends CollectionsEvent {
   final List<CollectionModel> updatedCollection;
 
-  const CollectionsUpdated(this.updatedCollection);
+  const MyCollectionsUpdated(this.updatedCollection);
 
   @override
   List<Object> get props => [updatedCollection];

@@ -1,8 +1,11 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vocab_app/configs/config.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
+import 'package:vocab_app/utils/dialog.dart';
 
 class HomePersistentHeader extends SliverPersistentHeaderDelegate {
   final double _mainHeaderHeight = SizeConfig.defaultSize * 3;
@@ -10,6 +13,11 @@ class HomePersistentHeader extends SliverPersistentHeaderDelegate {
   final double _insetHorizontal = SizeConfig.defaultSize * 1.5;
   final double _minHeaderExtent = SizeConfig.defaultSize * 6;
   final double _maxHeaderExtent = SizeConfig.defaultSize * 7;
+
+  /// Clicking (+) sign on header shows generalDialog
+  void addData(BuildContext context) {
+    UtilDialog.chooseCollection(context: context);
+  }
 
   @override
   Widget build(
@@ -49,8 +57,10 @@ class HomePersistentHeader extends SliverPersistentHeaderDelegate {
                   child: Text("Vocabula®", style: FONT_CONST.BOLD_PRIMARY_18),
                 ),
                 IconButton(
-                  onPressed: () {},
-                  icon: const Icon(CupertinoIcons.bag),
+                  onPressed: () {
+                    addData(context);
+                  },
+                  icon: const Icon(CupertinoIcons.add),
                 ),
               ],
             ),

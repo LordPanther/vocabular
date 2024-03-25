@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:vocab_app/data/repository/collections_repository/collections_repo.dart';
+import 'package:vocab_app/data/repository/collections_repository/firebase_collections_repo.dart';
 
 import '../../models/user_model.dart';
 import '../user_repository/firebase_user_repo.dart';
@@ -11,6 +13,7 @@ import 'auth_repo.dart';
 class FirebaseAuthRepository extends AuthRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final UserRepository _userRepository = FirebaseUserRepository();
+  final CollectionsRepository _collectionsRepository = FirebaseCollectionsRepository();
   // final UserModel user;
 
   String _authException = "Authentication Failure";
@@ -37,6 +40,7 @@ class FirebaseAuthRepository extends AuthRepository {
       var updatedUserDetails = user.cloneWith(id: userId.user!.uid);
       // Create new doc in users collection
       await _userRepository.addUserData(updatedUserDetails);
+      await _collectionsRepository.addCollectinData(updatedUserDetails);
     } on FirebaseAuthException catch (e) {
       _authException = e.message.toString();
     }

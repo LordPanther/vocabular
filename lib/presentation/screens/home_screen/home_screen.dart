@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 body: SafeArea(
                   child: RefreshIndicator(
                     onRefresh: () async {
-                      BlocProvider.of<HomeBloc>(context);
+                      BlocProvider.of<HomeBloc>(context).add(RefreshHome());
                     },
                     child: CustomScrollView(
                       physics: const AlwaysScrollableScrollPhysics(

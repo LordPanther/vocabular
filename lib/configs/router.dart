@@ -24,7 +24,7 @@ class AppRouter {
   static const String CONFIRM_PASSWORD_RESET = '/confirm_password_reset';
   static const String NEW_PASSWORD = '/new_password';
   static const String COLLECTIONS = '/collections';
-  static const String ADD_WORD = '/add_word';
+  static const String ADD_DATA = '/add_word';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -60,8 +60,13 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => const BottomNavigation(),
         );
-      case ADD_WORD:
-        return MaterialPageRoute(builder: (_) => const CollectionScreen());
+      case ADD_DATA:
+        var option = settings.arguments as String;
+        return MaterialPageRoute(
+          builder: (_) => CollectionScreen(
+            option: option
+          ),
+        );
       case INITIALIZE_INFO:
         return MaterialPageRoute(
           builder: (_) => const InitializeInfoScreen(),

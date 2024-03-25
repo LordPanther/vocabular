@@ -9,7 +9,6 @@ import '../../models/user_model.dart';
 
 class FirebaseUserRepository implements UserRepository {
   final _userCollection = FirebaseFirestore.instance.collection("users");
-  final _userCollections = FirebaseFirestore.instance.collection("collections");
 
   @override
   Stream<UserModel> loggedUserStream(User loggedFirebaseUser) {
@@ -38,10 +37,6 @@ class FirebaseUserRepository implements UserRepository {
         .set(newUser.toMap())
         // ignore: avoid_print
         .catchError((error) => print(error));
-
-    await _userCollections.doc(newUser.id).set({
-      "collections": ["defaultcollections"]
-    }).catchError((error) => (error));
   }
 
   @override
