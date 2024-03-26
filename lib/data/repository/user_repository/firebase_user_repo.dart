@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:vocab_app/data/repository/user_repository/user_repo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:vocab_app/presentation/widgets/single_card/collections_card.dart';
 
 import '../../models/user_model.dart';
 

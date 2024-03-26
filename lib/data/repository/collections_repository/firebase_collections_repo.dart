@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/models.dart';
 import 'package:vocab_app/data/repository/collections_repository/collections_repo.dart';
 import 'package:vocab_app/presentation/common_blocs/collections/collections_bloc.dart';
-import 'package:vocab_app/presentation/widgets/single_card/collections_card.dart';
 
 class FirebaseCollectionsRepository implements CollectionsRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -17,8 +15,15 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
   /// Called once on registration to create collections:[defaultcollections]
   @override
   Future<void> addCollectinData(UserModel user) async {
-    CollectionModel collection = const CollectionModel(name: "defaultcollection", id: "defaultcollection");
-    await _userCollection.collection("collections").doc(user.id).set(collection.toMap()).catchError((error) => (error));
+    CollectionModel collection = const CollectionModel(
+        name: "defaultcollection", id: "defaultcollection");
+    await _userCollection
+        .collection("collections")
+        .doc(user.id)
+        .set(
+          collection.toMap(),
+        )
+        .catchError((error) => (error));
   }
 
   /// [CollectionsBloc]
@@ -30,11 +35,11 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
     for (var collection in collections) {
       String collectionId = collection.id;
       String path = "users/${user!.uid}/$collectionId";
-      bool collectionExists = await _userCollection.doc(path).get().then((value) => value.exists);
+      bool collectionExists =
+          await _userCollection.doc(path).get().then((value) => value.exists);
 
       if (!collectionExists) {
         await _userCollection.doc(path).set(collection.toMap());
-
       } else {
         continue;
       }
@@ -54,15 +59,15 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
   }
 
   /// Delete a collection from list collections:[collections]
-  @override
-  Future<void> removeCollection() async {
-    User? user = _firebaseAuth.currentUser;
-    await _userCollection
-        .doc(user!.uid)
-        .delete()
-    // ignore: avoid_print
-        .catchError((error) => print(error));
-  }
+  // @override
+  // Future<void> removeCollection() async {
+  //   User? user = _firebaseAuth.currentUser;
+  //   await _userCollection
+  //       .doc(user!.uid)
+  //       .delete()
+  //       // ignore: avoid_print
+  //       .catchError((error) => print(error));
+  // }
 
   /// [CollectionsBloc]
   /// A list of collections created by user collections: [collections]
@@ -74,15 +79,15 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
 
     List<CollectionModel> userCollection = [];
 
-    var collections = _userCollection
+    _userCollection
         .doc(uid)
         .collection(collection)
         .snapshots()
         .listen((snapshot) {
-          for (var doc in snapshot.docs) {
-            var data = doc.data();
-            userCollection.add(CollectionModel.fromMap(data));
-          }
+      for (var doc in snapshot.docs) {
+        var data = doc.data();
+        userCollection.add(CollectionModel.fromMap(data));
+      }
     });
 
     return controller.stream;
