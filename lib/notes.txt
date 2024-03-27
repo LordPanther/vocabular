@@ -1,4 +1,14 @@
 POPUP DIALOG
+  return CustomDismissible(
+                              key: Key(collections[index] as String),
+                              onDismissed: (direction) {
+                                _onDismissed(context, collections[index]);
+                              },
+                              child: CollectionsModelCard(
+                                collection: collections[index],
+                              ),
+                            );
+
 
   // void showPopupDialog(BuildContext context) {
   //   showGeneralDialog(

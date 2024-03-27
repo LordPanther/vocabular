@@ -9,8 +9,8 @@ import 'package:vocab_app/data/models/daily_word_model.dart';
 import 'package:vocab_app/data/repository/collections_repository/collections_repo.dart';
 import 'package:vocab_app/data/repository/collections_repository/firebase_collections_repo.dart';
 import 'package:vocab_app/data/repository/repository.dart';
-import 'package:vocab_app/presentation/common_blocs/collections/collections_event.dart';
-import 'package:vocab_app/presentation/common_blocs/collections/collections_state.dart';
+import 'package:vocab_app/presentation/screens/collections_manager/collections/collections_event.dart';
+import 'package:vocab_app/presentation/screens/collections_manager/collections/collections_state.dart';
 import 'package:vocab_app/utils/dialog.dart';
 
 class CollectionsBloc extends Bloc<CollectionsEvent, CollectionsState> {
@@ -24,9 +24,6 @@ class CollectionsBloc extends Bloc<CollectionsEvent, CollectionsState> {
   CollectionsBloc() : super(CollectionsLoading()) {
     on<PopulateCollections>((event, emit) async {
       await _mapPopulateCollectionsToMap(event, emit);
-    });
-    on<LoadUserCollections>((event, emit) async {
-      await _mapMyCollectionsToState(event, emit);
     });
     on<MyCollectionsUpdated>((event, emit) async {
       await _mapCollectionsUpdatedToState(event, emit);
@@ -52,23 +49,6 @@ class CollectionsBloc extends Bloc<CollectionsEvent, CollectionsState> {
         if (kDebugMode) {
           print("Unknown OPTION error");
         }
-    }
-  }
-
-  /// [AppView]
-  /// Called on App startup to load collections to UI
-  Future<void> _mapMyCollectionsToState(
-      event, Emitter<CollectionsState> emit) async {
-    String collection = event.collection;
-    try {
-      _fetchCollectionsSub?.cancel();
-      _loggedFirebaseUser = _authRepository.loggedFirebaseUser;
-      _fetchCollectionsSub = _collectionsRepository
-          .fetchCollections(_loggedFirebaseUser.uid, collection)
-          .listen(
-              (userCollections) => add(MyCollectionsUpdated(userCollections)));
-    } catch (e) {
-      emit(CollectionsLoadFailure(e.toString()));
     }
   }
 

@@ -13,7 +13,8 @@ import 'auth_repo.dart';
 class FirebaseAuthRepository extends AuthRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final UserRepository _userRepository = FirebaseUserRepository();
-  final CollectionsRepository _collectionsRepository = FirebaseCollectionsRepository();
+  final CollectionsRepository _collectionsRepository =
+      FirebaseCollectionsRepository();
   // final UserModel user;
 
   String _authException = "Authentication Failure";
@@ -40,7 +41,7 @@ class FirebaseAuthRepository extends AuthRepository {
       var updatedUserDetails = user.cloneWith(id: userId.user!.uid);
       // Create new doc in users collection
       await _userRepository.addUserData(updatedUserDetails);
-      await _collectionsRepository.addCollectinData(updatedUserDetails);
+      await _collectionsRepository.addCollectionData(updatedUserDetails);
     } on FirebaseAuthException catch (e) {
       _authException = e.message.toString();
     }
@@ -70,7 +71,6 @@ class FirebaseAuthRepository extends AuthRepository {
       if (kDebugMode) {
         print("VerificationState: Verification email sent");
       }
-
     } on FirebaseAuthException catch (e) {
       _authException = e.message.toString();
     }

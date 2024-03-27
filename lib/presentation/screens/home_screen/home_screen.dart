@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/presentation/screens/home_screen/home/home_bloc.dart';
@@ -14,11 +13,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeBloc(),
+      create: (context) => HomeBloc()..add(LoadHome()),
       child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Builder(

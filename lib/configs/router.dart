@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:vocab_app/bottom_navigation.dart';
-import 'package:vocab_app/presentation/screens/collections/collections_screen.dart';
+import 'package:vocab_app/presentation/screens/collections_manager/collections_screen.dart';
 import '../data/models/user_model.dart';
 import '../presentation/screens/confirm_password_reset/confrim_password_reset.dart';
 import '../presentation/screens/forgot_password/forgot_password_screen.dart';

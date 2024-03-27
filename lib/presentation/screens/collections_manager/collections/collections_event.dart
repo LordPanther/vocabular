@@ -9,15 +9,6 @@ abstract class CollectionsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-/// Load all collections created by user
-class LoadUserCollections extends CollectionsEvent {
-  final String collections;
-
-  const LoadUserCollections({
-    required this.collections,
-  });
-}
-
 class AddWord extends CollectionsEvent {
   final WordModel word;
 

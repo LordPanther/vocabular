@@ -2,10 +2,11 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/models.dart';
 import 'package:vocab_app/data/repository/collections_repository/collections_repo.dart';
-import 'package:vocab_app/presentation/common_blocs/collections/collections_bloc.dart';
+import 'package:vocab_app/presentation/screens/collections_manager/collections/collections_bloc.dart';
 
 class FirebaseCollectionsRepository implements CollectionsRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -14,16 +15,24 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
   /// [FirebaseAuthRepository]
   /// Called once on registration to create collections:[defaultcollections]
   @override
-  Future<void> addCollectinData(UserModel user) async {
+  Future<void> addCollectionData(UserModel user) async {
     CollectionModel collection = const CollectionModel(
-        name: "defaultcollection", id: "defaultcollection");
-    await _userCollection
-        .collection("collections")
-        .doc(user.id)
-        .set(
-          collection.toMap(),
-        )
-        .catchError((error) => (error));
+      name: "defaultcollection",
+      id: "default",
+    );
+
+    try {
+      await _userCollection
+          .collection("users")
+          .doc(user.id)
+          .collection("collections")
+          .doc(collection.id)
+          .set(collection.toMap());
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+    }
   }
 
   /// [CollectionsBloc]
@@ -33,8 +42,7 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
     User? user = _firebaseAuth.currentUser;
 
     for (var collection in collections) {
-      String collectionId = collection.id;
-      String path = "users/${user!.uid}/$collectionId";
+      String path = "users/${user!.uid}/collections/${collection.id}";
       bool collectionExists =
           await _userCollection.doc(path).get().then((value) => value.exists);
 
@@ -53,56 +61,30 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
     await _userCollection.doc(user!.uid).get().then((doc) async {
       if (doc.exists) {
         // update
-        await doc.reference.update(updatedCollection.toMap());
+        // await doc.reference.update(updatedCollection.toMap());
+        return;
+      } else {
+        String path = "users/${user.uid}/collections/${updatedCollection.id}";
+        await _userCollection.doc(path).set(updatedCollection.toMap());
       }
     }).catchError((error) {});
-  }
-
-  /// Delete a collection from list collections:[collections]
-  // @override
-  // Future<void> removeCollection() async {
-  //   User? user = _firebaseAuth.currentUser;
-  //   await _userCollection
-  //       .doc(user!.uid)
-  //       .delete()
-  //       // ignore: avoid_print
-  //       .catchError((error) => print(error));
-  // }
-
-  /// [CollectionsBloc]
-  /// A list of collections created by user collections: [collections]
-  @override
-  Stream<List<CollectionModel>> fetchCollections(
-      String uid, String collection) {
-    StreamController<List<CollectionModel>> controller =
-        StreamController<List<CollectionModel>>();
-
-    List<CollectionModel> userCollection = [];
-
-    _userCollection
-        .doc(uid)
-        .collection(collection)
-        .snapshots()
-        .listen((snapshot) {
-      for (var doc in snapshot.docs) {
-        var data = doc.data();
-        userCollection.add(CollectionModel.fromMap(data));
-      }
-    });
-
-    return controller.stream;
   }
 
   /// The list of collections to display on UI
   @override
   Future<List<CollectionModel>> fetchUserCollections() async {
+    User? user = _firebaseAuth.currentUser;
     List<CollectionModel> userCollections = [];
-    return userCollections;
-  }
+    var snapshot = await _userCollection
+        .collection("users")
+        .doc(user!.uid)
+        .collection("collections")
+        .get();
 
-  @override
-  Future<void> updateCollections(String collection, WordModel wordData) {
-    // TODO: implement updateCollections
-    throw UnimplementedError();
+    for (var doc in snapshot.docs) {
+      var data = doc.data();
+      userCollections.add(CollectionModel.fromMap(data));
+    }
+    return userCollections;
   }
 }

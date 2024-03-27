@@ -13,7 +13,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       await _mapLoadHomeToMap(event, emit);
     });
     on<RefreshHome>((event, emit) async {
-      await _mapRefreshHomeToMap(event, emit);
+      await _mapLoadHomeToMap(event, emit);
     });
   }
 

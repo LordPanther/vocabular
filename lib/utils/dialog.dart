@@ -24,7 +24,10 @@ class UtilDialog {
           Animation<double> secondaryAnimation) {
         var option = "";
         return AlertDialog(
-          backgroundColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          backgroundColor: COLOR_CONST.backgroundColor,
           content: SelectableTextButtonRow(
             onTextSelected: (selectedText) {
               /// Do something
@@ -32,12 +35,24 @@ class UtilDialog {
             },
           ),
           actions: <Widget>[
-            IconButton(
-              onPressed: () {
-                Navigator.popAndPushNamed(context, AppRouter.ADD_DATA, arguments: option);
-              },
-              icon: const Icon(CupertinoIcons.arrow_right),
-            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(CupertinoIcons.xmark),
+                ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.popAndPushNamed(context, AppRouter.ADD_DATA,
+                        arguments: option);
+                  },
+                  icon: const Icon(CupertinoIcons.arrow_right),
+                ),
+              ],
+            )
           ],
         );
       },

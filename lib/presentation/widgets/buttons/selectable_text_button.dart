@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:vocab_app/configs/config.dart';
+import 'package:vocab_app/constants/font_constant.dart';
 
 class SelectableTextButtonRow extends StatefulWidget {
   final void Function(String) onTextSelected;
@@ -6,7 +8,8 @@ class SelectableTextButtonRow extends StatefulWidget {
   const SelectableTextButtonRow({super.key, required this.onTextSelected});
 
   @override
-  _SelectableTextButtonRowState createState() => _SelectableTextButtonRowState();
+  _SelectableTextButtonRowState createState() =>
+      _SelectableTextButtonRowState();
 }
 
 class _SelectableTextButtonRowState extends State<SelectableTextButtonRow> {
@@ -28,7 +31,10 @@ class _SelectableTextButtonRowState extends State<SelectableTextButtonRow> {
           child: Text(
             'Collection',
             style: TextStyle(
-              decoration: _selectedText == "Collection" ? TextDecoration.underline : TextDecoration.none,
+              decoration: _selectedText == "collection"
+                  ? TextDecoration.underline
+                  : TextDecoration.none,
+              fontSize: SizeConfig.defaultSize * 2,
             ),
           ),
         ),
@@ -38,7 +44,10 @@ class _SelectableTextButtonRowState extends State<SelectableTextButtonRow> {
           child: Text(
             'Word',
             style: TextStyle(
-              decoration: _selectedText == "Word" ? TextDecoration.underline : TextDecoration.none,
+              decoration: _selectedText == "word"
+                  ? TextDecoration.underline
+                  : TextDecoration.none,
+              fontSize: SizeConfig.defaultSize * 2,
             ),
           ),
         ),
