@@ -9,7 +9,7 @@ abstract class WordRepository {
 
   Future<void> getWordFromApi(WordApiModel word);
 
-  Future<void> addWordToCollection(WordModel word, CollectionModel collection);
+  // Future<void> addWordToCollection(WordModel word, CollectionModel collection);
 }
 
   // Future<void> addNewWord(WordModel word);

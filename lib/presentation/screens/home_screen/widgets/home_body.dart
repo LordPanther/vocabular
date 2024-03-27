@@ -62,12 +62,7 @@ class _HomeBodyState extends State<HomeBody> {
           builder: (context, state) {
             if (state is HomeLoading) {
               // return UtilDialog.showWaiting(context);
-              return const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Loading(),
-                ],
-              );
+              return const Loading();
             }
             if (state is HomeLoaded) {
               var collections = state.homeResponse.collections;

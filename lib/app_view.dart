@@ -6,7 +6,6 @@ import 'package:vocab_app/presentation/common_blocs/application/application_even
 import 'package:vocab_app/presentation/common_blocs/application/application_state.dart';
 import 'package:vocab_app/presentation/common_blocs/auth/auth_bloc.dart';
 import 'package:vocab_app/presentation/common_blocs/auth/auth_state.dart';
-import 'package:vocab_app/presentation/screens/collections_manager/collections/bloc.dart';
 import 'package:vocab_app/presentation/common_blocs/common_bloc.dart';
 import 'package:vocab_app/presentation/common_blocs/language/language_bloc.dart';
 import 'package:vocab_app/presentation/common_blocs/language/language_state.dart';

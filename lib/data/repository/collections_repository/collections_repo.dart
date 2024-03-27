@@ -3,13 +3,14 @@ import 'package:vocab_app/data/models/user_model.dart';
 
 abstract class CollectionsRepository {
   /// Called once on registration to create collections:[defaultcollections]
-  Future<void> addCollectionData(UserModel updatedUserDetails);
+  Future<void> createDefaultCollection(UserModel updatedUserDetails);
 
-  /// Fetch list of user created collections:[]
-  Future<List<CollectionModel>> fetchUserCollections();
+  /// Create a new collection in UI
+  Future<void> createCollection(CollectionModel collection);
 
-  Future<void> addColllectionToList(CollectionModel collectionModel);
+  /// Fetch list of user created collections
+  Future<List<CollectionModel>> fetchCollections();
 
-  Future<void> createCollection(List<CollectionModel> collection);
-
+  /// Remove a collection
+  Future<void> removeCollection(CollectionModel collection);
 }

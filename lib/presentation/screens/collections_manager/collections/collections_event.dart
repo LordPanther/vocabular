@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
-import 'package:vocab_app/data/models/daily_word_model.dart';
 
 abstract class CollectionsEvent extends Equatable {
   const CollectionsEvent();
@@ -9,54 +8,24 @@ abstract class CollectionsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AddWord extends CollectionsEvent {
-  final WordModel word;
+class CollectionInitial extends CollectionsEvent {}
 
-  const AddWord({
-    required this.word,
-  });
-
-  @override
-  List<Object> get props => [word.word];
-
-  @override
-  String toString() {
-    return 'Loaded{name: ${word.word}';
-  }
-}
-
-/// Choose to add word or collection in collections screen
-class PopulateCollections extends CollectionsEvent {
-  final String option;
+/// Choose to add collection in collections screen
+class CreateCollection extends CollectionsEvent {
   final CollectionModel collectionModel;
-  final WordModel wordModel;
-  const PopulateCollections({
-    required this.option,
+  const CreateCollection({
     required this.collectionModel,
-    required this.wordModel,
   });
 
   @override
-  List<Object> get props => [option, wordModel, collectionModel];
+  List<Object> get props => [collectionModel];
 }
 
-class RemoveCartItemModel extends CollectionsEvent {
+class RemoveCollection extends CollectionsEvent {
   final CollectionModel collection;
 
-  const RemoveCartItemModel(this.collection);
+  const RemoveCollection(this.collection);
 
   @override
   List<Object> get props => [collection];
-}
-
-// class AddWordToCollection extends CollectionsEvent {}
-
-/// Collection was updated
-class MyCollectionsUpdated extends CollectionsEvent {
-  final List<CollectionModel> updatedCollection;
-
-  const MyCollectionsUpdated(this.updatedCollection);
-
-  @override
-  List<Object> get props => [updatedCollection];
 }

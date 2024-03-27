@@ -15,7 +15,7 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
   /// [FirebaseAuthRepository]
   /// Called once on registration to create collections:[defaultcollections]
   @override
-  Future<void> addCollectionData(UserModel user) async {
+  Future<void> createDefaultCollection(UserModel user) async {
     CollectionModel collection = const CollectionModel(
       name: "defaultcollection",
       id: "default",
@@ -36,10 +36,12 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
   }
 
   /// [CollectionsBloc]
-  /// Create collection if it does not exist
+  /// Add collection to collections
   @override
-  Future<void> createCollection(List<CollectionModel> collections) async {
+  Future<void> createCollection(CollectionModel collection) async {
     User? user = _firebaseAuth.currentUser;
+
+    List<CollectionModel> collections = await fetchCollections();
 
     for (var collection in collections) {
       String path = "users/${user!.uid}/collections/${collection.id}";
@@ -48,31 +50,32 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
 
       if (!collectionExists) {
         await _userCollection.doc(path).set(collection.toMap());
-      } else {
-        continue;
+        await addColllectionToUi(collection);
       }
     }
   }
 
-  /// Add another collection to the list of collections:[collections]
-  @override
-  Future<void> addColllectionToList(CollectionModel updatedCollection) async {
+  /// Create collection
+  Future<void> addColllectionToUi(CollectionModel collection) async {
     User? user = _firebaseAuth.currentUser;
-    await _userCollection.doc(user!.uid).get().then((doc) async {
-      if (doc.exists) {
-        // update
-        // await doc.reference.update(updatedCollection.toMap());
-        return;
-      } else {
-        String path = "users/${user.uid}/collections/${updatedCollection.id}";
-        await _userCollection.doc(path).set(updatedCollection.toMap());
+
+    try {
+      await _userCollection
+          .collection("users")
+          .doc(user!.uid)
+          .collection(collection.id)
+          .doc()
+          .set(collection.toMap());
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
       }
-    }).catchError((error) {});
+    }
   }
 
-  /// The list of collections to display on UI
+  /// Get a list of collections in collections
   @override
-  Future<List<CollectionModel>> fetchUserCollections() async {
+  Future<List<CollectionModel>> fetchCollections() async {
     User? user = _firebaseAuth.currentUser;
     List<CollectionModel> userCollections = [];
     var snapshot = await _userCollection
@@ -86,5 +89,11 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
       userCollections.add(CollectionModel.fromMap(data));
     }
     return userCollections;
+  }
+
+  @override
+  Future<void> removeCollection(CollectionModel collection) {
+    // TODO: implement removeCollection
+    throw UnimplementedError();
   }
 }

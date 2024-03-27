@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vocab_app/configs/router.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
@@ -8,6 +9,7 @@ import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/daily_word_model.dart';
 import 'package:vocab_app/presentation/screens/collections_manager/collections/bloc.dart';
 import 'package:vocab_app/utils/dialog.dart';
+import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
 
 class ListCollectionsModel extends StatefulWidget {
@@ -24,8 +26,7 @@ class _ListCollectionsModelState extends State<ListCollectionsModel> {
 
   final TextEditingController word = TextEditingController();
   final TextEditingController definition = TextEditingController();
-  final TextEditingController collectionId = TextEditingController();
-  final TextEditingController collectionName = TextEditingController();
+  final TextEditingController collection = TextEditingController();
 
   @override
   void initState() {
@@ -40,69 +41,94 @@ class _ListCollectionsModelState extends State<ListCollectionsModel> {
     super.dispose();
   }
 
-  bool get isPopulated => word.text.isNotEmpty;
+  bool get isWordPopulated => word.text.isNotEmpty;
+  bool get isCollectionPopulated => collection.text.isNotEmpty;
 
-  bool isLoadWordButtonEnabled() {
-    return isPopulated;
-  }
-
+  /// [CollectionsBloc]
   void addData(String option) async {
-    if (isLoadWordButtonEnabled()) {
+    if (option == "collection" && isCollectionPopulated) {
       CollectionModel collectionModel = CollectionModel(
-        name: collectionName.text,
-        id: collectionId.text,
-      );
-      WordModel wordModel = WordModel(
-        id: "",
-        definition: definition.text,
-        word: word.text,
+        name: collection.text,
+        id: collection.text,
       );
       collectionsBloc.add(
-        PopulateCollections(
-          option: widget.option,
+        CreateCollection(
           collectionModel: collectionModel,
-          wordModel: wordModel,
         ),
       );
     }
+    // } else if (option == "word" && isWordPopulated) {
+    //   WordModel wordModel = WordModel(
+    //     id: "",
+    //     definition: definition.text,
+    //     word: word.text,
+    //   );
+    //   collectionsBloc.add(
+    //     PopulateWords(
+    //       option: option,
+    //       wordModel: wordModel,
+    //     ),
+    //   );
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CollectionsBloc, CollectionsState>(
-      builder: (context, state) {
+    return BlocListener<CollectionsBloc, CollectionsState>(
+      listener: (context, state) {
+        /// Registering
         if (state is CollectionsLoading) {
-          return UtilDialog.showWaiting(context);
+          UtilDialog.showWaiting(context);
         }
+
+        /// Success
         if (state is CollectionsLoaded) {
-          var userOption = widget.option;
-          return userOption == "word"
-              ? Column(
-                  children: [
-                    _buildHeaderText(userOption),
-                    _buildTextFieldWord(),
-                    _buildTextFieldDefinition(),
-                    _buildButtonAddWord()
-                  ],
-                )
-              : Column(
-                  children: [
-                    _buildHeaderText(userOption),
-                    _buildTextFieldId(),
-                    _buildTextFieldCollection(),
-                    _buildButtonAddWord()
-                  ],
-                );
+          UtilSnackBar.showSnackBarContent(context,
+              content: "Collection created successfully");
+          Navigator.pushNamed(context, AppRouter.HOME);
         }
+
+        /// Failure
         if (state is CollectionsLoadFailure) {
-          return const Center(
-            child: Text("Load failure"),
-          );
+          UtilDialog.hideWaiting(context);
+          UtilDialog.showInformation(context, content: state.error);
         }
-        return const Center(
-          child: Text("Something went wrong."),
-        );
       },
+      child: BlocBuilder<CollectionsBloc, CollectionsState>(
+        builder: (context, state) {
+          var userOption = widget.option;
+          return Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.defaultPadding * 2,
+              vertical: SizeConfig.defaultSize * 3,
+            ),
+            child: Form(
+              child: userOption == "word"
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildHeaderText("Add new word..."),
+                        SizedBox(
+                          height: SizeConfig.defaultSize * 3,
+                        ),
+                        _buildTextFieldWord(),
+                        _buildTextFieldDefinition(),
+                        _buildButtonProcessAction()
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        _buildHeaderText("Add new collection..."),
+                        SizedBox(height: SizeConfig.defaultSize * 3),
+                        _buildTextFieldCollection(),
+                        SizedBox(height: SizeConfig.defaultSize * 3),
+                        _buildButtonProcessAction()
+                      ],
+                    ),
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -110,8 +136,8 @@ class _ListCollectionsModelState extends State<ListCollectionsModel> {
   _buildHeaderText(String userOption) {
     return Center(
       child: Text(
-        Translate.of(context).translate(userOption),
-        style: FONT_CONST.BOLD_DEFAULT_16,
+        userOption,
+        style: FONT_CONST.BOLD_DEFAULT_18,
       ),
     );
   }
@@ -158,34 +184,13 @@ class _ListCollectionsModelState extends State<ListCollectionsModel> {
     );
   }
 
-  /// Collection id
-  _buildTextFieldId() {
-    return TextFormField(
-      style: TextStyle(
-          color: COLOR_CONST.textColor, fontSize: SizeConfig.defaultSize * 1.6),
-      cursorColor: COLOR_CONST.textColor,
-      textInputAction: TextInputAction.next,
-      controller: collectionId,
-      autovalidateMode: AutovalidateMode.always,
-      keyboardType: TextInputType.text,
-      decoration: InputDecoration(
-          labelText: Translate.of(context).translate('collection_id'),
-          labelStyle: const TextStyle(color: COLOR_CONST.textColor),
-          // prefixIcon: const Icon(Icons.email_outlined, color: Colors.white),
-          focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: COLOR_CONST.textColor)),
-          enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: COLOR_CONST.textColor))),
-    );
-  }
-
   _buildTextFieldCollection() {
     return TextFormField(
       style: TextStyle(
           color: COLOR_CONST.textColor, fontSize: SizeConfig.defaultSize * 1.6),
       cursorColor: COLOR_CONST.textColor,
       textInputAction: TextInputAction.next,
-      controller: collectionName,
+      controller: collection,
       autovalidateMode: AutovalidateMode.always,
       keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
@@ -199,12 +204,23 @@ class _ListCollectionsModelState extends State<ListCollectionsModel> {
     );
   }
 
-  _buildButtonAddWord() {
-    return IconButton(
-      onPressed: () {
-        addData(widget.option);
-      },
-      icon: const Icon(CupertinoIcons.arrow_right),
+  _buildButtonProcessAction() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        IconButton(
+          onPressed: () {
+            addData(widget.option);
+          },
+          icon: const Icon(CupertinoIcons.arrow_left),
+        ),
+        IconButton(
+          onPressed: () {
+            addData(widget.option);
+          },
+          icon: const Icon(CupertinoIcons.arrow_right),
+        ),
+      ],
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vocab_app/configs/config.dart';
-import 'package:vocab_app/constants/font_constant.dart';
+import 'package:vocab_app/constants/color_constant.dart';
 
 class SelectableTextButtonRow extends StatefulWidget {
   final void Function(String) onTextSelected;
@@ -31,9 +31,9 @@ class _SelectableTextButtonRowState extends State<SelectableTextButtonRow> {
           child: Text(
             'Collection',
             style: TextStyle(
-              decoration: _selectedText == "collection"
-                  ? TextDecoration.underline
-                  : TextDecoration.none,
+              color: _selectedText == "collection"
+                  ? COLOR_CONST.primaryColor
+                  : COLOR_CONST.textColor,
               fontSize: SizeConfig.defaultSize * 2,
             ),
           ),
@@ -44,9 +44,9 @@ class _SelectableTextButtonRowState extends State<SelectableTextButtonRow> {
           child: Text(
             'Word',
             style: TextStyle(
-              decoration: _selectedText == "word"
-                  ? TextDecoration.underline
-                  : TextDecoration.none,
+              color: _selectedText == "word"
+                  ? COLOR_CONST.primaryColor
+                  : COLOR_CONST.textColor,
               fontSize: SizeConfig.defaultSize * 2,
             ),
           ),

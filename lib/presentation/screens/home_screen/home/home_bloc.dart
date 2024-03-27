@@ -19,7 +19,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Future<void> _mapLoadHomeToMap(event, Emitter<HomeState> emit) async {
     HomeResponse homeResponse = HomeResponse(
-        collections: await _collectionsRepository.fetchUserCollections());
+        collections: await _collectionsRepository.fetchCollections());
     emit(HomeLoaded(homeResponse: homeResponse));
   }
 

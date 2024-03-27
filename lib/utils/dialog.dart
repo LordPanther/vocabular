@@ -24,6 +24,7 @@ class UtilDialog {
           Animation<double> secondaryAnimation) {
         var option = "";
         return AlertDialog(
+          title: const Center(child: Text("Add New..")),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),
           ),
