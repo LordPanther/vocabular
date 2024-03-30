@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
+import 'package:vocab_app/presentation/screens/dictionary/dictionary_screen.dart';
 import 'package:vocab_app/presentation/screens/home_screen/home_screen.dart';
 import 'package:vocab_app/presentation/screens/profile/profile_screen.dart';
 import 'package:vocab_app/utils/translate.dart';
@@ -48,6 +49,7 @@ class _BottomNavigationState extends State<BottomNavigation>
         children: const [
           ProfileScreen(),
           HomeScreen(),
+          DictionaryScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -59,6 +61,10 @@ class _BottomNavigationState extends State<BottomNavigation>
           BottomNavigationBarItem(
             icon: const Icon(CupertinoIcons.home),
             label: Translate.of(context).translate('home'),
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(CupertinoIcons.book),
+            label: Translate.of(context).translate('dict'),
           ),
         ],
         selectedLabelStyle: FONT_CONST.BOLD_DEFAULT,

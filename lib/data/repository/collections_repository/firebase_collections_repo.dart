@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/models.dart';
 import 'package:vocab_app/data/repository/collections_repository/collections_repo.dart';
-import 'package:vocab_app/presentation/screens/collections_manager/collections/collections_bloc.dart';
 
 class FirebaseCollectionsRepository implements CollectionsRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -17,17 +16,37 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
   @override
   Future<void> createDefaultCollection(UserModel user) async {
     CollectionModel collection = const CollectionModel(
-      name: "defaultcollection",
-      id: "default",
+      name: "default",
     );
+    WordModel word = WordModel(
+        id: user.id,
+        definition:
+            "The worlds best app for all those words you use everyday, everywhere.",
+        word: "vocabular");
 
     try {
+      // Create collections array
+      await _userCollection
+          .collection("users")
+          .doc(user.id)
+          .collection("collectionsbucket")
+          .doc("bucket")
+          .set(
+        {
+          "collections": [collection.toMap()]
+        },
+      );
+      // Create default collection
       await _userCollection
           .collection("users")
           .doc(user.id)
           .collection("collections")
-          .doc(collection.id)
-          .set(collection.toMap());
+          .doc(collection.name)                          // Different for every user
+          .set(
+        {
+          word.word: {word.toMap()}
+        },
+      );
     } catch (error) {
       if (kDebugMode) {
         print(error);
@@ -38,19 +57,41 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
   /// [CollectionsBloc]
   /// Add collection to collections
   @override
-  Future<void> createCollection(CollectionModel collection) async {
+  Future<void> createCollection(CollectionModel newCollection) async {
     User? user = _firebaseAuth.currentUser;
+    var snapshot = await _userCollection
+        .collection("users")
+        .doc(user!.uid)
+        .collection("collectionsbucket")
+        .doc("collections")
+        .get();
 
-    List<CollectionModel> collections = await fetchCollections();
+    if (snapshot.exists) {
+      List<String> collections = snapshot.data()?['collections'];
+      if (collections.contains(newCollection.name)) {
+        return;
+      } else {
+        await addColllectionToUi(newCollection);
+      }
+    }
+  }
 
-    for (var collection in collections) {
-      String path = "users/${user!.uid}/collections/${collection.id}";
-      bool collectionExists =
-          await _userCollection.doc(path).get().then((value) => value.exists);
-
-      if (!collectionExists) {
-        await _userCollection.doc(path).set(collection.toMap());
-        await addColllectionToUi(collection);
+  @override
+  Future<void> addWordToCollection(
+      CollectionModel collection, WordModel word) async {
+    User? user = _firebaseAuth.currentUser;
+    try {
+      await _userCollection
+          .collection("users")
+          .doc(user!.uid)
+          .collection("collections")
+          .doc(collection.name)
+          .set({
+        word.word: {word.toMap()}
+      });
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
       }
     }
   }
@@ -63,9 +104,9 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
       await _userCollection
           .collection("users")
           .doc(user!.uid)
-          .collection(collection.id)
-          .doc()
-          .set(collection.toMap());
+          .collection("collections")
+          .doc(collection.name)
+          .set({});
     } catch (error) {
       if (kDebugMode) {
         print(error);
@@ -91,9 +132,43 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
     return userCollections;
   }
 
+  /// Fetch words for a specific collection
+  Future<List<WordModel>> fetchWords(CollectionModel collection) async {
+    User? user = _firebaseAuth.currentUser;
+    List<WordModel> words = [];
+    var snapshot = await _userCollection
+        .collection("users")
+        .doc(user!.uid)
+        .collection("collections")
+        .get();
+
+    for (var doc in snapshot.docs) {
+      var data = doc.data();
+      var collectionsData = List<WordModel>.from(data[collection.name]);
+
+      for (var wordData in collectionsData) {
+        var word = WordModel.fromMap(wordData as Map<String, dynamic>);
+        words.add(word);
+      }
+    }
+    return words;
+  }
+
   @override
-  Future<void> removeCollection(CollectionModel collection) {
-    // TODO: implement removeCollection
-    throw UnimplementedError();
+  Future<void> removeCollection(CollectionModel collection) async {
+    User? user = _firebaseAuth.currentUser;
+
+    try {
+      await _userCollection
+          .collection("users")
+          .doc(user!.uid)
+          .collection("collections")
+          .doc(collection.name)
+          .delete();
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+    }
   }
 }

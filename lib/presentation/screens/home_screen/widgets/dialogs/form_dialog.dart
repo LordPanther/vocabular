@@ -1,38 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vocab_app/configs/router.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/daily_word_model.dart';
-import 'package:vocab_app/presentation/screens/collections_manager/collections/bloc.dart';
-import 'package:vocab_app/utils/dialog.dart';
-import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
 
-class ListCollectionsModel extends StatefulWidget {
+class FormDialog extends StatefulWidget {
   final String option;
-
-  const ListCollectionsModel({super.key, required this.option});
+  const FormDialog({super.key, required this.option});
 
   @override
-  State<ListCollectionsModel> createState() => _ListCollectionsModelState();
+  State<FormDialog> createState() => _FormDialogState();
 }
 
-class _ListCollectionsModelState extends State<ListCollectionsModel> {
-  late CollectionsBloc collectionsBloc;
-
+class _FormDialogState extends State<FormDialog> {
   final TextEditingController word = TextEditingController();
-  final TextEditingController definition = TextEditingController();
-  final TextEditingController collection = TextEditingController();
 
-  @override
-  void initState() {
-    collectionsBloc = BlocProvider.of<CollectionsBloc>(context);
-    super.initState();
-  }
+  final TextEditingController definition = TextEditingController();
+
+  final TextEditingController collection = TextEditingController();
 
   @override
   void dispose() {
@@ -44,91 +32,49 @@ class _ListCollectionsModelState extends State<ListCollectionsModel> {
   bool get isWordPopulated => word.text.isNotEmpty;
   bool get isCollectionPopulated => collection.text.isNotEmpty;
 
-  /// [CollectionsBloc]
-  void addData(String option) async {
+  void addData(String option) {
     if (option == "collection" && isCollectionPopulated) {
       CollectionModel collectionModel = CollectionModel(
         name: collection.text,
-        id: collection.text,
       );
-      collectionsBloc.add(
-        CreateCollection(
-          collectionModel: collectionModel,
-        ),
+      Navigator.of(context).pop(collectionModel);
+    } else if (option == "word" && isWordPopulated) {
+      WordModel wordModel = WordModel(
+        id: "",
+        definition: definition.text,
+        word: word.text,
       );
+      Navigator.of(context).pop(wordModel);
     }
-    // } else if (option == "word" && isWordPopulated) {
-    //   WordModel wordModel = WordModel(
-    //     id: "",
-    //     definition: definition.text,
-    //     word: word.text,
-    //   );
-    //   collectionsBloc.add(
-    //     PopulateWords(
-    //       option: option,
-    //       wordModel: wordModel,
-    //     ),
-    //   );
-    // }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<CollectionsBloc, CollectionsState>(
-      listener: (context, state) {
-        /// Registering
-        if (state is CollectionsLoading) {
-          UtilDialog.showWaiting(context);
-        }
-
-        /// Success
-        if (state is CollectionsLoaded) {
-          UtilSnackBar.showSnackBarContent(context,
-              content: "Collection created successfully");
-          Navigator.pushNamed(context, AppRouter.HOME);
-        }
-
-        /// Failure
-        if (state is CollectionsLoadFailure) {
-          UtilDialog.hideWaiting(context);
-          UtilDialog.showInformation(context, content: state.error);
-        }
-      },
-      child: BlocBuilder<CollectionsBloc, CollectionsState>(
-        builder: (context, state) {
-          var userOption = widget.option;
-          return Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.defaultPadding * 2,
-              vertical: SizeConfig.defaultSize * 3,
+    var userOption = widget.option;
+    return AlertDialog(
+      title: Text("Add new $userOption"),
+      content: userOption == "word"
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildHeaderText("Add new word..."),
+                SizedBox(
+                  height: SizeConfig.defaultSize * 3,
+                ),
+                _buildTextFieldWord(),
+                _buildTextFieldDefinition(),
+                _buildButtonProcessAction()
+              ],
+            )
+          : Column(
+              children: [
+                _buildHeaderText("Add new collection..."),
+                SizedBox(height: SizeConfig.defaultSize * 3),
+                _buildTextFieldCollection(),
+                SizedBox(height: SizeConfig.defaultSize * 3),
+                _buildButtonProcessAction()
+              ],
             ),
-            child: Form(
-              child: userOption == "word"
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildHeaderText("Add new word..."),
-                        SizedBox(
-                          height: SizeConfig.defaultSize * 3,
-                        ),
-                        _buildTextFieldWord(),
-                        _buildTextFieldDefinition(),
-                        _buildButtonProcessAction()
-                      ],
-                    )
-                  : Column(
-                      children: [
-                        _buildHeaderText("Add new collection..."),
-                        SizedBox(height: SizeConfig.defaultSize * 3),
-                        _buildTextFieldCollection(),
-                        SizedBox(height: SizeConfig.defaultSize * 3),
-                        _buildButtonProcessAction()
-                      ],
-                    ),
-            ),
-          );
-        },
-      ),
     );
   }
 
@@ -209,15 +155,11 @@ class _ListCollectionsModelState extends State<ListCollectionsModel> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         IconButton(
-          onPressed: () {
-            addData(widget.option);
-          },
+          onPressed: () => addData(widget.option),
           icon: const Icon(CupertinoIcons.arrow_left),
         ),
         IconButton(
-          onPressed: () {
-            addData(widget.option);
-          },
+          onPressed: () => addData(widget.option),
           icon: const Icon(CupertinoIcons.arrow_right),
         ),
       ],

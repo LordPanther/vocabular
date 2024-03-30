@@ -27,16 +27,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     onRefresh: () async {
                       BlocProvider.of<HomeBloc>(context).add(RefreshHome());
                     },
-                    child: CustomScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(
-                        parent: BouncingScrollPhysics(),
-                      ),
-                      slivers: [
-                        SliverPersistentHeader(
-                          delegate: HomePersistentHeader(),
-                          pinned: true,
-                        ),
-                        const HomeBody(),
+                    child: const Column(
+                      children: [
+                        HomeHeader(),
+                        HomeBody(),
                       ],
                     ),
                   ),

@@ -1,82 +1,67 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vocab_app/configs/config.dart';
-import 'package:vocab_app/configs/size_config.dart';
-import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
-import 'package:vocab_app/utils/dialog.dart';
+import 'package:vocab_app/presentation/screens/home_screen/widgets/dialogs/form_dialog.dart';
+import 'package:vocab_app/presentation/screens/home_screen/widgets/dialogs/popup_dialog.dart';
 
-class HomePersistentHeader extends SliverPersistentHeaderDelegate {
-  final double _mainHeaderHeight = SizeConfig.defaultSize * 3;
-  final double _insetVertical = SizeConfig.defaultSize * 1.5;
-  final double _insetHorizontal = SizeConfig.defaultSize * 1.5;
-  final double _minHeaderExtent = SizeConfig.defaultSize * 6;
-  final double _maxHeaderExtent = SizeConfig.defaultSize * 7;
+class HomeHeader extends StatelessWidget {
+  const HomeHeader({super.key});
 
-  /// Clicking (+) sign on header shows generalDialog
-  void addData(BuildContext context) {
-    UtilDialog.chooseCollection(context: context);
+  onOptionDialog(BuildContext context) async {
+    final option = await showDialog(
+      context: context,
+      builder: (context) {
+        return const SelectionDialog();
+      },
+    );
+    if (option != null) {
+      onFormDialog(context, option);
+    }
+  }
+
+  onFormDialog(BuildContext context, String option) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return FormDialog(option: option);
+      },
+    );
   }
 
   @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final offsetPercent = shrinkOffset / (_maxHeaderExtent - _minHeaderExtent);
-
-    return AnimatedContainer(
-      duration: mAnimationDuration,
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultSize * 1.6),
+      height: kToolbarHeight,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.white, // Adjust as needed
         boxShadow: [
           BoxShadow(
-            blurRadius: 1,
-            spreadRadius: 1,
-            color: COLOR_CONST.cardShadowColor.withOpacity(0.2),
-            offset: const Offset(0, 2),
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(0, 3), // changes position of shadow
           ),
         ],
       ),
-      child: Stack(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Positioned(
-            top: _insetVertical,
-            left: _insetHorizontal,
-            right: _insetHorizontal,
-            height: _mainHeaderHeight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(CupertinoIcons.line_horizontal_3),
-                ),
-                AnimatedOpacity(
-                  opacity: offsetPercent > 0.1 ? 0 : 1,
-                  duration: const Duration(microseconds: 500),
-                  child: Text("Vocabula®", style: FONT_CONST.BOLD_PRIMARY_18),
-                ),
-                IconButton(
-                  onPressed: () {
-                    addData(context);
-                  },
-                  icon: const Icon(CupertinoIcons.add),
-                ),
-              ],
-            ),
+          IconButton(
+            icon: const Icon(CupertinoIcons.search),
+            onPressed: () {},
+          ),
+          Text(
+            "Vocabula®",
+            style: FONT_CONST.BOLD_PRIMARY_18,
+          ),
+          IconButton(
+            icon: const Icon(CupertinoIcons.add),
+            onPressed: () => onOptionDialog(context),
           ),
         ],
       ),
     );
   }
-
-  @override
-  double get maxExtent => _maxHeaderExtent;
-
-  @override
-  double get minExtent => _minHeaderExtent;
-
-  @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
-      false;
 }

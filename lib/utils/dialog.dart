@@ -1,77 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
-import 'package:vocab_app/configs/config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
-import 'package:vocab_app/presentation/widgets/buttons/selectable_text_button.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
 import 'package:vocab_app/utils/translate.dart';
 import 'package:flutter/material.dart';
 
 class UtilDialog {
-  static chooseCollection({
-    required BuildContext context,
-    Function()? onClose,
-  }) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: false,
-      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-      barrierColor: Colors.black.withOpacity(0.5),
-      transitionDuration: const Duration(milliseconds: 500),
-      pageBuilder: (BuildContext context, Animation<double> animation,
-          Animation<double> secondaryAnimation) {
-        var option = "";
-        return AlertDialog(
-          title: const Center(child: Text("Add New..")),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-          backgroundColor: COLOR_CONST.backgroundColor,
-          content: SelectableTextButtonRow(
-            onTextSelected: (selectedText) {
-              /// Do something
-              option = selectedText;
-            },
-          ),
-          actions: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(CupertinoIcons.xmark),
-                ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.popAndPushNamed(context, AppRouter.ADD_DATA,
-                        arguments: option);
-                  },
-                  icon: const Icon(CupertinoIcons.arrow_right),
-                ),
-              ],
-            )
-          ],
-        );
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return BackdropFilter(
-          filter: ImageFilter.blur(
-            sigmaX: 4 * animation.value,
-            sigmaY: 4 * animation.value,
-          ),
-          child: FadeTransition(
-            opacity: animation,
-            child: child,
-          ),
-        );
-      },
-    );
-  }
-
   static showCustomContent(
     BuildContext context, {
     String? content,

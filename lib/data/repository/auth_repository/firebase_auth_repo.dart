@@ -41,9 +41,17 @@ class FirebaseAuthRepository extends AuthRepository {
       var updatedUserDetails = user.cloneWith(id: userId.user!.uid);
       // Create new doc in users collection
       await _userRepository.addUserData(updatedUserDetails);
-      await _collectionsRepository.createDefaultCollection(updatedUserDetails);
+      create(updatedUserDetails);
     } on FirebaseAuthException catch (e) {
       _authException = e.message.toString();
+    }
+  }
+
+  Future<void> create(UserModel updatedUserDetails) async {
+    try {
+      await _collectionsRepository.createDefaultCollection(updatedUserDetails);
+    } on FirebaseAuthException catch (error) {
+      _authException = error.message.toString();
     }
   }
 

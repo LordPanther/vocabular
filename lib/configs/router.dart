@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:vocab_app/bottom_navigation.dart';
-import 'package:vocab_app/presentation/screens/collections_manager/collections_screen.dart';
 import '../data/models/user_model.dart';
 import '../presentation/screens/confirm_password_reset/confrim_password_reset.dart';
 import '../presentation/screens/forgot_password/forgot_password_screen.dart';
@@ -61,12 +60,12 @@ class AppRouter {
           builder: (_) => const BottomNavigation(),
         );
       case ADD_DATA:
-        var option = settings.arguments as String;
-        return MaterialPageRoute(
-          builder: (_) => CollectionScreen(
-            option: option
-          ),
-        );
+        // var option = settings.arguments as String;
+        // return MaterialPageRoute(
+        //   builder: (_) => CollectionScreen(
+        //     option: option
+        //   ),
+        // );
       case INITIALIZE_INFO:
         return MaterialPageRoute(
           builder: (_) => const InitializeInfoScreen(),

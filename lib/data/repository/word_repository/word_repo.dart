@@ -1,4 +1,3 @@
-import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/daily_word_model.dart';
 import 'package:vocab_app/data/models/word_api_model.dart';
 
