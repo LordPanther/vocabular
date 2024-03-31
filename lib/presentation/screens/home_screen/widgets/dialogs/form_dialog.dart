@@ -52,10 +52,10 @@ class _FormDialogState extends State<FormDialog> {
   Widget build(BuildContext context) {
     var userOption = widget.option;
     return AlertDialog(
-      title: Text("Add new $userOption"),
       content: userOption == "word"
           ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 _buildHeaderText("Add new word..."),
                 SizedBox(
@@ -155,7 +155,7 @@ class _FormDialogState extends State<FormDialog> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         IconButton(
-          onPressed: () => addData(widget.option),
+          onPressed: () => Navigator.of(context).pop,
           icon: const Icon(CupertinoIcons.arrow_left),
         ),
         IconButton(

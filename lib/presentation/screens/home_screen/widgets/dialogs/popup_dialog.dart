@@ -32,16 +32,12 @@ class SelectionDialog extends StatelessWidget {
       actions: <Widget>[
         // Enter
         IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(CupertinoIcons.arrow_left),
         ),
 
         IconButton(
-          onPressed: () {
-            Navigator.of(context).pop(selectedOption); // Close the dialog
-          },
+          onPressed: () => Navigator.of(context).pop(selectedOption),
           icon: const Icon(CupertinoIcons.arrow_right),
         ),
       ],

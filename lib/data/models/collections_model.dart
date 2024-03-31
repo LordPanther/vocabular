@@ -12,7 +12,7 @@ class CollectionModel extends Equatable {
   // Json data from server turns into model data
   static CollectionModel fromMap(Map<String, dynamic> data) {
     return CollectionModel(
-      name: data["name"] ?? "default",
+      name: data["name"] ?? "",
     );
   }
 

@@ -26,27 +26,10 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
 
     try {
       // Create collections array
-      await _userCollection
-          .collection("users")
-          .doc(user.id)
-          .collection("collectionsbucket")
-          .doc("bucket")
-          .set(
-        {
-          "collections": [collection.toMap()]
-        },
-      );
+      await writeToCollectionsArray(collection);
+
       // Create default collection
-      await _userCollection
-          .collection("users")
-          .doc(user.id)
-          .collection("collections")
-          .doc(collection.name)                          // Different for every user
-          .set(
-        {
-          word.word: {word.toMap()}
-        },
-      );
+      await addWordToCollection(collection, word);
     } catch (error) {
       if (kDebugMode) {
         print(error);
@@ -63,17 +46,36 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
         .collection("users")
         .doc(user!.uid)
         .collection("collectionsbucket")
-        .doc("collections")
+        .doc("bucket")
         .get();
 
     if (snapshot.exists) {
-      List<String> collections = snapshot.data()?['collections'];
-      if (collections.contains(newCollection.name)) {
+      List<dynamic> collectionsArray = snapshot.data()!["collections"];
+      // var collectionsList =
+      //     collectionsArray.cast<String>().toList(growable: true);
+
+      if (collectionsArray.contains(newCollection.name)) {
         return;
       } else {
+        await writeToCollectionsArray(newCollection);
         await addColllectionToUi(newCollection);
       }
     }
+  }
+
+  /// If collection does not exist then create it
+  Future<void> writeToCollectionsArray(CollectionModel collection) async {
+    User? user = _firebaseAuth.currentUser;
+    await _userCollection
+        .collection("users")
+        .doc(user!.uid)
+        .collection("collectionsbucket")
+        .doc("bucket")
+        .set(
+      {
+        "collections": [collection.toMap()]
+      },
+    );
   }
 
   @override
@@ -122,12 +124,13 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
     var snapshot = await _userCollection
         .collection("users")
         .doc(user!.uid)
-        .collection("collections")
+        .collection("collectionsbucket")
         .get();
 
     for (var doc in snapshot.docs) {
-      var data = doc.data();
-      userCollections.add(CollectionModel.fromMap(data));
+      var collectionName = doc.data()["name"];
+      CollectionModel collectionModel = CollectionModel(name: collectionName);
+      userCollections.add(collectionModel);
     }
     return userCollections;
   }

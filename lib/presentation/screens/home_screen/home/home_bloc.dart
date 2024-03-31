@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
-import 'package:vocab_app/data/models/daily_word_model.dart';
 import 'package:vocab_app/data/repository/app_repository.dart';
 import 'package:vocab_app/data/repository/collections_repository/collections_repo.dart';
 import 'package:vocab_app/presentation/screens/home_screen/home/bloc.dart';
