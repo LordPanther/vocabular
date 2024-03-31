@@ -40,27 +40,19 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
   /// [CollectionsBloc]
   /// Add collection to collections
   @override
-  Future<void> createCollection(CollectionModel newCollection) async {
-    User? user = _firebaseAuth.currentUser;
-    var snapshot = await _userCollection
-        .collection("users")
-        .doc(user!.uid)
-        .collection("collectionsbucket")
-        .doc("bucket")
-        .get();
+  Future<bool> createCollection(CollectionModel newCollection) async {
 
-    if (snapshot.exists) {
-      List<dynamic> collectionsArray = snapshot.data()!["collections"];
-      // var collectionsList =
-      //     collectionsArray.cast<String>().toList(growable: true);
+    // bool collectionExists = false;
 
-      if (collectionsArray.contains(newCollection.name)) {
-        return;
-      } else {
-        await writeToCollectionsArray(newCollection);
-        await addColllectionToUi(newCollection);
-      }
+    List<CollectionModel> collections = await fetchCollections();
+
+    if (collections.contains(newCollection)) {
+      return true;
+    } else {
+      await writeToCollectionsArray(newCollection);
+      await addColllectionToUi(newCollection);
     }
+    return false;
   }
 
   /// If collection does not exist then create it
@@ -124,12 +116,11 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
     var snapshot = await _userCollection
         .collection("users")
         .doc(user!.uid)
-        .collection("collectionsbucket")
+        .collection("collections")
         .get();
 
     for (var doc in snapshot.docs) {
-      var collectionName = doc.data()["name"];
-      CollectionModel collectionModel = CollectionModel(name: collectionName);
+      CollectionModel collectionModel = CollectionModel(name: doc.id);
       userCollections.add(collectionModel);
     }
     return userCollections;

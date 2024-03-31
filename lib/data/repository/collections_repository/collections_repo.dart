@@ -7,7 +7,7 @@ abstract class CollectionsRepository {
   Future<void> createDefaultCollection(UserModel updatedUserDetails);
 
   /// Create a new collection in UI
-  Future<void> createCollection(CollectionModel collection);
+  Future<bool> createCollection(CollectionModel collection);
 
   Future<void> addWordToCollection(CollectionModel collection, WordModel word);
 

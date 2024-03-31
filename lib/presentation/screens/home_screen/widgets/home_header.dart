@@ -18,9 +18,7 @@ class HomeHeader extends StatelessWidget {
         return const SelectionDialog();
       },
     );
-    if (option != null) {
-      _onFormDialog(context, option);
-    }
+    _onFormDialog(context, option);
   }
 
   _onFormDialog(BuildContext context, String option) async {

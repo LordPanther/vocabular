@@ -28,11 +28,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(HomeLoaded(homeResponse: homeResponse));
   }
 
-  Future<void> _mapCreateCollectionToMap(
-      event, Emitter<HomeState> emit) async {
+  Future<void> _mapCreateCollectionToMap(event, Emitter<HomeState> emit) async {
     CollectionModel collection = event.collectionModel;
     try {
-      await _collectionsRepository.createCollection(collection);
+      bool collectionExists =
+          await _collectionsRepository.createCollection(collection);
+      if (collectionExists) {
+        emit(CollectionExists());
+      }
       await _mapLoadHomeToMap(event, emit);
     } catch (error) {
       emit(HomeLoadFailure(error.toString()));

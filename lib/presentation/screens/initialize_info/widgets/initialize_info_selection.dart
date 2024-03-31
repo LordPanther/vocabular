@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/user_model.dart';
@@ -81,11 +82,11 @@ class _InitializeInfoSelectionState extends State<InitializeInfoSelection> {
       cursorColor: COLOR_CONST.textColor,
       controller: firstNameController,
       keyboardType: TextInputType.text,
-      validator: (value) {
-        return UtilValidators.isValidName(value!)
-            ? null
-            : Translate.of(context).translate("invalid_name");
-      },
+      // validator: (value) {
+      //   return UtilValidators.isValidName(value!)
+      //       ? null
+      //       : Translate.of(context).translate("invalid_name");
+      // },
       decoration: InputDecoration(
           labelText: Translate.of(context).translate("first_name"),
           labelStyle: const TextStyle(color: COLOR_CONST.textColor),
@@ -104,11 +105,11 @@ class _InitializeInfoSelectionState extends State<InitializeInfoSelection> {
       cursorColor: COLOR_CONST.textColor,
       controller: lastNameController,
       keyboardType: TextInputType.text,
-      validator: (value) {
-        return UtilValidators.isValidName(value!)
-            ? null
-            : Translate.of(context).translate("invalid_name");
-      },
+      // validator: (value) {
+      //   return UtilValidators.isValidName(value!)
+      //       ? null
+      //       : Translate.of(context).translate("invalid_name");
+      // },
       decoration: InputDecoration(
           labelText: Translate.of(context).translate("last_name"),
           labelStyle: const TextStyle(color: COLOR_CONST.textColor),
@@ -123,14 +124,25 @@ class _InitializeInfoSelectionState extends State<InitializeInfoSelection> {
   _buildButtonContinue() {
     return SizedBox(
       width: SizeConfig.defaultSize * 15,
-      child: MainButton(
-          borderRadius: SizeConfig.defaultSize * 0.5,
-          onPressed: onContinue,
-          backgroundColor: COLOR_CONST.primaryColor,
-          child: Text(
-            Translate.of(context).translate('continue'),
-            style: FONT_CONST.BOLD_BLACK_18,
-          )),
+      child: IconButton(
+        onPressed: onContinue,
+        icon: const Icon(CupertinoIcons.arrow_right_circle),
+      ),
     );
   }
+
+  // _buildButtonContinue() {
+  //   return SizedBox(
+  //     width: SizeConfig.defaultSize * 15,
+  //     child: MainButton(
+  //       borderRadius: SizeConfig.defaultSize * 0.5,
+  //       onPressed: onContinue,
+  //       backgroundColor: COLOR_CONST.primaryColor,
+  //       child: Text(
+  //         Translate.of(context).translate('continue'),
+  //         style: FONT_CONST.BOLD_BLACK_18,
+  //       ),
+  //     ),
+  //   );
+  // }
 }
