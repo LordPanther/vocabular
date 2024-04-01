@@ -32,6 +32,8 @@ class _FormDialogState extends State<FormDialog> {
   bool get isWordPopulated => word.text.isNotEmpty;
   bool get isCollectionPopulated => collection.text.isNotEmpty;
 
+  bool isChecked = false;
+
   void addData(String option) {
     if (option == "collection" && isCollectionPopulated) {
       CollectionModel collectionModel = CollectionModel(
@@ -44,7 +46,7 @@ class _FormDialogState extends State<FormDialog> {
         definition: definition.text,
         word: word.text,
       );
-      Navigator.of(context).pop(wordModel);
+      Navigator.of(context).pop([wordModel, isChecked]);
     }
   }
 
@@ -59,19 +61,25 @@ class _FormDialogState extends State<FormDialog> {
               children: [
                 _buildHeaderText("Add new word..."),
                 SizedBox(
-                  height: SizeConfig.defaultSize * 3,
+                  height: SizeConfig.defaultSize * 5,
                 ),
                 _buildTextFieldWord(),
+                SizedBox(height: SizeConfig.defaultSize * 3),
                 _buildTextFieldDefinition(),
+                SizedBox(height: SizeConfig.defaultSize * 3),
+                _buildCheckbox(),
+                SizedBox(height: SizeConfig.defaultSize * 5),
                 _buildButtonProcessAction()
               ],
             )
           : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 _buildHeaderText("Add new collection..."),
-                SizedBox(height: SizeConfig.defaultSize * 3),
+                SizedBox(height: SizeConfig.defaultSize * 5),
                 _buildTextFieldCollection(),
-                SizedBox(height: SizeConfig.defaultSize * 3),
+                SizedBox(height: SizeConfig.defaultSize * 5),
                 _buildButtonProcessAction()
               ],
             ),
@@ -127,6 +135,24 @@ class _FormDialogState extends State<FormDialog> {
               borderSide: BorderSide(color: COLOR_CONST.textColor)),
           enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: COLOR_CONST.textColor))),
+    );
+  }
+
+  _buildCheckbox() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Checkbox(
+          value: isChecked,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked = value!;
+            });
+          },
+        ),
+        const SizedBox(width: 10),
+        const Text("Share this word with other users for free?")
+      ],
     );
   }
 

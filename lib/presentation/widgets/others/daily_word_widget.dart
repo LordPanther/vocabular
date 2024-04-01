@@ -21,30 +21,27 @@ class _DailyWordWidgetState extends State<DailyWordWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                _buildWordAudio(),
-                SizedBox(
-                  width: SizeConfig.defaultSize * 1.5,
-                ),
-                _buildWord(),
-              ],
-            ),
-            const SizedBox(height: 5),
-            _buildPartOfSpeech(),
-            const SizedBox(height: 3),
-            _buildDefinition(),
-            const SizedBox(height: 3),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              _buildWordAudio(),
+              SizedBox(
+                width: SizeConfig.defaultSize * 1.5,
+              ),
+              _buildWord(),
+            ],
+          ),
+          const SizedBox(height: 5),
+          _buildPartOfSpeech(),
+          const SizedBox(height: 3),
+          _buildDefinition(),
+          const SizedBox(height: 3),
+        ],
       ),
     );
   }
