@@ -21,6 +21,7 @@ class HomeHeader extends StatelessWidget {
       },
     );
     CollectionModel collection = CollectionModel(name: results[1]);
+    // ignore: use_build_context_synchronously
     _onFormDialog(context, results[0], collection);
   }
 

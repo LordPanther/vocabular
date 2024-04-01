@@ -8,6 +8,7 @@ class SelectableTextButtonRow extends StatefulWidget {
   const SelectableTextButtonRow({super.key, required this.onTextSelected});
 
   @override
+  // ignore: library_private_types_in_public_api
   _SelectableTextButtonRowState createState() =>
       _SelectableTextButtonRowState();
 }

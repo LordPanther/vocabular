@@ -1,8 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/daily_word_model.dart';
-import 'package:vocab_app/data/repository/app_repository.dart';
-import 'package:vocab_app/data/repository/collections_repository/collections_repo.dart';
 import 'package:vocab_app/data/repository/repository.dart';
 import 'package:vocab_app/presentation/screens/home_screen/home/bloc.dart';
 
@@ -86,7 +84,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   /// Remove word
   Future<void> _mapRemoveWordToMap(event, Emitter<HomeState> emit) async {
-    CollectionModel collection = event.collection;
 
     try {} catch (error) {
       HomeLoadFailure(error.toString());

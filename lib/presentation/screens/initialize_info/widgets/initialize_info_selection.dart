@@ -2,9 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/user_model.dart';
-import 'package:vocab_app/presentation/widgets/buttons/main_button.dart';
 import 'package:vocab_app/utils/translate.dart';
-import 'package:vocab_app/utils/validator.dart';
 import 'package:flutter/material.dart';
 import '../../../../configs/config.dart';
 

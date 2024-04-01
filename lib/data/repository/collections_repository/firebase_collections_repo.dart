@@ -161,7 +161,6 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
   // }
 
   /// Get a single collection in collections
-  @override
   Future<CollectionModel> fetchCollection() async {
     User? user = _firebaseAuth.currentUser;
     var doc = await _userCollection
