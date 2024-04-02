@@ -123,18 +123,22 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
         .get();
 
     for (var doc in snapshot.docs) {
-      CollectionModel collectionModel = CollectionModel(name: doc.id);
+      CollectionModel collectionModel =
+          CollectionModel(name: doc.id); //[0] = default, [1] = work
       userCollections.add(collectionModel);
 
-      var data = doc.data();
-      var collectionsData = List<WordModel>.from(data[collectionModel.name]);
+      List<WordModel> words = await fetchWords(doc);
+      userWords.add(words);
 
-      List<WordModel> wordsByCollection = [];
-      for (var wordData in collectionsData) {
-        var word = WordModel.fromMap(wordData as Map<String, dynamic>);
-        wordsByCollection.add(word);
-      }
-      userWords.add(wordsByCollection);
+      // var data = doc.data();
+      // var collectionsData = data[collectionModel.name];
+
+      // List<WordModel> wordsByCollection = [];
+      // for (var wordData in collectionsData) {
+      //   var word = WordModel.fromMap(wordData as Map<String, dynamic>);
+      //   wordsByCollection.add(word);
+      // }
+      // userWords.add(wordsByCollection);
     }
     return CollectionData(collections: userCollections, words: userWords);
   }
@@ -175,25 +179,34 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
   }
 
   /// Fetch words for a specific collection
-  Future<List<WordModel>> fetchWords(CollectionModel collection) async {
+  Future<List<WordModel>> fetchWords(DocumentSnapshot doc) async {
     User? user = _firebaseAuth.currentUser;
     List<WordModel> words = [];
-    var snapshot = await _userCollection
-        .collection("users")
-        .doc(user!.uid)
-        .collection("collections")
-        .get();
 
-    for (var doc in snapshot.docs) {
-      var data = doc.data();
-      var collectionsData = List<WordModel>.from(data[collection.name]);
+    try {
+      var snapshot = await _userCollection
+          .collection("users")
+          .doc(user!.uid)
+          .collection("collections")
+          .doc(doc.id)
+          .get();
 
-      for (var wordData in collectionsData) {
-        var word = WordModel.fromMap(wordData as Map<String, dynamic>);
-        words.add(word);
+      Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+
+      data.forEach(
+        (key, value) {
+          words.add(WordModel(
+              id: value["id"], definition: value["definition"], word: key));
+        },
+      );
+      return words; // Return the list of words here
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
       }
+      // Return an empty list in case of an error
+      return words;
     }
-    return words;
   }
 
   @override

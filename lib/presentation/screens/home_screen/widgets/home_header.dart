@@ -13,7 +13,8 @@ class HomeHeader extends StatelessWidget {
   final List<CollectionModel> collections;
   const HomeHeader({super.key, required this.collections});
 
-  void _onOptionDialog(BuildContext context, List<CollectionModel> collections) async {
+  void _onOptionDialog(
+      BuildContext context, List<CollectionModel> collections) async {
     final String results = await showDialog(
       context: context,
       builder: (context) {
@@ -25,7 +26,8 @@ class HomeHeader extends StatelessWidget {
     _onFormDialog(context, results[0], collection);
   }
 
-  _onFormDialog(BuildContext context, String option, CollectionModel collection) async {
+  _onFormDialog(
+      BuildContext context, String option, CollectionModel collection) async {
     Map<String, dynamic> results = await showDialog(
       context: context,
       builder: (context) {
@@ -39,8 +41,8 @@ class HomeHeader extends StatelessWidget {
         BlocProvider.of<HomeBloc>(context)
             .add(CreateCollection(collectionModel: collection));
       } else {
-        BlocProvider.of<HomeBloc>(context)
-            .add(CreateWord(collection: collection, word: word, shareWord: isChecked));
+        BlocProvider.of<HomeBloc>(context).add(CreateWord(
+            collection: collection, word: word, shareWord: isChecked));
       }
     }
   }
