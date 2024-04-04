@@ -9,23 +9,6 @@ class HomeEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AddToCollection extends HomeEvent {
-  final String collection;
-
-  const AddToCollection({required this.collection});
-}
-
-/// Choose to add collection in collections screen
-class CreateCollection extends HomeEvent {
-  final CollectionModel collectionModel;
-  const CreateCollection({
-    required this.collectionModel,
-  });
-
-  @override
-  List<Object> get props => [collectionModel];
-}
-
 class CreateWord extends HomeEvent {
   final CollectionModel collection;
   final WordModel word;
@@ -37,15 +20,6 @@ class CreateWord extends HomeEvent {
   List<Object> get props => [collection, word, shareWord];
 }
 
-class RemoveCollection extends HomeEvent {
-  final CollectionModel collection;
-
-  const RemoveCollection(this.collection);
-
-  @override
-  List<Object> get props => [collection];
-}
-
 class RemoveWord extends HomeEvent {
   final CollectionModel collection;
   final WordModel word;
@@ -54,8 +28,6 @@ class RemoveWord extends HomeEvent {
   @override
   List<Object> get props => [collection, word];
 }
-
-class LoadCollections extends HomeEvent {}
 
 class LoadHome extends HomeEvent {}
 

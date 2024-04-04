@@ -1,5 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:flutter/cupertino.dart';
 import 'package:vocab_app/presentation/common_blocs/language/bloc.dart';
 import 'package:vocab_app/configs/config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
@@ -26,14 +27,22 @@ class _SettingScreenState extends State<SettingScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(Translate.of(context).translate("settings"),
-            style: const TextStyle(color: COLOR_CONST.backgroundColor)),
+            style: const TextStyle(color: COLOR_CONST.primaryColor)),
       ),
       body: SafeArea(
         child: Column(
           children: [
             CustomListTile(
+              title: Translate.of(context).translate("collections"),
+              leading: const Icon(CupertinoIcons.list_dash,
+                  color: COLOR_CONST.textColor),
+              onPressed: () =>
+                  Navigator.of(context).pushNamed(AppRouter.COLLECTIONS),
+            ),
+            CustomListTile(
               title: Translate.of(context).translate("language"),
-              leading: const Icon(Icons.language, color: COLOR_CONST.textColor),
+              leading: const Icon(CupertinoIcons.globe,
+                  color: COLOR_CONST.textColor),
               trailing: Text(
                 Translate.of(context).translate(UtilLanguage.getLanguageName(
                     AppLanguage.defaultLanguage.languageCode)),
@@ -42,8 +51,8 @@ class _SettingScreenState extends State<SettingScreen> {
             ),
             CustomListTile(
               title: Translate.of(context).translate("theme"),
-              leading:
-                  const Icon(Icons.color_lens, color: COLOR_CONST.textColor),
+              leading: const Icon(CupertinoIcons.color_filter,
+                  color: COLOR_CONST.textColor),
             ),
           ],
         ),

@@ -11,7 +11,7 @@ class VerificationHeader extends StatelessWidget {
       padding: EdgeInsets.only(
           top: SizeConfig.defaultSize * 15, bottom: SizeConfig.defaultSize * 8),
       child: SizedBox(
-        height: SizeConfig.defaultSize * 10,
+        height: SizeConfig.defaultSize * 5,
         child: Image.asset(IMAGE_CONST.LOGIN_BANNER),
       ),
     );

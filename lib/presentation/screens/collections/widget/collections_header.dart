@@ -1,18 +1,17 @@
-import 'package:vocab_app/constants/image_constant.dart';
 import 'package:flutter/material.dart';
+import 'package:vocab_app/configs/size_config.dart';
+import 'package:vocab_app/constants/image_constant.dart';
 
-import '../../../../configs/config.dart';
-
-class LoginHeader extends StatelessWidget {
-  const LoginHeader({super.key});
+class CollectionsHeader extends StatelessWidget {
+  const CollectionsHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.only(
-        top: SizeConfig.defaultSize * 12,
-        bottom: SizeConfig.defaultSize * 2,
+        top: SizeConfig.defaultSize * 10,
+        bottom: SizeConfig.defaultSize * 5,
         right: SizeConfig.defaultSize * 1.5,
         left: SizeConfig.defaultSize * 1.5,
       ),
@@ -21,8 +20,8 @@ class LoginHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            width: SizeConfig.defaultSize * 10,
-            child: Image.asset(IMAGE_CONST.LOGIN_BANNER),
+            width: SizeConfig.defaultSize * 5,
+            child: Image.asset(IMAGE_CONST.SPLASH_LOGO),
           ),
         ],
       ),

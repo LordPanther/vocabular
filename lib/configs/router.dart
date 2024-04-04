@@ -2,6 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:vocab_app/bottom_navigation.dart';
+import 'package:vocab_app/presentation/screens/collections/collections_screen.dart';
+import 'package:vocab_app/presentation/screens/profile/profile_screen.dart';
+import 'package:vocab_app/presentation/screens/search/search_screen.dart';
+import 'package:vocab_app/presentation/screens/settings/setting_screen.dart';
 import '../data/models/user_model.dart';
 import '../presentation/screens/confirm_password_reset/confrim_password_reset.dart';
 import '../presentation/screens/forgot_password/forgot_password_screen.dart';
@@ -23,7 +27,9 @@ class AppRouter {
   static const String CONFIRM_PASSWORD_RESET = '/confirm_password_reset';
   static const String NEW_PASSWORD = '/new_password';
   static const String COLLECTIONS = '/collections';
-  static const String ADD_DATA = '/add_word';
+  static const String SETTINGS = '/settings';
+  static const String PROFILE = '/profile';
+  static const String SEARCH = '/search';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -59,13 +65,22 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => const BottomNavigation(),
         );
-      case ADD_DATA:
-        // var option = settings.arguments as String;
-        // return MaterialPageRoute(
-        //   builder: (_) => CollectionScreen(
-        //     option: option
-        //   ),
-        // );
+      case SETTINGS:
+        return MaterialPageRoute(
+          builder: (_) => const SettingScreen(),
+        );
+      case PROFILE:
+        return MaterialPageRoute(
+          builder: (_) => const ProfileScreen(),
+        );
+      case SEARCH:
+        return MaterialPageRoute(
+          builder: (_) => const SearchScreen(),
+        );
+      case COLLECTIONS:
+        return MaterialPageRoute(
+          builder: (_) => const CollectionsScreen(),
+        );
       case INITIALIZE_INFO:
         return MaterialPageRoute(
           builder: (_) => const InitializeInfoScreen(),

@@ -12,12 +12,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<LoadHome>((event, emit) async {
       await _mapLoadHomeToMap(event, emit);
     });
-    on<CreateCollection>((event, emit) async {
-      await _mapCreateCollectionToMap(event, emit);
-    });
-    on<RemoveCollection>((event, emit) async {
-      await _mapRemoveCollectionToMap(event, emit);
-    });
     on<CreateWord>((event, emit) async {
       await _mapCreateWordToMap(event, emit);
     });
@@ -42,21 +36,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(HomeLoaded(homeResponse: homeResponse));
   }
 
-  /// Create collection
-  Future<void> _mapCreateCollectionToMap(event, Emitter<HomeState> emit) async {
-    CollectionModel collection = event.collectionModel;
-    try {
-      bool collectionExists =
-          await _collectionsRepository.createCollection(collection);
-      if (collectionExists) {
-        emit(CollectionExists());
-      }
-      await _mapLoadHomeToMap(event, emit);
-    } catch (error) {
-      emit(HomeLoadFailure(error.toString()));
-    }
-  }
-
   /// Create word
   Future<void> _mapCreateWordToMap(event, Emitter<HomeState> emit) async {
     WordModel word = event.word;
@@ -67,18 +46,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           collection, word, shareWord);
     } catch (error) {
       emit(HomeLoadFailure(error.toString()));
-    }
-  }
-
-  /// Remove collection
-  Future<void> _mapRemoveCollectionToMap(event, Emitter<HomeState> emit) async {
-    CollectionModel collection = event.collection;
-
-    try {
-      await _collectionsRepository.removeCollection(collection);
-      await _mapLoadHomeToMap(event, emit);
-    } catch (error) {
-      HomeLoadFailure(error.toString());
     }
   }
 

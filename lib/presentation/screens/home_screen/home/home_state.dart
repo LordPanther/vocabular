@@ -18,8 +18,6 @@ class HomeLoaded extends HomeState {
   List<Object?> get props => [homeResponse];
 }
 
-class CollectionExists extends HomeState {}
-
 /// Home Load State
 class HomeLoading extends HomeState {}
 

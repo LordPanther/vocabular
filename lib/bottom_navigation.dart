@@ -4,9 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
+import 'package:vocab_app/presentation/screens/collections/collections_screen.dart';
 import 'package:vocab_app/presentation/screens/dictionary/dictionary_screen.dart';
 import 'package:vocab_app/presentation/screens/home_screen/home_screen.dart';
 import 'package:vocab_app/presentation/screens/profile/profile_screen.dart';
+import 'package:vocab_app/presentation/screens/search/search_screen.dart';
+import 'package:vocab_app/presentation/screens/settings/setting_screen.dart';
 import 'package:vocab_app/utils/translate.dart';
 
 class BottomNavigation extends StatefulWidget {
@@ -47,24 +50,24 @@ class _BottomNavigationState extends State<BottomNavigation>
       body: IndexedStack(
         index: selectedIndex,
         children: const [
-          ProfileScreen(),
+          SettingScreen(),
           HomeScreen(),
-          DictionaryScreen(),
+          CollectionsScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
-            icon: const Icon(CupertinoIcons.profile_circled),
-            label: Translate.of(context).translate('profile'),
+            icon: const Icon(CupertinoIcons.settings),
+            label: Translate.of(context).translate('settings'),
           ),
           BottomNavigationBarItem(
             icon: const Icon(CupertinoIcons.home),
             label: Translate.of(context).translate('home'),
           ),
           BottomNavigationBarItem(
-            icon: const Icon(CupertinoIcons.book),
-            label: Translate.of(context).translate('dict'),
+            icon: const Icon(CupertinoIcons.add),
+            label: Translate.of(context).translate('add'),
           ),
         ],
         selectedLabelStyle: FONT_CONST.BOLD_DEFAULT,

@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/presentation/widgets/others/dropdown_list.dart';
 
 class SelectionDialog extends StatefulWidget {
   final List<CollectionModel> collections;
+
   const SelectionDialog({super.key, required this.collections});
 
   @override
@@ -13,69 +13,89 @@ class SelectionDialog extends StatefulWidget {
 
 class _SelectionDialogState extends State<SelectionDialog> {
   // Variable to hold the selected option
-  String selectedOption = "";
-  String? collectionOption = "";
+  late String selectedOption;
+  String? collectionOption;
   List<String> dropdownCollection = [];
 
-  onSelection(List<CollectionModel> collections) {
+  @override
+  void initState() {
+    super.initState();
     selectedOption = 'word';
-    for (var collection in collections) {
-      dropdownCollection.add(collection.name);
-    }
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('Add new...'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          selectedOption == "word"
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    // First Option
-                    ListTile(
-                      title: const Text('Collection'),
-                      onTap: () {
-                        selectedOption = 'collection';
-                      },
-                    ),
-                    // Second Option
-                    ListTile(
-                      title: const Text('Word'),
-                      onTap: () => onSelection(widget.collections),
-                    ),
-                  ],
-                )
-              : Column(
-                  children: [
-                    const Text("Choose collection"),
-                    const SizedBox(height: 5),
-                    DropdownSelectionList(
-                      items: dropdownCollection,
-                      onItemSelected: (String? selectedItem) {
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (selectedOption == "collection")
+              Column(
+                children: [
+                  const Text("Choose collection"),
+                  const SizedBox(height: 5),
+                  DropdownSelectionList(
+                    items: dropdownCollection,
+                    onItemSelected: (String? selectedItem) {
+                      setState(() {
                         collectionOption = selectedItem;
-                      },
-                    ),
-                  ],
-                )
-        ],
+                      });
+                    },
+                  ),
+                ],
+              )
+            else
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      // First Option
+                      ListTile(
+                        title: const Text('Collection'),
+                        onTap: () {
+                          setState(() {
+                            selectedOption = 'collection';
+                            dropdownCollection.clear();
+                            for (var collection in widget.collections) {
+                              dropdownCollection.add(collection.name);
+                            }
+                          });
+                        },
+                      ),
+                      // Second Option
+                      ListTile(
+                        title: const Text('Word'),
+                        onTap: () {
+                          setState(() {
+                            selectedOption = 'word';
+                            dropdownCollection.clear();
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+          ],
+        ),
       ),
       actions: <Widget>[
-        // Enter
-        IconButton(
+        // Cancel
+        TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(CupertinoIcons.arrow_left),
+          child: const Text('Cancel'),
         ),
-
-        IconButton(
-          onPressed: () =>
-              Navigator.of(context).pop([selectedOption, collectionOption]),
-          icon: const Icon(CupertinoIcons.arrow_right),
+        // Confirm
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop([selectedOption, collectionOption]);
+          },
+          child: const Text('Confirm'),
         ),
       ],
     );

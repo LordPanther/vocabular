@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/daily_word_model.dart';
+import 'package:vocab_app/presentation/screens/collections/bloc/collections_bloc.dart';
+import 'package:vocab_app/presentation/screens/collections/bloc/collections_event.dart';
 import 'package:vocab_app/presentation/screens/home_screen/home/home_bloc.dart';
-import 'package:vocab_app/presentation/screens/home_screen/home/home_event.dart';
 import 'package:vocab_app/presentation/screens/home_screen/home/home_state.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
 import 'package:vocab_app/utils/snackbar.dart';
@@ -41,18 +42,13 @@ class _HomeBodyState extends State<HomeBody> {
 
   /// Remove/Delete collection and its content
   onRemoveCollection(CollectionModel collection) {
-    homeBloc.add(RemoveCollection(collection));
+    context.read<CollectionsBloc>().add(RemoveCollection(collection));
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<HomeBloc, HomeState>(
-      listener: (context, state) {
-        if (state is CollectionExists) {
-          UtilSnackBar.showSnackBarContent(context,
-              content: "Collection already exists");
-        }
-      },
+      listener: (context, state) {},
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           if (state is HomeLoading) {

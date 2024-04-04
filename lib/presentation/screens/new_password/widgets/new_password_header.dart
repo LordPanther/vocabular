@@ -21,7 +21,7 @@ class NewPasswordHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            width: SizeConfig.defaultSize * 10,
+            width: SizeConfig.defaultSize * 5,
             child: Image.asset(IMAGE_CONST.LOGIN_BANNER),
           ),
         ],
