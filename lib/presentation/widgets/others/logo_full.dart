@@ -10,7 +10,7 @@ class LogoFull extends StatelessWidget {
   Widget build(BuildContext context) {
     return Image.asset(
       IMAGE_CONST.SPLASH_LOGO,
-      width: SizeConfig.defaultSize * 20,
+      width: SizeConfig.defaultSize * 10,
       // height: SizeConfig.defaultSize * 15,
     );
   }

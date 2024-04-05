@@ -12,11 +12,14 @@ class UtilDialog {
     String? content,
     Function()? onClose,
   }) {
-    showDialog(
+    showGeneralDialog(
       context: context,
-      builder: (context) {
-        // var state = context.watch<RegisterBloc>().state;
-
+      barrierDismissible: false,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (BuildContext context, Animation<double> animation,
+          Animation<double> secondaryAnimation) {
         return AlertDialog(
           content: Text(content!),
           actions: <Widget>[
@@ -32,6 +35,18 @@ class UtilDialog {
           ],
         );
       },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: 4 * animation.value,
+            sigmaY: 4 * animation.value,
+          ),
+          child: FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+        );
+      },
     );
   }
 
@@ -41,9 +56,14 @@ class UtilDialog {
     String? content,
     Function()? onClose,
   }) {
-    showDialog(
+    showGeneralDialog(
       context: context,
-      builder: (context) {
+      barrierDismissible: false,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (BuildContext context, Animation<double> animation,
+          Animation<double> secondaryAnimation) {
         return AlertDialog(
           title: Text(
             title ?? Translate.of(context).translate("message_for_you"),
@@ -59,6 +79,18 @@ class UtilDialog {
               ),
             )
           ],
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: 4 * animation.value,
+            sigmaY: 4 * animation.value,
+          ),
+          child: FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
         );
       },
     );
@@ -106,10 +138,14 @@ class UtilDialog {
     required Widget content,
     String confirmButtonText = "Yes",
   }) {
-    return showDialog<bool>(
+    return showGeneralDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) {
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (BuildContext context, Animation<double> animation,
+          Animation<double> secondaryAnimation) {
         return AlertDialog(
           title: Text(
             title ?? Translate.of(context).translate("message_for_you"),
@@ -137,6 +173,57 @@ class UtilDialog {
           ],
         );
       },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: 4 * animation.value,
+            sigmaY: 4 * animation.value,
+          ),
+          child: FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+        );
+      },
     );
   }
 }
+
+// Template
+
+// showGeneralDialog(
+//       context: context,
+//       barrierDismissible: false,
+//       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+//       barrierColor: Colors.black.withOpacity(0.5),
+//       transitionDuration: const Duration(milliseconds: 500),
+//       pageBuilder: (BuildContext context, Animation<double> animation,
+//           Animation<double> secondaryAnimation) {
+// return AlertDialog(
+//           content: Text(content!),
+//           actions: <Widget>[
+//             TextButton(
+//               onPressed: onClose ?? () => Navigator.pop(context),
+//               child: Center(
+//                 child: Text(
+//                   Translate.of(context).translate("close"),
+//                   style: FONT_CONST.MEDIUM_PRIMARY_18,
+//                 ),
+//               ),
+//             )
+//           ],
+//         );
+//       },
+//       transitionBuilder: (context, animation, secondaryAnimation, child) {
+//         return BackdropFilter(
+//           filter: ImageFilter.blur(
+//             sigmaX: 4 * animation.value,
+//             sigmaY: 4 * animation.value,
+//           ),
+//           child: FadeTransition(
+//             opacity: animation,
+//             child: child,
+//           ),
+//         );
+//       },
+//     );

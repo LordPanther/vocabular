@@ -1,10 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DropdownSelectionList extends StatefulWidget {
   final List<String> items;
   final void Function(String?) onItemSelected;
 
-  const DropdownSelectionList({super.key, required this.items, required this.onItemSelected});
+  const DropdownSelectionList(
+      {super.key, required this.items, required this.onItemSelected});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -17,6 +19,8 @@ class _DropdownSelectionListState extends State<DropdownSelectionList> {
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
+      hint: const Text("Select a collection"),
+      icon: const Icon(CupertinoIcons.square_arrow_down),
       value: selectedItem,
       onChanged: (String? newValue) {
         setState(() {

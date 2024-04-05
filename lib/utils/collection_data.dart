@@ -6,4 +6,8 @@ class CollectionData {
   List<List<WordModel>> words;
 
   CollectionData({required this.collections, required this.words});
+
+  List<CollectionModel> get passedCollections => collections;
+
+  List<List<WordModel>> get passedWords => words;
 }

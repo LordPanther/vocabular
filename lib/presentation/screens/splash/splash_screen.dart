@@ -59,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen>
               child: const LogoFull(),
             ),
           ),
-          SizedBox(height: SizeConfig.defaultSize * 10),
+          SizedBox(height: SizeConfig.defaultSize * 8),
           const CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(COLOR_CONST.dividerColor),
           ),

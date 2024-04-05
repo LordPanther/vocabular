@@ -82,7 +82,7 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
           .doc(user!.uid)
           .collection("collections")
           .doc(collection.name)
-          .set({word.word: word.toMap()});
+          .update({word.word: word.toMap()});
     } catch (error) {
       if (kDebugMode) {
         print(error);
@@ -127,40 +127,9 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
 
       List<WordModel> words = await fetchWords(doc);
       userWords.add(words);
-
-      // var data = doc.data();
-      // var collectionsData = data[collectionModel.name];
-
-      // List<WordModel> wordsByCollection = [];
-      // for (var wordData in collectionsData) {
-      //   var word = WordModel.fromMap(wordData as Map<String, dynamic>);
-      //   wordsByCollection.add(word);
-      // }
-      // userWords.add(wordsByCollection);
     }
     return CollectionData(collections: userCollections, words: userWords);
   }
-
-  /// Get a list of collections in collections
-  // @override
-  // Future<List<CollectionModel>> fetchCollections() async {
-  //   User? user = _firebaseAuth.currentUser;
-  //   List<CollectionModel> userCollections = [];
-  //   List<WordModel> userWords = [];
-  //   var snapshot = await _userCollection
-  //       .collection("users")
-  //       .doc(user!.uid)
-  //       .collection("collections")
-  //       .get();
-
-  //   for (var doc in snapshot.docs) {
-  //     CollectionModel collectionModel = CollectionModel(name: doc.id);
-  //     userCollections.add(collectionModel);
-  //     var words = await fetchWords(collectionModel);
-  //     userWords.add(words as WordModel);
-  //   }
-  //   return userCollections;
-  // }
 
   /// Get a single collection in collections
   Future<CollectionModel> fetchCollection() async {

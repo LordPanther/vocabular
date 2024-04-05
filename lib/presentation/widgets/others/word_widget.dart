@@ -24,12 +24,9 @@ class WordTile extends StatelessWidget {
           children: [
             const SizedBox(height: 5),
             _buildDefinition(),
-            // const SizedBox(height: 3),
-            // _buildSynonym()
           ],
         ),
-        onTap: () {
-          /// OnLongpress popup to delete word
+        onLongPress: () {
         },
       ),
     );
@@ -60,22 +57,4 @@ class WordTile extends StatelessWidget {
       ),
     );
   }
-
-  // _buildSynonym() {
-  //   return Padding(
-  //     padding: EdgeInsets.only(left: SizeConfig.defaultSize * 1.5),
-  //     child: Row(
-  //       children: [
-  //         Text(
-  //           "synonym: ",
-  //           style: FONT_CONST.MEDIUM_DEFAULT_16,
-  //         ),
-  //         Text(
-  //           synonyms,
-  //           style: FONT_CONST.REGULAR_DEFAULT_16,
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 }

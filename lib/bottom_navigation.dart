@@ -7,6 +7,7 @@ import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/presentation/screens/collections/collections_screen.dart';
 import 'package:vocab_app/presentation/screens/dictionary/dictionary_screen.dart';
 import 'package:vocab_app/presentation/screens/home_screen/home_screen.dart';
+import 'package:vocab_app/presentation/widgets/others/add_word_dialog.dart';
 import 'package:vocab_app/presentation/screens/profile/profile_screen.dart';
 import 'package:vocab_app/presentation/screens/search/search_screen.dart';
 import 'package:vocab_app/presentation/screens/settings/setting_screen.dart';
@@ -49,10 +50,10 @@ class _BottomNavigationState extends State<BottomNavigation>
     return Scaffold(
       body: IndexedStack(
         index: selectedIndex,
-        children: const [
-          SettingScreen(),
-          HomeScreen(),
-          CollectionsScreen(),
+        children: [
+          const SettingScreen(),
+          const HomeScreen(),
+          AddWordDialog(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

@@ -19,16 +19,18 @@ class CollectionsForm extends StatefulWidget {
 
 class _CollectionsFormState extends State<CollectionsForm> {
   late CollectionsBloc collectionsBloc;
-  final TextEditingController word = TextEditingController();
-  final TextEditingController definition = TextEditingController();
   final TextEditingController collection = TextEditingController();
-  bool isChecked = false;
   bool get isCollectionPopulated => collection.text.isNotEmpty;
 
   @override
+  void initState() {
+    collectionsBloc = BlocProvider.of<CollectionsBloc>(context);
+    super.initState();
+  }
+
+  @override
   void dispose() {
-    word.dispose();
-    definition.dispose();
+    collection.dispose();
     super.dispose();
   }
 
@@ -38,7 +40,6 @@ class _CollectionsFormState extends State<CollectionsForm> {
         name: collection.text,
       );
       collectionsBloc.add(CreateCollection(collection: collectionModel));
-      context.read<HomeBloc>().add(RefreshHome());
     }
   }
 

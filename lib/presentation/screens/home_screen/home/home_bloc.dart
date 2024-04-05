@@ -51,7 +51,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   /// Remove word
   Future<void> _mapRemoveWordToMap(event, Emitter<HomeState> emit) async {
-
     try {} catch (error) {
       HomeLoadFailure(error.toString());
     }
