@@ -32,3 +32,22 @@ class RemoveWord extends HomeEvent {
 class LoadHome extends HomeEvent {}
 
 class RefreshHome extends HomeEvent {}
+
+class CreateCollection extends HomeEvent {
+  final CollectionModel collection;
+  const CreateCollection({
+    required this.collection,
+  });
+
+  @override
+  List<Object> get props => [collection];
+}
+
+class RemoveCollection extends HomeEvent {
+  final CollectionModel collection;
+
+  const RemoveCollection(this.collection);
+
+  @override
+  List<Object> get props => [collection];
+}

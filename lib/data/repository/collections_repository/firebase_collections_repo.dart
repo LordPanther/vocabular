@@ -31,7 +31,7 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
       await writeToCollectionsArray(collection);
 
       // Create default collection
-      await addWordToCollection(collection, word, sharedWord);
+      await addNewWord(collection, word, sharedWord);
     } catch (error) {
       if (kDebugMode) {
         print(error);
@@ -73,7 +73,7 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
   }
 
   @override
-  Future<void> addWordToCollection(
+  Future<void> addNewWord(
       CollectionModel collection, WordModel word, bool shareWord) async {
     User? user = _firebaseAuth.currentUser;
     try {
@@ -83,6 +83,23 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
           .collection("collections")
           .doc(collection.name)
           .update({word.word: word.toMap()});
+    } catch (error) {
+      if (kDebugMode) {
+        print(error);
+      }
+    }
+  }
+
+  @override
+  Future<void> removeWord(CollectionModel collection, WordModel word) async {
+    User? user = _firebaseAuth.currentUser;
+    try {
+      await _userCollection
+          .collection("users")
+          .doc(user!.uid)
+          .collection("collections")
+          .doc(collection.name)
+          .update({word.word: FieldValue.delete()});
     } catch (error) {
       if (kDebugMode) {
         print(error);
@@ -132,18 +149,18 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
   }
 
   /// Get a single collection in collections
-  Future<CollectionModel> fetchCollection() async {
-    User? user = _firebaseAuth.currentUser;
-    var doc = await _userCollection
-        .collection("users")
-        .doc(user!.uid)
-        .collection("collections")
-        .doc()
-        .get();
+  // Future<CollectionModel> fetchCollection() async {
+  //   User? user = _firebaseAuth.currentUser;
+  //   var doc = await _userCollection
+  //       .collection("users")
+  //       .doc(user!.uid)
+  //       .collection("collections")
+  //       .doc()
+  //       .get();
 
-    CollectionModel collectionModel = CollectionModel(name: doc.id);
-    return collectionModel;
-  }
+  //   CollectionModel collectionModel = CollectionModel(name: doc.id);
+  //   return collectionModel;
+  // }
 
   /// Fetch words for a specific collection
   Future<List<WordModel>> fetchWords(DocumentSnapshot doc) async {

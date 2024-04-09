@@ -56,8 +56,7 @@ class _AddWordDialogState extends State<AddWordDialog> {
         word: word.text,
       );
       var newCollection = CollectionModel(name: collection!);
-      await collectionsRepository.addWordToCollection(
-          newCollection, newWord, isChecked);
+      await collectionsRepository.addNewWord(newCollection, newWord, isChecked);
       Navigator.of(context).popAndPushNamed(AppRouter.HOME);
     } else {
       if (!isWordPopulated) {

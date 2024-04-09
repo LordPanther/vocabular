@@ -10,7 +10,12 @@ abstract class CollectionsRepository {
   /// Create a new collection in UI
   Future<bool> createCollection(CollectionModel collection);
 
-  Future<void> addWordToCollection(CollectionModel collection, WordModel word, bool shareWord);
+  /// Add a new word [word]
+  Future<void> addNewWord(
+      CollectionModel collection, WordModel word, bool shareWord);
+
+  /// Remove this word [word]
+  Future<void> removeWord(CollectionModel collection, WordModel word);
 
   /// Fetch list of user created collections
   Future<CollectionData> fetchCollections();

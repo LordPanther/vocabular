@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:vocab_app/bottom_navigation.dart';
-import 'package:vocab_app/presentation/screens/collections/collections_screen.dart';
 import 'package:vocab_app/presentation/screens/profile/profile_screen.dart';
 import 'package:vocab_app/presentation/screens/search/search_screen.dart';
 import 'package:vocab_app/presentation/screens/settings/setting_screen.dart';
@@ -26,7 +25,6 @@ class AppRouter {
   static const String HOME = '/home';
   static const String CONFIRM_PASSWORD_RESET = '/confirm_password_reset';
   static const String NEW_PASSWORD = '/new_password';
-  static const String COLLECTIONS = '/collections';
   static const String SETTINGS = '/settings';
   static const String PROFILE = '/profile';
   static const String SEARCH = '/search';
@@ -76,10 +74,6 @@ class AppRouter {
       case SEARCH:
         return MaterialPageRoute(
           builder: (_) => const SearchScreen(),
-        );
-      case COLLECTIONS:
-        return MaterialPageRoute(
-          builder: (_) => const CollectionsScreen(),
         );
       case INITIALIZE_INFO:
         return MaterialPageRoute(
