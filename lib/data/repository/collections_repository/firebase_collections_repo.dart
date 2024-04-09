@@ -82,7 +82,7 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
           .doc(user!.uid)
           .collection("collections")
           .doc(collection.name)
-          .update({word.word: word.toMap()});
+          .set({word.word: word.toMap()}, SetOptions(merge: true));
     } catch (error) {
       if (kDebugMode) {
         print(error);
