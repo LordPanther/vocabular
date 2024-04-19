@@ -12,6 +12,7 @@ class COLOR_CONST {
   static const cardShadowColor = Color(0xFFd3d1d1);
   static const backgroundColor = Color(0xffF6F7FB);
   static const borderColor = Color(0xFFd3d1d1);
+  static const activeColor = Color.fromARGB(255, 240, 89, 89);
 
   static const accentTintColor = Color(0xFF7b60c4);
   static const accentShadeColor = Color(0xFF58458c);

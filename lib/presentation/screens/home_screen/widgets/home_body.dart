@@ -8,8 +8,8 @@ import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/daily_word_model.dart';
-import 'package:vocab_app/presentation/common_blocs/home/bloc.dart';
-import 'package:vocab_app/presentation/common_blocs/home/home_event.dart';
+import 'package:vocab_app/presentation/screens/home_screen/bloc/bloc.dart';
+import 'package:vocab_app/presentation/screens/home_screen/bloc/home_event.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
 import 'package:vocab_app/utils/snackbar.dart';
 

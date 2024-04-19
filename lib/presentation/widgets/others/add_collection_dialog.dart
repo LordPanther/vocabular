@@ -9,7 +9,7 @@ import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/repository/app_repository.dart';
 import 'package:vocab_app/data/repository/collections_repository/collections_repo.dart';
-import 'package:vocab_app/presentation/common_blocs/home/bloc.dart';
+import 'package:vocab_app/presentation/screens/home_screen/bloc/bloc.dart';
 import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vocab_app/presentation/common_blocs/home/bloc.dart';
+import 'package:vocab_app/presentation/screens/home_screen/bloc/bloc.dart';
 import 'package:vocab_app/presentation/common_blocs/profile/profile_bloc.dart';
 
 import '../screens/verify_user/verify/verify_bloc.dart';
@@ -12,7 +12,6 @@ class CommonBloc {
   static final applicationBloc = ApplicationBloc();
   static final authencationBloc = AuthenticationBloc();
   static final verificationBloc = VerificationBloc();
-  static final homeBloc = HomeBloc();
   static final languageBloc = LanguageBloc();
   static final profileBloc = ProfileBloc();
 
@@ -29,9 +28,6 @@ class CommonBloc {
     BlocProvider<LanguageBloc>(
       create: (context) => languageBloc,
     ),
-    BlocProvider<HomeBloc>(
-      create: (context) => homeBloc,
-    ),
     BlocProvider<ProfileBloc>(
       create: (context) => profileBloc,
     ),
@@ -44,7 +40,6 @@ class CommonBloc {
     verificationBloc.close();
     profileBloc.close();
     languageBloc.close();
-    homeBloc.close();
   }
 
   /// Singleton factory

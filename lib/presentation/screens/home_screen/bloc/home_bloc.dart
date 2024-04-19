@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/daily_word_model.dart';
 import 'package:vocab_app/data/repository/repository.dart';
-import 'package:vocab_app/presentation/common_blocs/home/bloc.dart';
+import 'package:vocab_app/presentation/screens/home_screen/bloc/bloc.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final CollectionsRepository _collectionsRepository =

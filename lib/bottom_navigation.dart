@@ -1,12 +1,11 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
+import 'package:vocab_app/presentation/screens/add_word/add_word_screen.dart';
 import 'package:vocab_app/presentation/screens/home_screen/home_screen.dart';
-import 'package:vocab_app/presentation/widgets/others/add_word_dialog.dart';
 import 'package:vocab_app/presentation/screens/settings/setting_screen.dart';
 import 'package:vocab_app/utils/translate.dart';
 
@@ -50,7 +49,7 @@ class _BottomNavigationState extends State<BottomNavigation>
         children: const [
           SettingScreen(),
           HomeScreen(),
-          AddWordDialog(),
+          AddWordScreen(),
         ],
       ),
       bottomNavigationBar: Padding(

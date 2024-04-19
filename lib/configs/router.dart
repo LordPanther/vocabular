@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:vocab_app/bottom_navigation.dart';
+import 'package:vocab_app/presentation/screens/add_word/add_word_screen.dart';
 import 'package:vocab_app/presentation/screens/profile/profile_screen.dart';
 import 'package:vocab_app/presentation/screens/search/search_screen.dart';
 import 'package:vocab_app/presentation/screens/settings/setting_screen.dart';
-import 'package:vocab_app/presentation/widgets/others/add_word_dialog.dart';
 import '../data/models/user_model.dart';
 import '../presentation/screens/confirm_password_reset/confrim_password_reset.dart';
 import '../presentation/screens/forgot_password/forgot_password_screen.dart';
@@ -29,7 +29,7 @@ class AppRouter {
   static const String SETTINGS = '/settings';
   static const String PROFILE = '/profile';
   static const String SEARCH = '/search';
-  static const String WORD_DIALOG = '/word';
+  static const String WORD = '/word';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -54,9 +54,9 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => const LoginScreen(),
         );
-      case WORD_DIALOG:
+      case WORD:
         return MaterialPageRoute(
-          builder: (_) => const AddWordDialog(),
+          builder: (_) => const AddWordScreen(),
         );
       case REGISTER:
         var selection = settings.arguments as UserModel;
