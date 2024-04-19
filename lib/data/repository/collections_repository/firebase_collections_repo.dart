@@ -27,9 +27,6 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
     bool sharedWord = true;
 
     try {
-      // Create collections array
-      await writeToCollectionsArray(collection);
-
       // Create default collection
       await addNewWord(collection, word, sharedWord);
     } catch (error) {
@@ -51,25 +48,9 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
     if (collections.contains(newCollection)) {
       return true;
     } else {
-      await writeToCollectionsArray(newCollection);
       await addColllectionToUi(newCollection);
     }
     return false;
-  }
-
-  /// If collection does not exist then create it
-  Future<void> writeToCollectionsArray(CollectionModel collection) async {
-    User? user = _firebaseAuth.currentUser;
-    await _userCollection
-        .collection("users")
-        .doc(user!.uid)
-        .collection("collectionsbucket")
-        .doc("bucket")
-        .set(
-      {
-        "collections": [collection.toMap()]
-      },
-    );
   }
 
   @override

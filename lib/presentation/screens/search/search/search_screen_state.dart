@@ -25,12 +25,12 @@ class SuggestionLoaded extends SearchState {
 
 ///
 class ResultsLoaded extends SearchState {
-  final List<WordModel> results;
+  final List<WordModel> wordResults;
 
-  const ResultsLoaded(this.results);
+  const ResultsLoaded({required this.wordResults});
 
   @override
-  List<Object> get props => [results];
+  List<Object> get props => [wordResults];
 }
 
 ///

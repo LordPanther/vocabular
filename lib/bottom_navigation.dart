@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/presentation/screens/home_screen/home_screen.dart';
@@ -52,26 +53,40 @@ class _BottomNavigationState extends State<BottomNavigation>
           AddWordDialog(),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(CupertinoIcons.settings),
-            label: Translate.of(context).translate('settings'),
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(CupertinoIcons.home),
-            label: Translate.of(context).translate('home'),
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(CupertinoIcons.add),
-            label: Translate.of(context).translate('add'),
-          ),
-        ],
-        selectedLabelStyle: FONT_CONST.BOLD_DEFAULT,
-        selectedItemColor: COLOR_CONST.primaryColor,
-        unselectedFontSize: 12,
-        currentIndex: selectedIndex,
-        onTap: onItemTapped,
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.only(bottom: SizeConfig.defaultSize),
+        child: BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.settings_outlined,
+                size: SizeConfig.defaultIconSize,
+              ),
+              label: Translate.of(context).translate('settings'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home_outlined,
+                size: SizeConfig.defaultIconSize,
+              ),
+              label: Translate.of(context).translate('home'),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.add,
+                size: SizeConfig.defaultIconSize,
+              ),
+              label: Translate.of(context).translate('add'),
+            ),
+          ],
+          selectedLabelStyle: FONT_CONST.BOLD_DEFAULT,
+          selectedItemColor: COLOR_CONST.primaryColor,
+          backgroundColor: COLOR_CONST.backgroundColor,
+          elevation: 0,
+          // unselectedFontSize: SizeConfig.defaultSize * 1.2,
+          currentIndex: selectedIndex,
+          onTap: onItemTapped,
+        ),
       ),
     );
   }

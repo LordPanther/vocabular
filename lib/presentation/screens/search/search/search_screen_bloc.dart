@@ -71,7 +71,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         }
       }
       
-      emit(ResultsLoaded(results));
+      emit(ResultsLoaded(wordResults: results));
       
       // Store keyword locally
       if (!recentKeywords.contains(keyword.toLowerCase())) {

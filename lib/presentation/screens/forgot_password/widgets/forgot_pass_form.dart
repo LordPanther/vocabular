@@ -25,7 +25,7 @@ class ForgotPassForm extends StatefulWidget {
 
 class _ForgotPassFormState extends State<ForgotPassForm> {
   late ForgotPasswordBloc forgotPasswordBloc;
-  late UserModel user;
+  // late UserModel user;
 
   // local states
   // final _formKey = GlobalKey<FormState>();

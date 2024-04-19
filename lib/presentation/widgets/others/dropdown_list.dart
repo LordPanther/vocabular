@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vocab_app/configs/config.dart';
 
 class DropdownSelectionList extends StatefulWidget {
   final List<String> items;
@@ -19,8 +20,12 @@ class _DropdownSelectionListState extends State<DropdownSelectionList> {
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
-      hint: const Text("Select a collection"),
-      icon: const Icon(CupertinoIcons.square_arrow_down),
+      underline: Container(),
+      hint: Padding(
+        padding: EdgeInsets.only(right: SizeConfig.defaultSize * 3),
+        child: const Text("Select a collection"),
+      ),
+      icon: const Icon(CupertinoIcons.chevron_down),
       value: selectedItem,
       onChanged: (String? newValue) {
         setState(() {
@@ -31,7 +36,7 @@ class _DropdownSelectionListState extends State<DropdownSelectionList> {
       items: widget.items.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value),
+          child: Center(child: Text(value.toUpperCase())),
         );
       }).toList(),
     );

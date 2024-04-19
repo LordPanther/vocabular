@@ -1,12 +1,77 @@
 import 'dart:ui';
 
+import 'package:flutter/widgets.dart';
+import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
+import 'package:vocab_app/data/models/collections_model.dart';
+import 'package:vocab_app/data/models/daily_word_model.dart';
+import 'package:vocab_app/presentation/widgets/buttons/volume_icon.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
 import 'package:vocab_app/utils/translate.dart';
 import 'package:flutter/material.dart';
 
 class UtilDialog {
+  static showSeadrchDetail(
+    BuildContext context, {
+    String? content,
+    required int index,
+    required List<WordModel> words,
+    Function()? onTap,
+  }) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (BuildContext context, Animation<double> animation,
+          Animation<double> secondaryAnimation) {
+        // Display word details in the popup
+        var word = words[index].word;
+        return AlertDialog(
+          title: Row(
+            children: [
+              GestureDetector(onTap: onTap,child: const CircularVolumeIcon(),),
+              SizedBox(width: SizeConfig.defaultSize * 2),
+              Text(word[0].toUpperCase() + word.substring(1)),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(words[index].definition),
+                SizedBox(height: SizeConfig.defaultSize * 5),
+                Text(
+                    'Collection: ${words[index].id[0].toUpperCase() + words[index].id.substring(1)}'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: 4 * animation.value,
+            sigmaY: 4 * animation.value,
+          ),
+          child: FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+
   static showCustomContent(
     BuildContext context, {
     String? content,

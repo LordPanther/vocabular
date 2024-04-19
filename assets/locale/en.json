@@ -58,5 +58,7 @@
   "daily_word": "Daily Word",
   "collections": "Collections",
   "login_form": "Add a new word...",
-  "add": "Add"
+  "add": "Add",
+  "add_definition": "Definition",
+  "add_word": "Word"
 }

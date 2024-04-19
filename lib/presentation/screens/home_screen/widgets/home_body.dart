@@ -1,9 +1,15 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vocab_app/configs/size_config.dart';
+import 'package:vocab_app/constants/color_constant.dart';
+import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/daily_word_model.dart';
 import 'package:vocab_app/presentation/common_blocs/home/bloc.dart';
+import 'package:vocab_app/presentation/common_blocs/home/home_event.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
 import 'package:vocab_app/utils/snackbar.dart';
 
@@ -64,22 +70,94 @@ class _HomeBodyState extends State<HomeBody> {
             var collections = state.homeResponse.collections;
             var words = state.homeResponse.words;
             return Expanded(
-              child: ListView.builder(
-                itemCount: collections.length,
-                itemBuilder: (context, index) {
-                  var collection = collections[index];
-                  return ExpansionTile(
-                    title: Text(collection.name),
-                    subtitle: const Text("<word_count>"),
-                    trailing: collection.name == "default"
-                        ? null
-                        : IconButton(
-                            onPressed: () => onRemoveCollection(collection),
-                            icon: const Icon(CupertinoIcons.minus),
-                          ),
-                    children: _buildWordsList(words[index]),
-                  );
-                },
+              child: Padding(
+                padding: EdgeInsets.all(SizeConfig.defaultPadding),
+                child: ListView.builder(
+                  itemCount: collections.length,
+                  itemBuilder: (context, index) {
+                    var collection = collections[index];
+                    var wordsLength = words[index].length;
+
+                    return GestureDetector(
+                      child: ExpansionTile(
+                        shape:
+                            const RoundedRectangleBorder(side: BorderSide.none),
+                        childrenPadding:
+                            EdgeInsets.all(SizeConfig.defaultPadding),
+                        trailing: const Text(''),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(collection.name[0].toUpperCase() +
+                                collection.name.substring(1)),
+                            wordsLength > 1
+                                ? Text('${words[index].length} words')
+                                : Text('${words[index].length} word'),
+                          ],
+                        ),
+                        children: _buildWordsList(words[index]),
+                      ),
+                      onLongPress: () {
+                        showGeneralDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          barrierLabel: MaterialLocalizations.of(context)
+                              .modalBarrierDismissLabel,
+                          barrierColor: Colors.black.withOpacity(0.5),
+                          transitionDuration: const Duration(milliseconds: 500),
+                          pageBuilder: (BuildContext context,
+                              Animation<double> animation,
+                              Animation<double> secondaryAnimation) {
+                            return AlertDialog(
+                              backgroundColor: COLOR_CONST.backgroundColor,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5))),
+                              title: Center(
+                                  child: Text(
+                                "Remove Collection",
+                                style: FONT_CONST.REGULAR_DEFAULT_16,
+                              )),
+                              content: const Text(
+                                  "Are you sure you want to remove this collection?"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("Cancel"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    // Dispatch remove word event here
+                                    homeBloc.add(
+                                      RemoveCollection(collection),
+                                    );
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("Remove"),
+                                ),
+                              ],
+                            );
+                          },
+                          transitionBuilder:
+                              (context, animation, secondaryAnimation, child) {
+                            return BackdropFilter(
+                              filter: ImageFilter.blur(
+                                sigmaX: 4 * animation.value,
+                                sigmaY: 4 * animation.value,
+                              ),
+                              child: FadeTransition(
+                                opacity: animation,
+                                child: child,
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             );
           }
@@ -104,9 +182,15 @@ class _HomeBodyState extends State<HomeBody> {
           title: Text(word.word),
           subtitle: Text(word.definition),
           onLongPress: () {
-            showDialog(
+            showGeneralDialog(
               context: context,
-              builder: (BuildContext context) {
+              barrierDismissible: false,
+              barrierLabel:
+                  MaterialLocalizations.of(context).modalBarrierDismissLabel,
+              barrierColor: Colors.black.withOpacity(0.5),
+              transitionDuration: const Duration(milliseconds: 500),
+              pageBuilder: (BuildContext context, Animation<double> animation,
+                  Animation<double> secondaryAnimation) {
                 return AlertDialog(
                   title: const Text("Confirm Removal"),
                   content:
@@ -131,6 +215,19 @@ class _HomeBodyState extends State<HomeBody> {
                       child: const Text("Remove"),
                     ),
                   ],
+                );
+              },
+              transitionBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return BackdropFilter(
+                  filter: ImageFilter.blur(
+                    sigmaX: 4 * animation.value,
+                    sigmaY: 4 * animation.value,
+                  ),
+                  child: FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  ),
                 );
               },
             );

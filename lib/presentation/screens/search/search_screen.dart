@@ -4,14 +4,17 @@ import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/constants/image_constant.dart';
+import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/daily_word_model.dart';
 import 'package:vocab_app/presentation/screens/search/search/search_screen_bloc.dart';
 import 'package:vocab_app/presentation/screens/search/search/search_screen_event.dart';
 import 'package:vocab_app/presentation/screens/search/search/search_screen_state.dart';
 import 'package:vocab_app/presentation/screens/search/widgets/search_bar.dart';
+import 'package:vocab_app/presentation/widgets/buttons/volume_icon.dart';
 import 'package:vocab_app/presentation/widgets/others/custom_list_tile.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
 import 'package:vocab_app/utils/translate.dart';
+import 'package:vocab_app/utils/utils.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -118,34 +121,40 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   _buildResults(ResultsLoaded state) {
-  List<WordModel> results = state.results;
-  
-  if (results.isNotEmpty) {
-    return ListView.builder(
-      padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultPadding),
-      physics: const BouncingScrollPhysics(),
-      itemCount: results.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(results[index].word),
-          subtitle: Text(results[index].definition),
-          onTap: () {
-            // Implement onTap action if needed
-          },
-        );
-      },
-    );
-  } else {
-    return Center(
-      child: Image.asset(
-        IMAGE_CONST.NOT_FOUND,
-        width: SizeConfig.defaultSize * 25,
-        height: SizeConfig.defaultSize * 25,
-      ),
-    );
-  }
-}
+    List<WordModel> words = state.wordResults;
 
+    if (words.isNotEmpty) {
+      return ListView.builder(
+        padding: EdgeInsets.symmetric(horizontal: SizeConfig.defaultPadding),
+        physics: const BouncingScrollPhysics(),
+        itemCount: words.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(words[index].word),
+            // subtitle: Column(
+            //   children: [
+            //     Text(words[index].definition),
+            //     SizedBox(height: SizeConfig.defaultSize * 5),
+            //     Text(words[index].id),
+            //   ],
+            // ),
+            onTap: () {
+              // Implement onTap action if needed
+              UtilDialog.showSeadrchDetail(context, index: index, words: words);
+            },
+          );
+        },
+      );
+    } else {
+      return Center(
+        child: Image.asset(
+          IMAGE_CONST.NOT_FOUND,
+          width: SizeConfig.defaultSize * 25,
+          height: SizeConfig.defaultSize * 25,
+        ),
+      );
+    }
+  }
 
   _buildSuggestionItem(String keyword) {
     return GestureDetector(
