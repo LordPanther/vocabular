@@ -10,6 +10,7 @@ import 'package:vocab_app/data/models/daily_word_model.dart';
 import 'package:vocab_app/presentation/screens/home_screen/bloc/home_bloc.dart';
 import 'package:vocab_app/presentation/screens/home_screen/bloc/home_event.dart';
 import 'package:vocab_app/utils/snackbar.dart';
+import 'package:vocab_app/utils/translate.dart';
 
 class WordTile extends StatelessWidget {
   final WordModel word;
@@ -44,11 +45,11 @@ class WordTile extends StatelessWidget {
           ),
           title: Center(
             child: Text(
-              "Confirmation",
+              Translate.of(context).translate("confirmation"),
               style: FONT_CONST.BOLD_DEFAULT_18,
             ),
           ),
-          content: const Text("Are you sure you want to remove this word?"),
+          content: Text(Translate.of(context).translate("word_remove")),
           actions: [
             IconButton(
               onPressed: () {
@@ -67,7 +68,7 @@ class WordTile extends StatelessWidget {
                       word: word));
                 } else {
                   UtilSnackBar.showSnackBarContent(context,
-                      content: "Default word cannot be deleted");
+                      content: Translate.of(context).translate("content_one"));
                 }
 
                 Navigator.of(context).pop();

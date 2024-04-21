@@ -65,13 +65,13 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
         /// Submitting
         if (state.isSubmitting) {
           UtilSnackBar.showSnackBarContent(context,
-              content: "Sending password reset email.");
+              content: Translate.of(context).translate("reset_email"));
         }
 
         /// Success
         if (state.isSuccess) {
           UtilSnackBar.showSnackBarContent(context,
-              content: "Password reset email sent successfully.");
+              content: Translate.of(context).translate("reset_send"));
           Navigator.pushReplacementNamed(context, AppRouter.NEW_PASSWORD);
         }
 
@@ -93,8 +93,8 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
             child: Form(
                 child: Column(
               children: [
-                const Text(
-                  "Don't worry! Please enter your email. We will send you a link to return to your account.",
+                Text(
+                  Translate.of(context).translate("reset_link"),
                 ),
                 SizedBox(height: SizeConfig.defaultSize * 5),
                 _buildEmailFormField(),

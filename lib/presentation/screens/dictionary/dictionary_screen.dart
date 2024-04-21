@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vocab_app/utils/translate.dart';
 
 class DictionaryScreen extends StatefulWidget {
   const DictionaryScreen({super.key});
@@ -10,12 +11,12 @@ class DictionaryScreen extends StatefulWidget {
 class _DictionaryScreenState extends State<DictionaryScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
-            child: Text("Dictionary"),
+            child: Text(Translate.of(context).translate("dictionary")),
           ),
         ],
       ),

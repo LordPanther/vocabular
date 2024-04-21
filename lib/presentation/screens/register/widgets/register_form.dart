@@ -95,7 +95,7 @@ class _RegisterFormState extends State<RegisterForm> {
         /// Success
         if (state.isSuccess) {
           UtilSnackBar.showSnackBarContent(context,
-              content: "Profile created successfully");
+              content: Translate.of(context).translate('profile_created'));
           Navigator.pushNamed(context, AppRouter.VERIFY_USER, arguments: user);
         }
 

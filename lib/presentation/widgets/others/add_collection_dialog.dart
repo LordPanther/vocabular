@@ -58,7 +58,7 @@ class _AddCollectionDialogState extends State<AddCollectionDialog> {
       }
     } else {
       UtilSnackBar.showSnackBarContent(context,
-          content: "Enter collection first...");
+          content: Translate.of(context).translate("collection_alert"));
     }
   }
 
@@ -73,7 +73,7 @@ class _AddCollectionDialogState extends State<AddCollectionDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(height: SizeConfig.defaultSize * 3),
-          _buildHeaderText("Add new collection..."),
+          _buildHeaderText(Translate.of(context).translate("new_collection")),
           SizedBox(height: SizeConfig.defaultSize * 5),
           _buildTextFieldCollection(),
           SizedBox(height: SizeConfig.defaultSize * 3),
@@ -119,7 +119,7 @@ class _AddCollectionDialogState extends State<AddCollectionDialog> {
     return collectionExists
         ? Center(
             child: Text(
-              "Collection already exists",
+              Translate.of(context).translate("collection_exists"),
               style: FONT_CONST.BOLD_PRIMARY_18,
             ),
           )

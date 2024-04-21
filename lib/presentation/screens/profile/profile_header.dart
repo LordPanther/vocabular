@@ -11,6 +11,7 @@ import 'package:vocab_app/presentation/widgets/buttons/circle_icon_button.dart';
 import 'package:vocab_app/utils/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
+import 'package:vocab_app/utils/translate.dart';
 
 class ProfileHeader extends StatelessWidget {
   ProfileHeader({
@@ -37,7 +38,7 @@ class ProfileHeader extends StatelessWidget {
     } else {
       // ignore: use_build_context_synchronously
       UtilSnackBar.showSnackBarContent(context,
-          content: "No Image Path Recieved");
+          content: Translate.of(context).translate('no_image'));
     }
   }
 
@@ -77,7 +78,8 @@ class ProfileHeader extends StatelessWidget {
               }),
             );
           }
-          return const Center(child: Text("Something went wrongs."));
+          return Center(
+              child: Text(Translate.of(context).translate('error_one')));
         },
       ),
     );

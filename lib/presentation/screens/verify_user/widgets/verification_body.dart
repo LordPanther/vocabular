@@ -49,13 +49,13 @@ class _VerificationBodyState extends State<VerificationBody> {
         /// Submitting
         if (state.isSubmitting) {
           UtilSnackBar.showSnackBarContent(context,
-              content: "Verification email has been sent");
+              content: Translate.of(context).translate('verification_sent'));
         }
 
         /// Success
         if (state.isSuccess) {
           UtilSnackBar.showSnackBarContent(context,
-              content: "Email has been verified succesfully");
+              content: Translate.of(context).translate('verification'));
           BlocProvider.of<AuthenticationBloc>(context).add(LogIn());
         }
 
@@ -75,7 +75,7 @@ class _VerificationBodyState extends State<VerificationBody> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Thank you for joining the Vocabular family. Do not forget to verify your profile later by clicking on the link we sent to the provided email address. If you cannot see the link check your Spam folder or re-verify.",
+                  Translate.of(context).translate('verification_note'),
                   style: FONT_CONST.MEDIUM_DEFAULT_18,
                   textAlign: TextAlign.justify,
                 ),

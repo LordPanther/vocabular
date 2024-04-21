@@ -63,9 +63,11 @@ class _SearchScreenState extends State<SearchScreen> {
           return _buildResults(state);
         }
         if (state is SearchFailure) {
-          return const Center(child: Text("Load Failure"));
+          return Center(
+              child: Text(Translate.of(context).translate('error_three')));
         }
-        return const Center(child: Text("Something went wrongs."));
+        return Center(
+            child: Text(Translate.of(context).translate('error_one')));
       },
     );
   }

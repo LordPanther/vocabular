@@ -10,6 +10,7 @@ import 'package:vocab_app/presentation/screens/home_screen/bloc/bloc.dart';
 import 'package:vocab_app/presentation/widgets/others/collection_tile.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
 import 'package:vocab_app/utils/snackbar.dart';
+import 'package:vocab_app/utils/translate.dart';
 
 class HomeBody extends StatefulWidget {
   final Function(List<CollectionModel>) sendCollections;
@@ -61,7 +62,8 @@ class _HomeBodyState extends State<HomeBody> {
               ),
             );
           }
-          return const Center(child: Text("Load failure or error state"));
+          return Center(
+              child: Text(Translate.of(context).translate("error_three")));
         },
       ),
     );
@@ -84,12 +86,11 @@ class _HomeBodyState extends State<HomeBody> {
           ),
           title: Center(
             child: Text(
-              "Confirmation",
+              Translate.of(context).translate('confirmation'),
               style: FONT_CONST.BOLD_DEFAULT_18,
             ),
           ),
-          content:
-              const Text("Are you sure you want to remove this collection?"),
+          content: Text(Translate.of(context).translate('collection_remove')),
           actions: [
             IconButton(
               onPressed: () {
@@ -101,12 +102,10 @@ class _HomeBodyState extends State<HomeBody> {
               onPressed: () {
                 // Dispatch remove word event here
                 if (collection.name != "default") {
-                  context.watch<HomeBloc>().add(
-                        RemoveCollection(collection: collection),
-                      );
+                  homeBloc.add(RemoveCollection(collection: collection));
                 } else {
                   UtilSnackBar.showSnackBarContent(context,
-                      content: "Default collection cannot be deleted");
+                      content: Translate.of(context).translate('content_two'));
                 }
 
                 Navigator.of(context).pop();

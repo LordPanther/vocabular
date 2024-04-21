@@ -70,7 +70,7 @@ class _NewPasswordFormState extends State<NewPasswordForm> {
         /// Success
         if (state.isSuccess) {
           UtilSnackBar.showSnackBarContent(context,
-              content: "Password reset successfully");
+              content: Translate.of(context).translate('password_reset'));
           Navigator.pushNamed(context, AppRouter.CONFIRM_PASSWORD_RESET);
         }
 
@@ -108,10 +108,8 @@ class _NewPasswordFormState extends State<NewPasswordForm> {
   }
 
   _buildHeaderText() {
-    return const Center(
-      child: Text(
-        "Please enter a new password.This will be your new password from now onwards.",
-      ),
+    return Center(
+      child: Text(Translate.of(context).translate('new_password')),
     );
   }
 

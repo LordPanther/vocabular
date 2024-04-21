@@ -37,7 +37,7 @@ class _AddCollectionBodyState extends State<AddCollectionBody> {
       BlocProvider.of<HomeBloc>(context).add(LoadHome());
     } else {
       UtilSnackBar.showSnackBarContent(context,
-          content: "Please add a collection...");
+          content: Translate.of(context).translate("enter_collection"));
     }
   }
 
@@ -59,7 +59,7 @@ class _AddCollectionBodyState extends State<AddCollectionBody> {
       listener: (context, state) {
         if (state is CollectionAdded) {
           UtilSnackBar.showSnackBarContent(context,
-              content: "Collection Added...");
+              content: Translate.of(context).translate("collection_added"));
           Navigator.popAndPushNamed(context, AppRouter.HOME,
               arguments: {state.collection});
         }
@@ -86,7 +86,7 @@ class _AddCollectionBodyState extends State<AddCollectionBody> {
               ),
               child: Column(
                 children: [
-                  _buildHeaderText("Add new collection..."),
+                  _buildHeaderText(),
                   SizedBox(height: SizeConfig.defaultSize * 5),
                   _buildCollectionTextField(),
                   SizedBox(height: SizeConfig.defaultSize * 3),
@@ -99,22 +99,22 @@ class _AddCollectionBodyState extends State<AddCollectionBody> {
           }
 
           if (state is CollectionAddFailure) {
-            return const Center(
-              child: Text("Load failure"),
+            return Center(
+              child: Text(Translate.of(context).translate("error_three")),
             );
           }
-          return const Center(
-            child: Text("Something went wrong."),
+          return Center(
+            child: Text(Translate.of(context).translate("error_one")),
           );
         },
       ),
     );
   }
 
-  Widget _buildHeaderText(String userOption) {
+  Widget _buildHeaderText() {
     return Center(
       child: Text(
-        userOption,
+        Translate.of(context).translate("add_new_collection"),
         style: FONT_CONST.BOLD_DEFAULT_18,
       ),
     );
@@ -148,7 +148,7 @@ class _AddCollectionBodyState extends State<AddCollectionBody> {
 
   Widget _buildCollectionDropdown(List<String> collections) {
     return DropdownSelectionList(
-      action: "View your collections",
+      action: Translate.of(context).translate("view_collections"),
       items: collections,
       onItemSelected: (String? selecteItem) {},
     );

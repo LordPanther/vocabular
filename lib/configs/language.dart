@@ -7,6 +7,7 @@ class AppLanguage {
   /// List language is supported in application
   static List<Locale> supportLanguage = [
     const Locale("en"),
+    const Locale("zu"),
   ];
 
   ///Singleton factory

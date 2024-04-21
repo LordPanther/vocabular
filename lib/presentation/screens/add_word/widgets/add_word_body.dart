@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +17,8 @@ import 'package:vocab_app/presentation/widgets/others/loading.dart';
 import 'package:vocab_app/utils/dialog.dart';
 import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
+import 'package:record/record.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class AddWordBody extends StatefulWidget {
   const AddWordBody({super.key});
@@ -26,6 +29,9 @@ class AddWordBody extends StatefulWidget {
 
 class _AddWordBodyState extends State<AddWordBody> {
   late WordBloc wordBloc;
+  late Record audioRecord;
+  String audioPath = '';
+  late AudioPlayer audioPlayer;
   final TextEditingController word = TextEditingController();
   final TextEditingController definition = TextEditingController();
   String? collection;
@@ -38,22 +44,34 @@ class _AddWordBodyState extends State<AddWordBody> {
   void initState() {
     wordBloc = BlocProvider.of<WordBloc>(context);
     super.initState();
+    audioPlayer = AudioPlayer();
+    audioRecord = Record();
   }
 
-  void _startLoading() {
+  Future<void> _startLoading() async {
     _isLoading = true;
     _progress = 0.0;
     const duration = Duration(minutes: 1); // Set duration to one minute
-    const steps = 60; // 60 steps for one minute
+    const steps = 60;
+    
+    try {
+      if (await audioRecord.hasPermission()) {
+        await audioRecord.start();
+      }
+    } catch (error) {
+      print(error);
+    }
 
     _timer = Timer.periodic(
       duration ~/ steps, // Calculate the interval for each step
       (timer) {
         setState(
-          () {
+          () async {
             _progress += 1 / steps; // Increment progress by a small fraction
-            if (_progress >= 1.0) {
+            if (_progress >= 1.0){
+              String? path = await audioRecord.stop();
               _stopLoading();
+              audioPath = path!;
             }
           },
         );
@@ -61,10 +79,12 @@ class _AddWordBodyState extends State<AddWordBody> {
     );
   }
 
-  void _stopLoading() {
+  Future<void> _stopLoading() async {
+    String? path = await audioRecord.stop();
     _timer.cancel();
     _isLoading = false;
     _progress = 0.0;
+    audioPath = path!;
   }
 
   bool get isWordPopulated => word.text.isNotEmpty;
@@ -85,15 +105,15 @@ class _AddWordBodyState extends State<AddWordBody> {
     } else {
       if (!isWordPopulated) {
         UtilSnackBar.showSnackBarContent(context,
-            content: "Please add a word first...");
+            content: Translate.of(context).translate("word_checker"));
       }
       if (!isDefinitionPopulated) {
         UtilSnackBar.showSnackBarContent(context,
-            content: "Please add a definition first...");
+            content: Translate.of(context).translate("definition_checker"));
       }
       if (collection == null) {
         UtilSnackBar.showSnackBarContent(context,
-            content: "Please select a collection...");
+            content: Translate.of(context).translate("collection_checker"));
       }
     }
   }
@@ -113,6 +133,8 @@ class _AddWordBodyState extends State<AddWordBody> {
     definition.dispose();
     _timer.cancel();
     super.dispose();
+    audioRecord.dispose();
+    audioPlayer.dispose();
   }
 
   @override
@@ -120,7 +142,8 @@ class _AddWordBodyState extends State<AddWordBody> {
     return BlocListener<WordBloc, WordState>(
       listener: (context, state) {
         if (state is WordAdded) {
-          UtilSnackBar.showSnackBarContent(context, content: "Word Added...");
+          UtilSnackBar.showSnackBarContent(context,
+              content: Translate.of(context).translate("word_added"));
           Navigator.popAndPushNamed(context, AppRouter.HOME,
               arguments: {state.word});
         }
@@ -143,7 +166,7 @@ class _AddWordBodyState extends State<AddWordBody> {
               ),
               child: Column(
                 children: [
-                  _buildHeaderText("Add new word..."),
+                  _buildHeaderText(),
                   SizedBox(height: SizeConfig.defaultSize * 5),
                   _buildWordTextField(),
                   SizedBox(height: SizeConfig.defaultSize * 3),
@@ -159,22 +182,22 @@ class _AddWordBodyState extends State<AddWordBody> {
             );
           }
           if (state is CollectionFailure) {
-            return const Center(
-              child: Text("Load failure"),
+            return Center(
+              child: Text(Translate.of(context).translate("error_three")),
             );
           }
-          return const Center(
-            child: Text("Something went wrong."),
+          return Center(
+            child: Text(Translate.of(context).translate("error_one")),
           );
         },
       ),
     );
   }
 
-  Widget _buildHeaderText(String userOption) {
+  Widget _buildHeaderText() {
     return Center(
       child: Text(
-        userOption,
+        Translate.of(context).translate("add_new_word"),
         style: FONT_CONST.BOLD_DEFAULT_18,
       ),
     );
@@ -258,7 +281,7 @@ class _AddWordBodyState extends State<AddWordBody> {
 
   Widget _buildCollectionDropdown(List<String> collections) {
     return DropdownSelectionList(
-      action: "Select a collection",
+      action: Translate.of(context).translate("select_collection"),
       items: collections,
       onItemSelected: (String? selectedItem) {
         setState(
@@ -274,9 +297,9 @@ class _AddWordBodyState extends State<AddWordBody> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        const Expanded(
+        Expanded(
           child: Text(
-            "Share this word with other users for free?",
+            Translate.of(context).translate("share_word"),
             overflow: TextOverflow.ellipsis,
           ),
         ),

@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:vocab_app/presentation/common_blocs/language/bloc.dart';
 import 'package:vocab_app/configs/config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
-import 'package:vocab_app/presentation/widgets/others/add_collection_dialog.dart';
 import 'package:vocab_app/presentation/widgets/others/custom_list_tile.dart';
 import 'package:vocab_app/utils/language.dart';
 import 'package:vocab_app/utils/dialog.dart';
@@ -37,7 +36,7 @@ class _SettingScreenState extends State<SettingScreen> {
               title: Translate.of(context).translate("collections"),
               leading: const Icon(CupertinoIcons.list_dash,
                   color: COLOR_CONST.textColor),
-              onPressed: () => _showCollectionDialog(),
+              onPressed: () => _showCollectionPage(),
             ),
             CustomListTile(
               title: Translate.of(context).translate("language"),
@@ -53,20 +52,19 @@ class _SettingScreenState extends State<SettingScreen> {
               title: Translate.of(context).translate("theme"),
               leading: const Icon(CupertinoIcons.color_filter,
                   color: COLOR_CONST.textColor),
+              onPressed: () => _showThemeDialog(),
             ),
+
           ],
         ),
       ),
     );
   }
 
-  void _showCollectionDialog() {
+  void _showThemeDialog() {}
+
+  void _showCollectionPage() {
     Navigator.pushNamed(context, AppRouter.COLLECTION);
-    // showDialog(
-    //     context: context,
-    //     builder: (BuildContext context) {
-    //       return const AddCollectionDialog();
-    //     });
   }
 
   void _showLanguageSetting() async {

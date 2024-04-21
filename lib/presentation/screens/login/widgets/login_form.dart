@@ -73,17 +73,17 @@ class _LoginFormState extends State<LoginForm> {
 
   void onFacebookLogin() {
     UtilSnackBar.showSnackBarContent(context,
-        content: "Button not yet supported");
+        content: Translate.of(context).translate('inactive_button'));
   }
 
   void onTwitterLogin() {
     UtilSnackBar.showSnackBarContent(context,
-        content: "Button not yet supported");
+        content: Translate.of(context).translate('inactive_button'));
   }
 
   void onAppleLogin() {
     UtilSnackBar.showSnackBarContent(context,
-        content: "Button not yet supported");
+        content: Translate.of(context).translate('inactive_button'));
   }
 
   @override
