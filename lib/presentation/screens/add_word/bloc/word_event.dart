@@ -20,4 +20,4 @@ class AddWord extends WordEvent {
   List<Object> get props => [collection, word];
 }
 
-class GetCollections extends WordEvent {}
+class LoadWordScreen extends WordEvent {}

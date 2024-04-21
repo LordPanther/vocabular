@@ -4,10 +4,11 @@ import 'package:vocab_app/configs/config.dart';
 
 class DropdownSelectionList extends StatefulWidget {
   final List<String> items;
+  final String action;
   final void Function(String?) onItemSelected;
 
   const DropdownSelectionList(
-      {super.key, required this.items, required this.onItemSelected});
+      {super.key, required this.action, required this.items, required this.onItemSelected});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -23,7 +24,7 @@ class _DropdownSelectionListState extends State<DropdownSelectionList> {
       underline: Container(),
       hint: Padding(
         padding: EdgeInsets.only(right: SizeConfig.defaultSize * 3),
-        child: const Text("Select a collection"),
+        child: Text(widget.action),
       ),
       icon: const Icon(CupertinoIcons.chevron_down),
       value: selectedItem,

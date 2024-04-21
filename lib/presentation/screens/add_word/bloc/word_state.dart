@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/daily_word_model.dart';
-import 'package:vocab_app/utils/collection_data.dart';
 
 abstract class WordState extends Equatable {
   const WordState();
@@ -24,10 +23,10 @@ class WordAdded extends WordState {
   }
 }
 
-class CollectionsRecieved extends WordState {
+class Loaded extends WordState {
   final List<CollectionModel> collections;
 
-  const CollectionsRecieved(this.collections);
+  const Loaded(this.collections);
 
   @override
   List<Object> get props => [collections];

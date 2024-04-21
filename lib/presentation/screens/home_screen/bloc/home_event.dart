@@ -46,7 +46,7 @@ class CreateCollection extends HomeEvent {
 class RemoveCollection extends HomeEvent {
   final CollectionModel collection;
 
-  const RemoveCollection(this.collection);
+  const RemoveCollection({required this.collection});
 
   @override
   List<Object> get props => [collection];

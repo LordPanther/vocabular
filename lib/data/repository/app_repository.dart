@@ -1,4 +1,4 @@
-import 'package:vocab_app/data/repository/collections_repository/firebase_collections_repo.dart';
+import 'package:vocab_app/data/repository/home_repository/firebase_home_repo.dart';
 import 'package:vocab_app/data/repository/feedback_repository/firebase_feedback_repo.dart';
 import 'package:vocab_app/data/repository/storage_repository/storage_repo.dart';
 import 'package:vocab_app/data/repository/user_repository/firebase_user_repo.dart';

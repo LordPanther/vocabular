@@ -46,7 +46,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     try {
       // Get image url from firebase storage
       String imageUrl = await _storageRepository.uploadImageFile(
-        "users/profile/${_loggedUser!.id}",
+        "vocabusers/profile/${_loggedUser!.id}",
         event.imageFile,
       );
       // Clone logged user with updated avatar

@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../models/user_model.dart';
 
 class FirebaseUserRepository implements UserRepository {
-  final _userCollection = FirebaseFirestore.instance.collection("users");
+  final _userCollection = FirebaseFirestore.instance.collection("vocabusers");
 
   @override
   Stream<UserModel> loggedUserStream(User loggedFirebaseUser) {

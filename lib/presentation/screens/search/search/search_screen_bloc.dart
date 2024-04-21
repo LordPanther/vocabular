@@ -3,7 +3,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:vocab_app/data/local/pref.dart';
 import 'package:vocab_app/data/models/daily_word_model.dart';
 import 'package:vocab_app/data/repository/app_repository.dart';
-import 'package:vocab_app/data/repository/collections_repository/collections_repo.dart';
+import 'package:vocab_app/data/repository/home_repository/home_repo.dart';
 import 'package:vocab_app/presentation/screens/search/search/search_screen_event.dart';
 import 'package:vocab_app/presentation/screens/search/search/search_screen_state.dart';
 import 'package:vocab_app/utils/collection_data.dart';

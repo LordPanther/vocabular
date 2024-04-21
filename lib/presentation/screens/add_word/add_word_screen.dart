@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vocab_app/presentation/screens/add_word/bloc/word_bloc.dart';
+import 'package:vocab_app/presentation/screens/add_word/bloc/bloc.dart';
 import 'package:vocab_app/presentation/screens/add_word/widgets/add_word_body.dart';
 import 'package:vocab_app/presentation/screens/add_word/widgets/add_word_header.dart';
 
@@ -15,7 +15,7 @@ class _AddWordScreenState extends State<AddWordScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => WordBloc(),
+      create: (context) => WordBloc()..add(LoadWordScreen()),
       child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Builder(

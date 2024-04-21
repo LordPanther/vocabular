@@ -48,8 +48,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     CollectionModel collection = event.collection;
     bool shareWord = event.shareWord;
     try {
-      await _collectionsRepository.addNewWord(
-          collection, word, shareWord);
+      await _collectionsRepository.addWord(collection, word, shareWord);
       await _mapLoadHomeToMap(event, emit);
     } catch (error) {
       emit(HomeLoadFailure(error.toString()));
@@ -61,7 +60,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     CollectionModel collection = event.collection;
     try {
       bool collectionExists =
-          await _collectionsRepository.createCollection(collection);
+          await _collectionsRepository.addCollection(collection);
       await _mapLoadHomeToMap(event, emit);
 
       if (collectionExists) {
@@ -82,7 +81,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     try {
       await _collectionsRepository.removeCollection(collection);
       await _mapLoadHomeToMap(event, emit);
-      // emit(CollectionRemoved());
     } catch (error) {
       emit(CollectionRemovalFailure(error.toString()));
     }

@@ -3,19 +3,16 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vocab_app/configs/router.dart';
-import 'package:vocab_app/configs/size_config.dart';
+import 'package:vocab_app/configs/config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/daily_word_model.dart';
-import 'package:vocab_app/data/repository/app_repository.dart';
-import 'package:vocab_app/data/repository/collections_repository/collections_repo.dart';
 import 'package:vocab_app/presentation/screens/add_word/bloc/bloc.dart';
+import 'package:vocab_app/presentation/screens/home_screen/bloc/bloc.dart';
 import 'package:vocab_app/presentation/widgets/buttons/record_button.dart';
 import 'package:vocab_app/presentation/widgets/others/dropdown_list.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
-import 'package:vocab_app/utils/collection_data.dart';
 import 'package:vocab_app/utils/dialog.dart';
 import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
@@ -29,13 +26,10 @@ class AddWordBody extends StatefulWidget {
 
 class _AddWordBodyState extends State<AddWordBody> {
   late WordBloc wordBloc;
-  CollectionsRepository collectionsRepository =
-      AppRepository.collectionsRepository;
-  late List<String> dropdownCollection;
   final TextEditingController word = TextEditingController();
   final TextEditingController definition = TextEditingController();
   String? collection;
-  bool isChecked = false;
+  bool isShared = false;
   double _progress = 0.0;
   bool _isLoading = false;
   late Timer _timer;
@@ -43,8 +37,6 @@ class _AddWordBodyState extends State<AddWordBody> {
   @override
   void initState() {
     wordBloc = BlocProvider.of<WordBloc>(context);
-    dropdownCollection = [];
-    fetchCollections();
     super.initState();
   }
 
@@ -75,18 +67,6 @@ class _AddWordBodyState extends State<AddWordBody> {
     _progress = 0.0;
   }
 
-  void fetchCollections() {
-    /// Fetch collections
-    wordBloc.add(GetCollections());
-
-    // List<CollectionModel> passedCollections = collectionData.collections;
-
-    // setState(() {
-    //   dropdownCollection =
-    //       passedCollections.map((collection) => collection.name).toList();
-    // });
-  }
-
   bool get isWordPopulated => word.text.isNotEmpty;
   bool get isDefinitionPopulated => definition.text.isNotEmpty;
 
@@ -99,8 +79,9 @@ class _AddWordBodyState extends State<AddWordBody> {
       );
       var newCollection = CollectionModel(name: collection!);
       wordBloc.add(
-          AddWord(collection: newCollection, word: newWord, share: isChecked));
-      Navigator.popAndPushNamed(context, AppRouter.HOME);
+          AddWord(collection: newCollection, word: newWord, share: isShared));
+      BlocProvider.of<HomeBloc>(context).add(LoadHome());
+      // Navigator.popAndPushNamed(context, AppRouter.HOME);
     } else {
       if (!isWordPopulated) {
         UtilSnackBar.showSnackBarContent(context,
@@ -130,7 +111,7 @@ class _AddWordBodyState extends State<AddWordBody> {
   void dispose() {
     word.dispose();
     definition.dispose();
-    if (_timer.isActive) _timer.cancel();
+    _timer.cancel();
     super.dispose();
   }
 
@@ -140,6 +121,8 @@ class _AddWordBodyState extends State<AddWordBody> {
       listener: (context, state) {
         if (state is WordAdded) {
           UtilSnackBar.showSnackBarContent(context, content: "Word Added...");
+          Navigator.popAndPushNamed(context, AppRouter.HOME,
+              arguments: {state.word});
         }
 
         if (state is WordAddFailure) {
@@ -151,7 +134,7 @@ class _AddWordBodyState extends State<AddWordBody> {
           if (state is Initial) {
             return const Loading();
           }
-          if (state is CollectionsRecieved) {
+          if (state is Loaded) {
             var collections =
                 state.collections.map((collection) => collection.name).toList();
             return Padding(
@@ -162,9 +145,9 @@ class _AddWordBodyState extends State<AddWordBody> {
                 children: [
                   _buildHeaderText("Add new word..."),
                   SizedBox(height: SizeConfig.defaultSize * 5),
-                  _buildTextFieldWord(),
+                  _buildWordTextField(),
                   SizedBox(height: SizeConfig.defaultSize * 3),
-                  _buildTextFieldDefinition(),
+                  _buildTextFieldWithRecordButton(),
                   SizedBox(height: SizeConfig.defaultSize * 1),
                   _buildCollectionDropdown(collections),
                   SizedBox(height: SizeConfig.defaultSize * 3),
@@ -197,7 +180,7 @@ class _AddWordBodyState extends State<AddWordBody> {
     );
   }
 
-  Widget _buildTextFieldWord() {
+  Widget _buildWordTextField() {
     return TextFormField(
       style: TextStyle(
         color: COLOR_CONST.textColor,
@@ -213,59 +196,23 @@ class _AddWordBodyState extends State<AddWordBody> {
         labelStyle: const TextStyle(color: COLOR_CONST.textColor),
         focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(
-            color: COLOR_CONST.textColor,
+            color: COLOR_CONST.primaryColor,
           ),
         ),
         enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: COLOR_CONST.textColor),
+          borderSide: BorderSide(color: COLOR_CONST.primaryColor),
         ),
       ),
     );
   }
 
-  Widget _buildCollectionDropdown(List<String> collections) {
-    return DropdownSelectionList(
-      items: collections,
-      onItemSelected: (String? selectedItem) {
-        setState(() {
-          collection = selectedItem;
-        });
-      },
-    );
-  }
-
-  Widget _buildTextFieldDefinition() {
+  Widget _buildTextFieldWithRecordButton() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 40),
+      padding: EdgeInsets.only(bottom: SizeConfig.defaultSize * 4),
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          TextFormField(
-            style: TextStyle(
-              color: COLOR_CONST.textColor,
-              fontSize: SizeConfig.defaultSize * 1.6,
-            ),
-            maxLines: 4,
-            cursorColor: COLOR_CONST.textColor,
-            textInputAction: TextInputAction.next,
-            controller: definition,
-            autovalidateMode: AutovalidateMode.always,
-            keyboardType: TextInputType.multiline,
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.symmetric(
-                vertical: SizeConfig.defaultSize,
-                horizontal: SizeConfig.defaultSize * 1.5,
-              ),
-              labelText: Translate.of(context).translate('add_definition'),
-              labelStyle: const TextStyle(color: COLOR_CONST.textColor),
-              focusedBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: COLOR_CONST.textColor),
-              ),
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: COLOR_CONST.textColor),
-              ),
-            ),
-          ),
+          _buildTextField(),
           Positioned(
             bottom: SizeConfig.defaultSize * -5,
             right: SizeConfig.defaultSize * 13,
@@ -280,37 +227,69 @@ class _AddWordBodyState extends State<AddWordBody> {
     );
   }
 
-  // Widget _recordingIndicator() {
-  //   if (_isLoading) {
-  //     return LinearProgressIndicator(
-  //       value: _progress,
-  //       backgroundColor: COLOR_CONST.backgroundColor,
-  //       valueColor:
-  //           const AlwaysStoppedAnimation<Color>(COLOR_CONST.primaryColor),
-  //     );
-  //   } else {
-  //     return const SizedBox(); // Return an empty widget when not recording
-  //   }
-  // }
+  Widget _buildTextField() {
+    return TextFormField(
+      style: TextStyle(
+        color: COLOR_CONST.textColor,
+        fontSize: SizeConfig.defaultSize * 1.6,
+      ),
+      maxLines: 4,
+      cursorColor: COLOR_CONST.textColor,
+      textInputAction: TextInputAction.next,
+      controller: definition,
+      autovalidateMode: AutovalidateMode.always,
+      keyboardType: TextInputType.multiline,
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(
+          vertical: SizeConfig.defaultSize,
+          horizontal: SizeConfig.defaultSize * 1.5,
+        ),
+        labelText: Translate.of(context).translate('add_definition'),
+        labelStyle: const TextStyle(color: COLOR_CONST.textColor),
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: COLOR_CONST.primaryColor),
+        ),
+        enabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: COLOR_CONST.primaryColor),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCollectionDropdown(List<String> collections) {
+    return DropdownSelectionList(
+      action: "Select a collection",
+      items: collections,
+      onItemSelected: (String? selectedItem) {
+        setState(
+          () {
+            collection = selectedItem;
+          },
+        );
+      },
+    );
+  }
 
   Widget _buildCheckbox() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Checkbox(
-          value: isChecked,
-          onChanged: (bool? value) {
-            setState(() {
-              isChecked = value!;
-            });
-          },
-        ),
-        const SizedBox(width: 10),
         const Expanded(
           child: Text(
             "Share this word with other users for free?",
             overflow: TextOverflow.ellipsis,
           ),
+        ),
+        const SizedBox(width: 10),
+        Checkbox(
+          value: isShared,
+          onChanged: (value) {
+            setState(
+              () {
+                isShared = value!;
+              },
+            );
+          },
         ),
       ],
     );
@@ -322,7 +301,10 @@ class _AddWordBodyState extends State<AddWordBody> {
       children: [
         IconButton(
           onPressed: onAddWord,
-          icon: const Icon(CupertinoIcons.arrow_right),
+          icon: Icon(
+            CupertinoIcons.arrow_right,
+            size: SizeConfig.defaultSize * 3,
+          ),
         ),
       ],
     );

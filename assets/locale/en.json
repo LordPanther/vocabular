@@ -60,5 +60,6 @@
   "login_form": "Add a new word...",
   "add": "Add",
   "add_definition": "Definition",
-  "add_word": "Word"
+  "add_word": "Word",
+  "collection_name": "Add Collection"
 }

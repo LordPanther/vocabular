@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/models.dart';
-import 'package:vocab_app/data/repository/collections_repository/collections_repo.dart';
+import 'package:vocab_app/data/repository/home_repository/home_repo.dart';
 import 'package:vocab_app/utils/collection_data.dart';
 
 class FirebaseCollectionsRepository implements CollectionsRepository {
@@ -28,7 +28,7 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
 
     try {
       // Create default collection
-      await addNewWord(collection, word, sharedWord);
+      await addWord(collection, word, sharedWord);
     } catch (error) {
       if (kDebugMode) {
         print(error);
@@ -39,7 +39,8 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
   /// [CollectionsBloc]
   /// Add collection to collections
   @override
-  Future<bool> createCollection(CollectionModel newCollection) async {
+  Future<bool> addCollection(
+      CollectionModel newCollection) async {
     // bool collectionExists = false;
 
     CollectionData collectionData = await fetchCollections();
@@ -54,12 +55,12 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
   }
 
   @override
-  Future<void> addNewWord(
+  Future<void> addWord(
       CollectionModel collection, WordModel word, bool shareWord) async {
     User? user = _firebaseAuth.currentUser;
     try {
       await _userCollection
-          .collection("users")
+          .collection("vocabusers")
           .doc(user!.uid)
           .collection("collections")
           .doc(collection.name)
@@ -76,7 +77,7 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
     User? user = _firebaseAuth.currentUser;
     try {
       await _userCollection
-          .collection("users")
+          .collection("vocabusers")
           .doc(user!.uid)
           .collection("collections")
           .doc(collection.name)
@@ -94,7 +95,7 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
 
     try {
       await _userCollection
-          .collection("users")
+          .collection("vocabusers")
           .doc(user!.uid)
           .collection("collections")
           .doc(collection.name)
@@ -113,7 +114,7 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
     List<CollectionModel> userCollections = [];
     List<List<WordModel>> userWords = [];
     var snapshot = await _userCollection
-        .collection("users")
+        .collection("vocabusers")
         .doc(user!.uid)
         .collection("collections")
         .get();
@@ -133,7 +134,7 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
   // Future<CollectionModel> fetchCollection() async {
   //   User? user = _firebaseAuth.currentUser;
   //   var doc = await _userCollection
-  //       .collection("users")
+  //       .collection("vocabusers")
   //       .doc(user!.uid)
   //       .collection("collections")
   //       .doc()
@@ -150,7 +151,7 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
 
     try {
       var snapshot = await _userCollection
-          .collection("users")
+          .collection("vocabusers")
           .doc(user!.uid)
           .collection("collections")
           .doc(doc.id)
@@ -180,7 +181,7 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
 
     try {
       await _userCollection
-          .collection("users")
+          .collection("vocabusers")
           .doc(user!.uid)
           .collection("collections")
           .doc(collection.name)

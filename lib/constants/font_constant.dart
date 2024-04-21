@@ -82,7 +82,7 @@ class FONT_CONST {
       MEDIUM_WHITE.copyWith(fontSize: SizeConfig.defaultSize * 2);
 
   //BOLD
-  static final BOLD_BLACK = BOLD.copyWith(color: COLOR_CONST.backgroundColor);
+  static final BOLD_BLACK = BOLD.copyWith(color: Colors.black);
   static final BOLD_BLACK_16 =
       BOLD_BLACK.copyWith(fontSize: SizeConfig.defaultSize * 1.6);
   static final BOLD_BLACK_18 =

@@ -61,11 +61,12 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   void _showCollectionDialog() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return const AddCollectionDialog();
-        });
+    Navigator.pushNamed(context, AppRouter.COLLECTION);
+    // showDialog(
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       return const AddCollectionDialog();
+    //     });
   }
 
   void _showLanguageSetting() async {

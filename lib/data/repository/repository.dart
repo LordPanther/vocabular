@@ -6,4 +6,4 @@ export 'feedback_repository/feedback_repo.dart';
 export 'feedback_repository/firebase_feedback_repo.dart';
 export 'storage_repository/storage_repo.dart';
 export 'app_repository.dart';
-export 'collections_repository/collections_repo.dart';
+export 'home_repository/home_repo.dart';

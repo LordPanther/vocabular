@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:vocab_app/bottom_navigation.dart';
+import 'package:vocab_app/presentation/screens/add_collection/add_collection_screen.dart';
 import 'package:vocab_app/presentation/screens/add_word/add_word_screen.dart';
 import 'package:vocab_app/presentation/screens/profile/profile_screen.dart';
 import 'package:vocab_app/presentation/screens/search/search_screen.dart';
@@ -30,6 +31,7 @@ class AppRouter {
   static const String PROFILE = '/profile';
   static const String SEARCH = '/search';
   static const String WORD = '/word';
+  static const String COLLECTION = '/collection';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -72,6 +74,10 @@ class AppRouter {
       case SETTINGS:
         return MaterialPageRoute(
           builder: (_) => const SettingScreen(),
+        );
+      case COLLECTION:
+        return MaterialPageRoute(
+          builder: (_) => const CollectionScreen(),
         );
       case PROFILE:
         return MaterialPageRoute(

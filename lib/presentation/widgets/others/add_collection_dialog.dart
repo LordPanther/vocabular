@@ -1,15 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vocab_app/configs/router.dart';
-import 'package:vocab_app/configs/size_config.dart';
-import 'package:vocab_app/constants/color_constant.dart';
+import 'package:vocab_app/configs/config.dart';
 import 'package:vocab_app/constants/constants.dart';
-import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/repository/app_repository.dart';
-import 'package:vocab_app/data/repository/collections_repository/collections_repo.dart';
-import 'package:vocab_app/presentation/screens/home_screen/bloc/bloc.dart';
+import 'package:vocab_app/data/repository/home_repository/home_repo.dart';
 import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
 
@@ -54,7 +49,7 @@ class _AddCollectionDialogState extends State<AddCollectionDialog> {
         CollectionModel collectionModel = CollectionModel(
           name: collection.text,
         );
-        await collectionsRepository.createCollection(collectionModel);
+        await collectionsRepository.addCollection(collectionModel);
         Navigator.of(context).popAndPushNamed(AppRouter.HOME);
       } else {
         setState(() {
@@ -70,10 +65,14 @@ class _AddCollectionDialogState extends State<AddCollectionDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(SizeConfig.defaultSize)),
+      ),
       content: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
+          SizedBox(height: SizeConfig.defaultSize * 3),
           _buildHeaderText("Add new collection..."),
           SizedBox(height: SizeConfig.defaultSize * 5),
           _buildTextFieldCollection(),
@@ -110,9 +109,9 @@ class _AddCollectionDialogState extends State<AddCollectionDialog> {
           labelStyle: const TextStyle(color: COLOR_CONST.textColor),
           // prefixIcon: const Icon(Icons.email_outlined, color: Colors.white),
           focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: COLOR_CONST.textColor)),
+              borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
           enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: COLOR_CONST.textColor))),
+              borderSide: BorderSide(color: COLOR_CONST.primaryColor))),
     );
   }
 
@@ -133,7 +132,7 @@ class _AddCollectionDialogState extends State<AddCollectionDialog> {
       children: [
         IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(CupertinoIcons.arrow_left),
+          icon: const Icon(CupertinoIcons.xmark),
         ),
         IconButton(
           onPressed: onCreateCollection,

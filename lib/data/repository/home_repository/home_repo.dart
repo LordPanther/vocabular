@@ -8,10 +8,10 @@ abstract class CollectionsRepository {
   Future<void> createDefaultCollection(UserModel updatedUserDetails);
 
   /// Create a new collection in UI
-  Future<bool> createCollection(CollectionModel collection);
+  Future<bool> addCollection(CollectionModel collection);
 
   /// Add a new word [word]
-  Future<void> addNewWord(
+  Future<void> addWord(
       CollectionModel collection, WordModel word, bool shareWord);
 
   /// Remove this word [word]
