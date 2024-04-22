@@ -1,0 +1,17 @@
+{
+  "trigger": true,
+  "modules": [
+    "email-filter-denylist",
+    "email-filter-allowlist"
+  ],
+  "parentResource": "vocabappe2cdcfa4",
+  "functionName": "vocabappe2cdcfa4PreSignup",
+  "resourceName": "vocabappe2cdcfa4PreSignup",
+  "parentStack": "auth",
+  "triggerEnvs": "[]",
+  "triggerDir": "/snapshot/amplify-cli/build/node_modules/@aws-amplify/amplify-category-auth/provider-utils/awscloudformation/triggers/PreSignup",
+  "triggerTemplate": "PreSignup.json.ejs",
+  "triggerEventPath": "PreSignup.event.json",
+  "roleName": "vocabappe2cdcfa4PreSignup",
+  "skipEdit": true
+}

@@ -1,0 +1,14 @@
+{
+  "resourceName": "v0cabappst0rag3",
+  "policyUUID": "1dfe1060",
+  "bucketName": "v0cabappbuck3t",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

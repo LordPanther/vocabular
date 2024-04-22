@@ -1,0 +1,34 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-vocabapp-dev-f91fb-authRole",
+      "UnauthRoleArn": "arn:aws:iam::339712861298:role/amplify-vocabapp-dev-f91fb-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::339712861298:role/amplify-vocabapp-dev-f91fb-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-vocabapp-dev-f91fb-deployment",
+      "UnauthRoleName": "amplify-vocabapp-dev-f91fb-unauthRole",
+      "StackName": "amplify-vocabapp-dev-f91fb",
+      "StackId": "arn:aws:cloudformation:us-east-1:339712861298:stack/amplify-vocabapp-dev-f91fb/051cdf60-00df-11ef-9368-0e903b650b2b",
+      "AmplifyAppId": "d2hjj8w5v9z0gr"
+    },
+    "categories": {
+      "auth": {
+        "vocabappe2cdcfa4": {}
+      },
+      "function": {
+        "vocabappe2cdcfa4CustomMessage": {
+          "REDIRECTURL": "https://yourdomain.com/path?emailVerificationSuccess=true",
+          "EMAILSUBJECT": "Thanks for Joining the Vocabular Family - Confirm Your Email to Complete Your Profile ",
+          "EMAILMESSAGE": "You`re just one step away from accessing all our exciting features."
+        },
+        "vocabappe2cdcfa4PostConfirmation": {
+          "GROUP": "vocabapp"
+        },
+        "vocabappe2cdcfa4PreSignup": {
+          "DOMAINALLOWLIST": "gmail.com, yahoo.com, outlook.com, icloud.com, mail.com, protonmail.com, aol.com, hotmail.com, msn.com, live.com, edu.com, org.com, company.com",
+          "DOMAINDENYLIST": ""
+        }
+      }
+    }
+  }
+}
