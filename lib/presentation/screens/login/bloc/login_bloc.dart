@@ -68,7 +68,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         emit(LoginState.success());
       } else {
         final message = _authRepository.authException;
-        emit(LoginState.failure(message));
+        emit(LoginState.failure(
+          "$message google",
+        ));
       }
     } catch (e) {
       final message = _authRepository.authException;

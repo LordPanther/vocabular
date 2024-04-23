@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
@@ -11,6 +12,7 @@ import 'package:vocab_app/presentation/widgets/others/collection_tile.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
 import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
+import 'package:vocab_app/utils/utils.dart';
 
 class HomeBody extends StatefulWidget {
   final Function(List<CollectionModel>) sendCollections;
@@ -23,11 +25,18 @@ class HomeBody extends StatefulWidget {
 
 class _HomeBodyState extends State<HomeBody> {
   late HomeBloc homeBloc;
+  bool _showDialog = false;
 
   @override
   void initState() {
     super.initState();
     homeBloc = BlocProvider.of<HomeBloc>(context);
+  }
+
+  @override
+  void dispose() {
+    _showDialog = false; // Reset flag on dispose
+    super.dispose();
   }
 
   @override
@@ -39,9 +48,13 @@ class _HomeBodyState extends State<HomeBody> {
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           if (state is HomeLoading) {
-            return const Loading();
+            _showDialog = true;
+            Timer(Duration.zero, () {
+              UtilDialog.showWaiting(context);
+            });
           }
           if (state is HomeLoaded) {
+            Navigator.of(context).pop();
             return Expanded(
               child: Padding(
                 padding: EdgeInsets.all(SizeConfig.defaultPadding),

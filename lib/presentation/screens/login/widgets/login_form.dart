@@ -98,13 +98,19 @@ class _LoginFormState extends State<LoginForm> {
 
         /// Failure
         if (state.isFailure) {
-          UtilDialog.hideWaiting(context);
-          UtilDialog.showInformation(context, content: state.message);
+          if (state.message!.split(" ").last == "google") {
+            print(state.message);
+            UtilDialog.hideWaiting(context);
+            Navigator.pushNamed(context, AppRouter.LOGIN);
+          } else {
+            UtilDialog.hideWaiting(context);
+            UtilDialog.showInformation(context, content: state.message);
+          }
         }
 
         /// Logging
         if (state.isSubmitting) {
-          // UtilDialog.showWaiting(context);
+          UtilDialog.showWaiting(context);
         }
       },
       child: BlocBuilder<LoginBloc, LoginState>(
@@ -306,7 +312,7 @@ class _LoginFormState extends State<LoginForm> {
 
   _buildGoogleButton(LoginState state) {
     return DefaultButton(
-      onPressed: () {},
+      onPressed: onGoogleLogin,
       child: Image.asset(IMAGE_CONST.GOOGLE_LOGO),
     );
   }

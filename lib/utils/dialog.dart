@@ -32,7 +32,10 @@ class UtilDialog {
         return AlertDialog(
           title: Row(
             children: [
-              GestureDetector(onTap: onTap,child: const CircularVolumeIcon(),),
+              GestureDetector(
+                onTap: onTap,
+                child: const CircularVolumeIcon(),
+              ),
               SizedBox(width: SizeConfig.defaultSize * 2),
               Text(word[0].toUpperCase() + word.substring(1)),
             ],
@@ -170,13 +173,7 @@ class UtilDialog {
       transitionDuration: const Duration(milliseconds: 500),
       pageBuilder: (BuildContext context, Animation<double> animation,
           Animation<double> secondaryAnimation) {
-        return AlertDialog(
-          content: Container(
-            height: 150,
-            alignment: Alignment.center,
-            child: const Loading(),
-          ),
-        );
+        return const Loading();
       },
       transitionBuilder: (context, animation, secondaryAnimation, child) {
         return BackdropFilter(

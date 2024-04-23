@@ -36,6 +36,7 @@ class _AppViewState extends State<AppView> {
   void initState() {
     CommonBloc.applicationBloc.add(SetupApplicationEvent());
     super.initState();
+    // _confirgureAmplify();
   }
 
   @override
