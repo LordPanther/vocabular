@@ -1,5 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:flutter/foundation.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/constants/image_constant.dart';
@@ -99,7 +100,9 @@ class _LoginFormState extends State<LoginForm> {
         /// Failure
         if (state.isFailure) {
           if (state.message!.split(" ").last == "google") {
-            print(state.message);
+            if (kDebugMode) {
+              print(state.message);
+            }
             UtilDialog.hideWaiting(context);
             Navigator.pushNamed(context, AppRouter.LOGIN);
           } else {

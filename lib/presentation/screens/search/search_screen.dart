@@ -1,19 +1,17 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/constants/image_constant.dart';
-import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/presentation/screens/search/search/search_screen_bloc.dart';
 import 'package:vocab_app/presentation/screens/search/search/search_screen_event.dart';
 import 'package:vocab_app/presentation/screens/search/search/search_screen_state.dart';
 import 'package:vocab_app/presentation/screens/search/widgets/search_bar.dart';
-import 'package:vocab_app/presentation/widgets/buttons/volume_icon.dart';
-import 'package:vocab_app/presentation/widgets/others/custom_list_tile.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
-import 'package:vocab_app/utils/translate.dart';
 import 'package:vocab_app/utils/utils.dart';
 
 class SearchScreen extends StatefulWidget {

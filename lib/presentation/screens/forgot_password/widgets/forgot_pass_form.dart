@@ -1,10 +1,10 @@
+
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:vocab_app/configs/router.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
-import 'package:vocab_app/data/models/user_model.dart';
 import 'package:vocab_app/presentation/widgets/buttons/default_button.dart';
 import 'package:vocab_app/utils/dialog.dart';
 import 'package:vocab_app/utils/snackbar.dart';

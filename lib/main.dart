@@ -9,6 +9,9 @@ import 'package:image_picker_platform_interface/image_picker_platform_interface.
 import 'app_view.dart';
 import 'configs/config.dart';
 
+     
+
+             
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = SimpleBlocObserver();
@@ -41,7 +44,7 @@ class MyApp extends StatelessWidget {
             },
           );
         },
-      ), 
+      ),
     );
   }
 }

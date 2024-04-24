@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
@@ -5,17 +7,17 @@ import 'dart:ui';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:vocab_app/configs/config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/word_model.dart';
-import 'package:vocab_app/data/repository/auth_repository/auth_repo.dart';
 import 'package:vocab_app/data/repository/repository.dart';
 import 'package:vocab_app/presentation/screens/add_word/bloc/bloc.dart';
-import 'package:vocab_app/presentation/screens/home_screen/bloc/bloc.dart';
 import 'package:vocab_app/presentation/widgets/buttons/record_button.dart';
 import 'package:vocab_app/presentation/widgets/others/dropdown_list.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
@@ -43,14 +45,13 @@ class _WordBodyState extends State<WordBody> {
   // Controllers/word
   final TextEditingController word = TextEditingController();
   final TextEditingController definition = TextEditingController();
-  String? collection;
+  String? _collection;
   bool isShared = false;
 
   // Audio recording global variables
   double _progress = 0.0;
   bool _isRecording = false;
-  // bool _isPlaying = false;
-  String? _audioPath = '';
+  String? _filePath = '';
 
   @override
   void initState() {
@@ -62,14 +63,22 @@ class _WordBodyState extends State<WordBody> {
 
   void record() {
     setState(() {
-      _isRecording = !_isRecording; // Toggle _isLoading state
       _isRecording
-          ? _startRecording()
-          : _stopRecording(); // Start or stop loading accordingly
+          ? _stopRecording() // Start or stop loading accordingly
+          : _startRecording();
     });
   }
 
+  Future<void> requestPermission() async {
+    bool permissionStatus = await audioRecord.hasPermission();
+    if (kDebugMode) {
+      print(permissionStatus);
+    }
+    setState(() {});
+  }
+
   Future<void> _startRecording() async {
+    await requestPermission();
     setState(() {
       _isRecording = true;
       _progress = 0.0;
@@ -80,10 +89,26 @@ class _WordBodyState extends State<WordBody> {
 
     try {
       if (await audioRecord.hasPermission()) {
-        await audioRecord.start();
+        Directory? directory;
+
+        if (Platform.isIOS) {
+          directory = await getApplicationDocumentsDirectory();
+        } else {
+          directory = Directory("/storage/emulated/0/Download/");
+          if (!directory.existsSync()) {
+            directory = (await getExternalStorageDirectory())!;
+          }
+        }
+        String recordingName = '${DateTime.now().millisecondsSinceEpoch}.m4a';
+        await audioRecord.start(path: '${directory.path}$recordingName');
+        if (kDebugMode) {
+          print("Recording...");
+        }
       }
     } catch (error) {
-      print(error);
+      if (kDebugMode) {
+        print(error);
+      }
     }
 
     _timer = Timer.periodic(
@@ -103,18 +128,21 @@ class _WordBodyState extends State<WordBody> {
 
   // Show popup upon stop recording
   Future<void> _stopRecording() async {
-    String? recordedFilePath = "";
-    recordedFilePath = await audioRecord.stop();
-    setState(() {
-      _timer.cancel();
-      _isRecording = false;
-      _progress = 0.0;
-      _audioPath = recordedFilePath;
-    });
-    _showRecordingDialog(_audioPath);
+    String? path = await audioRecord.stop();
+    if (kDebugMode) {
+      print("Recording stopped. Path: $path");
+    }
+    _timer.cancel();
+    setState(
+      () {
+        _isRecording = false;
+        _progress = 0.0;
+      },
+    );
+    _showRecordingDialog(path);
   }
 
-  void _showRecordingDialog(String? recordedFilePath) {
+  void _showRecordingDialog(String? path) {
     showGeneralDialog(
       context: context,
       barrierDismissible: false,
@@ -124,15 +152,25 @@ class _WordBodyState extends State<WordBody> {
       pageBuilder: (BuildContext context, Animation<double> animation,
           Animation<double> secondaryAnimation) {
         return RecordingDialog(
+          onPlayAudio: () {},
           onKeep: () {
-            _audioPath = recordedFilePath;
+            if (path!.isNotEmpty) {
+              _filePath = path;
+            } else {
+              if (kDebugMode) {
+                print("File path: $path");
+              }
+            }
             Navigator.of(context).pop();
           },
           onDiscard: () async {
-            if (_audioPath != null) {
-              File localFile = File(_audioPath!);
+            if (path?.isNotEmpty ?? false) {
+              File localFile = File(_filePath!);
               if (await localFile.exists()) {
                 await localFile.delete();
+                if (kDebugMode) {
+                  print("File deleted");
+                }
                 Navigator.of(context).pop();
                 UtilSnackBar.showSnackBarContent(context,
                     content: "Deleted audio file");
@@ -171,26 +209,22 @@ class _WordBodyState extends State<WordBody> {
   bool get isDefinitionPopulated => definition.text.isNotEmpty;
 
   void onAddWord() async {
-    File? audioFile = File(_audioPath!);
+    File? audioFile = File(_filePath!);
     User? user = _authRepository.loggedFirebaseUser;
-    if (isWordPopulated && isDefinitionPopulated && collection != null) {
+    if (isWordPopulated && isDefinitionPopulated && _collection != null) {
       String audioUrl = await _storageRepository.uploadAudioFile(
-        "vocabusers/audio/${user.uid}/$collection/$word",
+        word.text,
+        "vocabusers/audio/${user.uid}/$_collection",
         audioFile,
       );
       var newWord = WordModel(
-          id: collection!,
+          id: _collection!,
           definition: definition.text,
           word: word.text,
           audioUrl: audioUrl);
-      var newCollection = CollectionModel(name: collection!);
-      wordBloc.add(AddWord(
-          collection: newCollection,
-          word: newWord,
-          share: isShared));
-      print("Word added successfully");
-      // BlocProvider.of<HomeBloc>(context).add(LoadHome());
-      // Navigator.popAndPushNamed(context, AppRouter.HOME);
+      var newCollection = CollectionModel(name: _collection!);
+      wordBloc.add(
+          AddWord(collection: newCollection, word: newWord, share: isShared));
     } else {
       if (!isWordPopulated) {
         UtilSnackBar.showSnackBarContent(context,
@@ -200,7 +234,7 @@ class _WordBodyState extends State<WordBody> {
         UtilSnackBar.showSnackBarContent(context,
             content: Translate.of(context).translate("definition_checker"));
       }
-      if (collection == null) {
+      if (_collection == null) {
         UtilSnackBar.showSnackBarContent(context,
             content: Translate.of(context).translate("collection_checker"));
       }
@@ -366,7 +400,7 @@ class _WordBodyState extends State<WordBody> {
       onItemSelected: (String? selectedItem) {
         setState(
           () {
-            collection = selectedItem;
+            _collection = selectedItem;
           },
         );
       },

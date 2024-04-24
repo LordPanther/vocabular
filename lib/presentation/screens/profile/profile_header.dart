@@ -38,6 +38,7 @@ class ProfileHeader extends StatelessWidget {
     } else {
       // ignore: use_build_context_synchronously
       UtilSnackBar.showSnackBarContent(context,
+          // ignore: use_build_context_synchronously
           content: Translate.of(context).translate('no_image'));
     }
   }
