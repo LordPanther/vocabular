@@ -4,17 +4,20 @@ class WordModel extends Equatable {
   final String id;
   final String definition;
   final String word;
+  final String? audioUrl;
 
   const WordModel(
       {required this.id,
       required this.definition,
-      required this.word});
+      required this.word,
+      this.audioUrl});
 
   static WordModel fromMap(Map<String, dynamic> data) {
     return WordModel(
       id: data["id"] ?? "",
       definition: data["definition"] ?? "",
       word: data["word"] ?? "",
+      audioUrl: data["audiourl"] ?? "",
     );
   }
 
@@ -22,28 +25,28 @@ class WordModel extends Equatable {
     return {
       "id": id,
       "definition": definition,
-      "word": word
+      "word": word,
+      "audioUrl": audioUrl
     };
   }
 
   WordModel cloneWith({
     id,
-    audio,
+    audioUrl,
     definition,
-    acronym,
-    partOfSpeech,
-    note,
     word,
   }) {
     return WordModel(
-        id: id ?? this.id,
-        definition: definition ?? this.definition,
-        word: word ?? this.word);
+      id: id ?? this.id,
+      definition: definition ?? this.definition,
+      word: word ?? this.word,
+      audioUrl: audioUrl ?? this.audioUrl,
+    );
   }
 
   @override
   String toString() {
-    return "WordModel:{id:$id, definition:$definition, word:$word}";
+    return "WordModel:{id:$id, definition:$definition, word:$word, audio:$audioUrl}";
   }
 
   @override
@@ -51,5 +54,6 @@ class WordModel extends Equatable {
         id,
         definition,
         word,
+        audioUrl,
       ];
 }

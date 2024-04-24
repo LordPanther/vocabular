@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/presentation/screens/add_word/bloc/bloc.dart';
-import 'package:vocab_app/presentation/screens/add_word/widgets/add_word_body.dart';
-import 'package:vocab_app/presentation/screens/add_word/widgets/add_word_header.dart';
+import 'package:vocab_app/presentation/screens/add_word/widgets/word_body.dart';
+import 'package:vocab_app/presentation/screens/add_word/widgets/word_header.dart';
 
-class AddWordScreen extends StatefulWidget {
-  const AddWordScreen({super.key});
+class WordScreen extends StatefulWidget {
+  const WordScreen({super.key});
 
   @override
-  State<AddWordScreen> createState() => _AddWordScreenState();
+  State<WordScreen> createState() => _WordScreenState();
 }
 
-class _AddWordScreenState extends State<AddWordScreen> {
+class _WordScreenState extends State<WordScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -25,8 +25,8 @@ class _AddWordScreenState extends State<AddWordScreen> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        AddWordHeader(),
-                        AddWordBody(),
+                        WordHeader(),
+                        WordBody(),
                       ],
                     ),
                   ),

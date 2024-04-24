@@ -8,9 +8,9 @@ import 'package:vocab_app/data/models/models.dart';
 import 'package:vocab_app/data/repository/home_repository/home_repo.dart';
 import 'package:vocab_app/utils/collection_data.dart';
 
-class FirebaseCollectionsRepository implements CollectionsRepository {
+class FirebaseHomeRepository implements HomeRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final _userCollection = FirebaseFirestore.instance;
+  final _userHome = FirebaseFirestore.instance;
 
   /// [FirebaseAuthRepository]
   /// Called once on registration to create collections:[defaultcollections]
@@ -39,8 +39,7 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
   /// [CollectionsBloc]
   /// Add collection to collections
   @override
-  Future<bool> addCollection(
-      CollectionModel newCollection) async {
+  Future<bool> addCollection(CollectionModel newCollection) async {
     // bool collectionExists = false;
 
     CollectionData collectionData = await fetchCollections();
@@ -59,7 +58,7 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
       CollectionModel collection, WordModel word, bool shareWord) async {
     User? user = _firebaseAuth.currentUser;
     try {
-      await _userCollection
+      await _userHome
           .collection("vocabusers")
           .doc(user!.uid)
           .collection("collections")
@@ -76,7 +75,7 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
   Future<void> removeWord(CollectionModel collection, WordModel word) async {
     User? user = _firebaseAuth.currentUser;
     try {
-      await _userCollection
+      await _userHome
           .collection("vocabusers")
           .doc(user!.uid)
           .collection("collections")
@@ -94,7 +93,7 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
     User? user = _firebaseAuth.currentUser;
 
     try {
-      await _userCollection
+      await _userHome
           .collection("vocabusers")
           .doc(user!.uid)
           .collection("collections")
@@ -113,7 +112,7 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
     User? user = _firebaseAuth.currentUser;
     List<CollectionModel> userCollections = [];
     List<List<WordModel>> userWords = [];
-    var snapshot = await _userCollection
+    var snapshot = await _userHome
         .collection("vocabusers")
         .doc(user!.uid)
         .collection("collections")
@@ -130,27 +129,13 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
     return CollectionData(collections: userCollections, words: userWords);
   }
 
-  /// Get a single collection in collections
-  // Future<CollectionModel> fetchCollection() async {
-  //   User? user = _firebaseAuth.currentUser;
-  //   var doc = await _userCollection
-  //       .collection("vocabusers")
-  //       .doc(user!.uid)
-  //       .collection("collections")
-  //       .doc()
-  //       .get();
-
-  //   CollectionModel collectionModel = CollectionModel(name: doc.id);
-  //   return collectionModel;
-  // }
-
   /// Fetch words for a specific collection
   Future<List<WordModel>> fetchWords(DocumentSnapshot doc) async {
     User? user = _firebaseAuth.currentUser;
     List<WordModel> words = [];
 
     try {
-      var snapshot = await _userCollection
+      var snapshot = await _userHome
           .collection("vocabusers")
           .doc(user!.uid)
           .collection("collections")
@@ -180,7 +165,7 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
     User? user = _firebaseAuth.currentUser;
 
     try {
-      await _userCollection
+      await _userHome
           .collection("vocabusers")
           .doc(user!.uid)
           .collection("collections")
@@ -191,5 +176,20 @@ class FirebaseCollectionsRepository implements CollectionsRepository {
         print(error);
       }
     }
+  }
+
+  @override
+  Future<void> updateHomeData(
+      WordModel updatedWord, CollectionModel collection) async {
+    await _userHome
+        .collection("collections")
+        .doc(collection.name)
+        .get()
+        .then((doc) async {
+      if (doc.exists) {
+        // update
+        await doc.reference.update(updatedWord.toMap());
+      }
+    }).catchError((error) {});
   }
 }

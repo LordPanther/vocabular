@@ -13,8 +13,7 @@ import 'auth_repo.dart';
 class FirebaseAuthRepository extends AuthRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final UserRepository _userRepository = FirebaseUserRepository();
-  final CollectionsRepository _collectionsRepository =
-      FirebaseCollectionsRepository();
+  final HomeRepository _homeRepository = FirebaseHomeRepository();
   // final UserModel user;
 
   String _authException = "Authentication Failure";
@@ -49,7 +48,7 @@ class FirebaseAuthRepository extends AuthRepository {
 
   Future<void> create(UserModel updatedUserDetails) async {
     try {
-      await _collectionsRepository.createDefaultCollection(updatedUserDetails);
+      await _homeRepository.createDefaultCollection(updatedUserDetails);
     } on FirebaseAuthException catch (error) {
       _authException = error.message.toString();
     }

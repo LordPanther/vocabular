@@ -1,12 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
-import 'package:vocab_app/data/models/daily_word_model.dart';
+import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/data/repository/repository.dart';
 import 'package:vocab_app/presentation/screens/home_screen/bloc/bloc.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  final CollectionsRepository _collectionsRepository =
-      AppRepository.collectionsRepository;
+  final HomeRepository _homeRepository = AppRepository.collectionsRepository;
 
   HomeBloc() : super(HomeLoading()) {
     on<LoadHome>((event, emit) async {
@@ -31,7 +30,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   /// Load Home
   Future<void> _mapLoadHomeToMap(event, Emitter<HomeState> emit) async {
-    var collectionData = await _collectionsRepository.fetchCollections();
+    var collectionData = await _homeRepository.fetchCollections();
     List<CollectionModel> collections = collectionData.collections;
     List<List<WordModel>> words = collectionData.words;
 
@@ -48,7 +47,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     CollectionModel collection = event.collection;
     bool shareWord = event.shareWord;
     try {
-      await _collectionsRepository.addWord(collection, word, shareWord);
+      await _homeRepository.addWord(collection, word, shareWord);
       await _mapLoadHomeToMap(event, emit);
     } catch (error) {
       emit(HomeLoadFailure(error.toString()));
@@ -59,8 +58,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Future<void> _mapCreateCollectionToMap(event, Emitter<HomeState> emit) async {
     CollectionModel collection = event.collection;
     try {
-      bool collectionExists =
-          await _collectionsRepository.addCollection(collection);
+      bool collectionExists = await _homeRepository.addCollection(collection);
       await _mapLoadHomeToMap(event, emit);
 
       if (collectionExists) {
@@ -79,7 +77,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     CollectionModel collection = event.collection;
 
     try {
-      await _collectionsRepository.removeCollection(collection);
+      await _homeRepository.removeCollection(collection);
       await _mapLoadHomeToMap(event, emit);
     } catch (error) {
       emit(CollectionRemovalFailure(error.toString()));
@@ -91,7 +89,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     CollectionModel collection = event.collection;
     WordModel word = event.word;
     try {
-      await _collectionsRepository.removeWord(collection, word);
+      await _homeRepository.removeWord(collection, word);
       await _mapLoadHomeToMap(event, emit);
     } catch (error) {
       HomeLoadFailure(error.toString());

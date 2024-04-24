@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +11,9 @@ import 'package:vocab_app/configs/config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
-import 'package:vocab_app/data/models/daily_word_model.dart';
+import 'package:vocab_app/data/models/word_model.dart';
+import 'package:vocab_app/data/repository/auth_repository/auth_repo.dart';
+import 'package:vocab_app/data/repository/repository.dart';
 import 'package:vocab_app/presentation/screens/add_word/bloc/bloc.dart';
 import 'package:vocab_app/presentation/screens/home_screen/bloc/bloc.dart';
 import 'package:vocab_app/presentation/widgets/buttons/record_button.dart';
@@ -20,42 +24,60 @@ import 'package:vocab_app/utils/dialog.dart';
 import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
 import 'package:record/record.dart';
-import 'package:audioplayers/audioplayers.dart';
 
-class AddWordBody extends StatefulWidget {
-  const AddWordBody({super.key});
+class WordBody extends StatefulWidget {
+  const WordBody({super.key});
 
   @override
-  State<AddWordBody> createState() => _AddWordBodyState();
+  State<WordBody> createState() => _WordBodyState();
 }
 
-class _AddWordBodyState extends State<AddWordBody> {
+class _WordBodyState extends State<WordBody> {
   late WordBloc wordBloc;
-  late Record audioRecord;
-  String audioPath = '';
   late AudioPlayer audioPlayer;
+  late Timer _timer;
+  late Record audioRecord;
+  final AuthRepository _authRepository = AppRepository.authRepository;
+  final StorageRepository _storageRepository = AppRepository.storageRepository;
+
+  // Controllers/word
   final TextEditingController word = TextEditingController();
   final TextEditingController definition = TextEditingController();
   String? collection;
   bool isShared = false;
+
+  // Audio recording global variables
   double _progress = 0.0;
-  bool _isLoading = false;
-  late Timer _timer;
+  bool _isRecording = false;
+  // bool _isPlaying = false;
+  String? _audioPath = '';
 
   @override
   void initState() {
-    wordBloc = BlocProvider.of<WordBloc>(context);
     super.initState();
+    wordBloc = BlocProvider.of<WordBloc>(context);
     audioPlayer = AudioPlayer();
     audioRecord = Record();
   }
 
-  Future<void> _startLoading() async {
-    _isLoading = true;
-    _progress = 0.0;
+  void record() {
+    setState(() {
+      _isRecording = !_isRecording; // Toggle _isLoading state
+      _isRecording
+          ? _startRecording()
+          : _stopRecording(); // Start or stop loading accordingly
+    });
+  }
+
+  Future<void> _startRecording() async {
+    setState(() {
+      _isRecording = true;
+      _progress = 0.0;
+    });
+
     const duration = Duration(minutes: 1); // Set duration to one minute
     const steps = 60;
-    
+
     try {
       if (await audioRecord.hasPermission()) {
         await audioRecord.start();
@@ -67,27 +89,32 @@ class _AddWordBodyState extends State<AddWordBody> {
     _timer = Timer.periodic(
       duration ~/ steps, // Calculate the interval for each step
       (timer) {
-        setState(
-          () async {
+        if (_progress < 1.0) {
+          setState(() {
             _progress += 1 / steps; // Increment progress by a small fraction
-            if (_progress >= 1.0){
-              String? path = await audioRecord.stop();
-              _stopLoading();
-              audioPath = path!;
-            }
-          },
-        );
+          });
+        } else {
+          _timer.cancel();
+          _stopRecording();
+        }
       },
     );
   }
 
-  Future<void> _stopLoading() async {
-    String? path = await audioRecord.stop();
-    _timer.cancel();
-    _isLoading = false;
-    _progress = 0.0;
-    audioPath = path!;
+  // Show popup upon stop recording
+  Future<void> _stopRecording() async {
+    String? recordedFilePath = "";
+    recordedFilePath = await audioRecord.stop();
+    setState(() {
+      _timer.cancel();
+      _isRecording = false;
+      _progress = 0.0;
+      _audioPath = recordedFilePath;
+    });
+    _showRecordingDialog(_audioPath);
+  }
 
+  void _showRecordingDialog(String? recordedFilePath) {
     showGeneralDialog(
       context: context,
       barrierDismissible: false,
@@ -98,10 +125,19 @@ class _AddWordBodyState extends State<AddWordBody> {
           Animation<double> secondaryAnimation) {
         return RecordingDialog(
           onKeep: () {
-            
+            _audioPath = recordedFilePath;
+            Navigator.of(context).pop();
           },
-          onDiscard: () {
-            
+          onDiscard: () async {
+            if (_audioPath != null) {
+              File localFile = File(_audioPath!);
+              if (await localFile.exists()) {
+                await localFile.delete();
+                Navigator.of(context).pop();
+                UtilSnackBar.showSnackBarContent(context,
+                    content: "Deleted audio file");
+              }
+            }
           },
         );
       },
@@ -120,20 +156,40 @@ class _AddWordBodyState extends State<AddWordBody> {
     );
   }
 
+  // Future<void> _playRecording() async {
+  //   try {
+  //     Source urlSource = UrlSource(_audioPath!);
+  //     await audioPlayer.play(urlSource);
+  //   } catch (error) {
+  //     UtilSnackBar.showSnackBarContent(context,
+  //         content: "Failed to play recording. retry");
+  //     _isPlaying = false;
+  //   }
+  // }
+
   bool get isWordPopulated => word.text.isNotEmpty;
   bool get isDefinitionPopulated => definition.text.isNotEmpty;
 
   void onAddWord() async {
+    File? audioFile = File(_audioPath!);
+    User? user = _authRepository.loggedFirebaseUser;
     if (isWordPopulated && isDefinitionPopulated && collection != null) {
-      var newWord = WordModel(
-        id: collection!,
-        definition: definition.text,
-        word: word.text,
+      String audioUrl = await _storageRepository.uploadAudioFile(
+        "vocabusers/audio/${user.uid}/$collection/$word",
+        audioFile,
       );
+      var newWord = WordModel(
+          id: collection!,
+          definition: definition.text,
+          word: word.text,
+          audioUrl: audioUrl);
       var newCollection = CollectionModel(name: collection!);
-      wordBloc.add(
-          AddWord(collection: newCollection, word: newWord, share: isShared));
-      BlocProvider.of<HomeBloc>(context).add(LoadHome());
+      wordBloc.add(AddWord(
+          collection: newCollection,
+          word: newWord,
+          share: isShared));
+      print("Word added successfully");
+      // BlocProvider.of<HomeBloc>(context).add(LoadHome());
       // Navigator.popAndPushNamed(context, AppRouter.HOME);
     } else {
       if (!isWordPopulated) {
@@ -151,21 +207,12 @@ class _AddWordBodyState extends State<AddWordBody> {
     }
   }
 
-  void record() {
-    setState(() {
-      _isLoading = !_isLoading; // Toggle _isLoading state
-      _isLoading
-          ? _startLoading()
-          : _stopLoading(); // Start or stop loading accordingly
-    });
-  }
-
   @override
   void dispose() {
+    super.dispose();
     word.dispose();
     definition.dispose();
     _timer.cancel();
-    super.dispose();
     audioRecord.dispose();
     audioPlayer.dispose();
   }
@@ -274,7 +321,7 @@ class _AddWordBodyState extends State<AddWordBody> {
             right: SizeConfig.defaultSize * 13,
             child: RecordButton(
               progress: _progress,
-              isRecording: _isLoading,
+              isRecording: _isRecording,
               onTap: record,
             ),
           ),

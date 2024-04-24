@@ -16,8 +16,16 @@ class StorageRepository {
     return downloadURL;
   }
 
-  /// Return photo URL
-  Future<String> uploadImageData(String ref, Uint8List fileData) async {
+  Future<String> uploadAudioFile(String ref, File file) async {
+    var storageRef = storage.ref().child(ref);
+    var uploadTask = await storageRef.putFile(file);
+
+    String downloadURL = await uploadTask.ref.getDownloadURL();
+    return downloadURL;
+  }
+
+  /// Return audio URL for sharing with other users
+  Future<String> uploadAudioData(String ref, Uint8List fileData) async {
     var storageRef = storage.refFromURL(ref);
     var uploadTask = await storageRef.putData(fileData);
 

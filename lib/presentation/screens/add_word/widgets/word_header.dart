@@ -2,8 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/image_constant.dart';
 
-class AddWordHeader extends StatelessWidget {
-  const AddWordHeader({super.key});
+class WordHeader extends StatelessWidget {
+  const WordHeader({super.key});
 
   @override
   Widget build(BuildContext context) {

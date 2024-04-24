@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:vocab_app/data/local/pref.dart';
-import 'package:vocab_app/data/models/daily_word_model.dart';
+import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/data/repository/app_repository.dart';
 import 'package:vocab_app/data/repository/home_repository/home_repo.dart';
 import 'package:vocab_app/presentation/screens/search/search/search_screen_event.dart';
@@ -9,7 +9,7 @@ import 'package:vocab_app/presentation/screens/search/search/search_screen_state
 import 'package:vocab_app/utils/collection_data.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
-  final CollectionsRepository _collectionsRepository = AppRepository.collectionsRepository;
+  final HomeRepository _homeRepository = AppRepository.collectionsRepository;
 
   SearchBloc() : super(Searching()) {
     on<SearchEvent>((event, emit) {
@@ -47,46 +47,45 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
 
   Future<void> _mapKeywordChangedToState(
-    event, Emitter<SearchState> emit) async {
-  String keyword = event.keyword;
+      event, Emitter<SearchState> emit) async {
+    String keyword = event.keyword;
 
-  emit(Searching());
-  try {
-    List<String> recentKeywords = await _getRecentKeywords();
-    if (keyword.isEmpty) {
-      emit(SuggestionLoaded(
-        recentKeywords: recentKeywords,
-        hotKeywords: hotKeywords,
-      ));
-    } else {
-      // Get collections and words
-      CollectionData data = await _collectionsRepository.fetchCollections();
-      
-      // Search for words within collections
-      List<WordModel> results = [];
-      for (var collection in data.collections) {
-        for (var words in data.words) {
-          results.addAll(words.where((word) =>
-              word.word.toLowerCase().contains(keyword.toLowerCase())));
+    emit(Searching());
+    try {
+      List<String> recentKeywords = await _getRecentKeywords();
+      if (keyword.isEmpty) {
+        emit(SuggestionLoaded(
+          recentKeywords: recentKeywords,
+          hotKeywords: hotKeywords,
+        ));
+      } else {
+        // Get collections and words
+        CollectionData data = await _homeRepository.fetchCollections();
+
+        // Search for words within collections
+        List<WordModel> results = [];
+        for (var collection in data.collections) {
+          for (var words in data.words) {
+            results.addAll(words.where((word) =>
+                word.word.toLowerCase().contains(keyword.toLowerCase())));
+          }
+        }
+
+        emit(ResultsLoaded(wordResults: results));
+
+        // Store keyword locally
+        if (!recentKeywords.contains(keyword.toLowerCase())) {
+          if (recentKeywords.length > 9) {
+            recentKeywords.removeAt(0);
+          }
+          recentKeywords.add(keyword.toLowerCase());
+          await LocalPref.setStringList("recentKeywords", recentKeywords);
         }
       }
-      
-      emit(ResultsLoaded(wordResults: results));
-      
-      // Store keyword locally
-      if (!recentKeywords.contains(keyword.toLowerCase())) {
-        if (recentKeywords.length > 9) {
-          recentKeywords.removeAt(0);
-        }
-        recentKeywords.add(keyword.toLowerCase());
-        await LocalPref.setStringList("recentKeywords", recentKeywords);
-      }
+    } catch (e) {
+      emit(SearchFailure(e.toString()));
     }
-  } catch (e) {
-    emit(SearchFailure(e.toString()));
   }
-}
-
 
   Future<List<String>> _getRecentKeywords() async {
     return LocalPref.getStringList("recentKeywords") ?? [];

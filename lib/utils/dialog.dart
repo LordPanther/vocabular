@@ -5,7 +5,7 @@ import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
-import 'package:vocab_app/data/models/daily_word_model.dart';
+import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/presentation/widgets/buttons/volume_icon.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
 import 'package:vocab_app/utils/translate.dart';

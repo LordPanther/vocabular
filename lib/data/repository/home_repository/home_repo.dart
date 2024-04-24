@@ -1,9 +1,9 @@
 import 'package:vocab_app/data/models/collections_model.dart';
-import 'package:vocab_app/data/models/daily_word_model.dart';
+import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/data/models/user_model.dart';
 import 'package:vocab_app/utils/collection_data.dart';
 
-abstract class CollectionsRepository {
+abstract class HomeRepository {
   /// Called once on registration to create collections:[defaultcollections]
   Future<void> createDefaultCollection(UserModel updatedUserDetails);
 
@@ -22,4 +22,7 @@ abstract class CollectionsRepository {
 
   /// Remove a collection
   Future<void> removeCollection(CollectionModel collection);
+
+  Future<void> updateHomeData(
+      WordModel updatedWord, CollectionModel collection);
 }

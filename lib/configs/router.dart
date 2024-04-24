@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:vocab_app/bottom_navigation.dart';
 import 'package:vocab_app/presentation/screens/add_collection/add_collection_screen.dart';
-import 'package:vocab_app/presentation/screens/add_word/add_word_screen.dart';
+import 'package:vocab_app/presentation/screens/add_word/word_screen.dart';
 import 'package:vocab_app/presentation/screens/profile/profile_screen.dart';
 import 'package:vocab_app/presentation/screens/search/search_screen.dart';
 import 'package:vocab_app/presentation/screens/settings/setting_screen.dart';
@@ -58,7 +58,7 @@ class AppRouter {
         );
       case WORD:
         return MaterialPageRoute(
-          builder: (_) => const AddWordScreen(),
+          builder: (_) => const WordScreen(),
         );
       case REGISTER:
         var selection = settings.arguments as UserModel;

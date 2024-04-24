@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
-import 'package:vocab_app/data/models/daily_word_model.dart';
+import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/utils/translate.dart';
 
 class DailyWordWidget extends StatefulWidget {

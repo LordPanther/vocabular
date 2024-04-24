@@ -6,8 +6,7 @@ import 'package:vocab_app/presentation/screens/add_collection/bloc/collection_ev
 import 'package:vocab_app/presentation/screens/add_collection/bloc/collection_state.dart';
 
 class CollectionBloc extends Bloc<CollectionEvent, CollectionState> {
-  final CollectionsRepository _collectionsRepository =
-      AppRepository.collectionsRepository;
+  final HomeRepository _homeRepository = AppRepository.collectionsRepository;
   List<CollectionModel> collections = [];
 
   CollectionBloc() : super(Initial()) {
@@ -23,7 +22,7 @@ class CollectionBloc extends Bloc<CollectionEvent, CollectionState> {
       event, Emitter<CollectionState> emit) async {
     CollectionModel collection = event.collection;
     try {
-      await _collectionsRepository.addCollection(collection);
+      await _homeRepository.addCollection(collection);
       emit(CollectionAdded(collection));
     } catch (error) {
       emit(CollectionAddFailure(error.toString()));
@@ -33,7 +32,7 @@ class CollectionBloc extends Bloc<CollectionEvent, CollectionState> {
   Future<void> _mapGetCollectionsToMap(
       event, Emitter<CollectionState> emit) async {
     try {
-      var collectionData = await _collectionsRepository.fetchCollections();
+      var collectionData = await _homeRepository.fetchCollections();
       collections = collectionData.collections;
       emit(CollectionsLoaded(collections));
     } catch (error) {

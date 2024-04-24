@@ -11,7 +11,7 @@ class AppRepository {
   static final userRepository = FirebaseUserRepository();
   static final feedbackRepository = FirebaseFeedbackRepository();
   static final storageRepository = StorageRepository();
-  static final collectionsRepository = FirebaseCollectionsRepository();
+  static final collectionsRepository = FirebaseHomeRepository();
 
   /// Singleton factory
   static final AppRepository _instance = AppRepository._internal();

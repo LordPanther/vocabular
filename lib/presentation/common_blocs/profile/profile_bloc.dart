@@ -60,47 +60,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
   }
 
-  /// Address List Changed event => states
-  // Future<void> _mapAddressListChangedToState(
-  //     event, Emitter<ProfileState> emit) async {
-  //   try {
-  //     // Get delivery address from event
-  //     var deliveryAddress = event.deliveryAddress;
-  //     // Get current addresses
-  //     List addresses = List<DeliveryAddressModel>.from(_loggedUser!.addresses);
-  //     if (deliveryAddress.isDefault) {
-  //       addresses =
-  //           addresses.map((item) => item.cloneWith(isDefault: false)).toList();
-  //     }
-  //     // Check method
-  //     switch (event.method) {
-  //       case ListMethod.ADD:
-  //         // If current addresses is empty, so the first delivery address is always default
-  //         if (addresses.isEmpty) {
-  //           deliveryAddress = deliveryAddress.cloneWith(isDefault: true);
-  //         }
-  //         addresses.add(deliveryAddress);
-  //         break;
-  //       case ListMethod.DELETE:
-  //         addresses.remove(deliveryAddress);
-  //         break;
-  //       case ListMethod.UPDATE:
-  //         addresses = addresses.map((item) {
-  //           return item.id == deliveryAddress.id ? deliveryAddress : item;
-  //         }).toList();
-
-  //         break;
-  //       default:
-  //     }
-  //     // Clone logged user with updated addresses
-  //     var updatedUser = _loggedUser!.cloneWith(addresses: addresses);
-  //     // Update user's addresses
-  //     await _userRepository.updateUserData(updatedUser);
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
   /// Profile Updated event => states
   Future<void> _mapProfileUpdatedToState(
       event, Emitter<ProfileState> emit) async {

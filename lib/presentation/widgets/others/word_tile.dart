@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
-import 'package:vocab_app/data/models/daily_word_model.dart';
+import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/presentation/screens/home_screen/bloc/home_bloc.dart';
 import 'package:vocab_app/presentation/screens/home_screen/bloc/home_event.dart';
 import 'package:vocab_app/utils/snackbar.dart';

@@ -25,7 +25,6 @@ class HomeBody extends StatefulWidget {
 
 class _HomeBodyState extends State<HomeBody> {
   late HomeBloc homeBloc;
-  bool _showDialog = false;
 
   @override
   void initState() {
@@ -35,7 +34,6 @@ class _HomeBodyState extends State<HomeBody> {
 
   @override
   void dispose() {
-    _showDialog = false; // Reset flag on dispose
     super.dispose();
   }
 
@@ -48,13 +46,9 @@ class _HomeBodyState extends State<HomeBody> {
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           if (state is HomeLoading) {
-            _showDialog = true;
-            Timer(Duration.zero, () {
-              UtilDialog.showWaiting(context);
-            });
+            return const Loading();
           }
           if (state is HomeLoaded) {
-            Navigator.of(context).pop();
             return Expanded(
               child: Padding(
                 padding: EdgeInsets.all(SizeConfig.defaultPadding),

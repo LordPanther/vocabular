@@ -16,8 +16,7 @@ class AddCollectionDialog extends StatefulWidget {
 }
 
 class _AddCollectionDialogState extends State<AddCollectionDialog> {
-  CollectionsRepository collectionsRepository =
-      AppRepository.collectionsRepository;
+  HomeRepository collectionsRepository = AppRepository.collectionsRepository;
   late List<String> userCollections;
   final TextEditingController collection = TextEditingController();
   bool get isCollectionPopulated => collection.text.isNotEmpty;
