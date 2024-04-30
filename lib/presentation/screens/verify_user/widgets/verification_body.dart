@@ -6,7 +6,7 @@ import 'package:vocab_app/presentation/common_blocs/auth/auth_event.dart';
 import 'package:vocab_app/presentation/screens/verify_user/verify/verify_bloc.dart';
 import 'package:vocab_app/presentation/screens/verify_user/verify/verify_event.dart';
 import 'package:vocab_app/presentation/screens/verify_user/verify/verify_state.dart';
-import 'package:vocab_app/presentation/widgets/buttons/main_button.dart';
+import 'package:vocab_app/presentation/widgets/buttons/text_button.dart';
 import 'package:vocab_app/utils/dialog.dart';
 import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
@@ -100,12 +100,8 @@ class _VerificationBodyState extends State<VerificationBody> {
       width: SizeConfig.defaultSize * 15,
       child: MainButton(
         onPressed: goHome,
-        backgroundColor: COLOR_CONST.primaryColor,
-        borderRadius: SizeConfig.defaultSize * 0.5,
-        child: Text(
-          Translate.of(context).translate('continue'),
-          style: FONT_CONST.BOLD_DEFAULT_20,
-        ),
+        buttonName: Translate.of(context).translate('continue'),
+        buttonStyle: FONT_CONST.BOLD_DEFAULT_20, buttonIcon: null,
       ),
     );
   }
@@ -115,12 +111,8 @@ class _VerificationBodyState extends State<VerificationBody> {
       width: SizeConfig.defaultSize * 15,
       child: MainButton(
         onPressed: reVerify,
-        backgroundColor: COLOR_CONST.primaryColor,
-        borderRadius: SizeConfig.defaultSize * 0.5,
-        child: Text(
-          Translate.of(context).translate('resend_email_link'),
-          style: FONT_CONST.BOLD_DEFAULT_20,
-        ),
+        buttonName: Translate.of(context).translate('resend_email_link'),
+        buttonStyle: FONT_CONST.BOLD_DEFAULT_20,
       ),
     );
   }

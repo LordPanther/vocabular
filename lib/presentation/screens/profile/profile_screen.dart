@@ -8,9 +8,14 @@ import 'package:vocab_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,17 +27,6 @@ class ProfileScreen extends StatelessWidget {
               text: Translate.of(context).translate("profile"),
               icon: Icon(CupertinoIcons.profile_circled,
                   size: SizeConfig.defaultSize * 3),
-              onPressed: () {},
-            ),
-            _buildProfileMenuButton(
-              text: Translate.of(context).translate("my_orders"),
-              icon: Icon(CupertinoIcons.square_list,
-                  size: SizeConfig.defaultSize * 3),
-              onPressed: () {},
-            ),
-            _buildProfileMenuButton(
-              text: Translate.of(context).translate("delivery_address"),
-              icon: Icon(CupertinoIcons.map, size: SizeConfig.defaultSize * 3),
               onPressed: () {},
             ),
             _buildProfileMenuButton(

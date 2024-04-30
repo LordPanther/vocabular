@@ -9,9 +9,6 @@ import 'package:image_picker_platform_interface/image_picker_platform_interface.
 import 'app_view.dart';
 import 'configs/config.dart';
 
-     
-
-             
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = SimpleBlocObserver();
@@ -24,7 +21,6 @@ Future<void> main() async {
   if (imagePickerImplementation is ImagePickerAndroid) {
     imagePickerImplementation.useAndroidPhotoPicker = true;
   }
-
   runApp(const MyApp());
 }
 

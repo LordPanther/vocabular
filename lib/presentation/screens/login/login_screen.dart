@@ -52,7 +52,7 @@ class LoginScreen extends StatelessWidget {
               AppRouter.INITIALIZE_INFO,
             ),
             child: Text(
-              Translate.of(context).translate('register'),
+              Translate.of(context).translate('sign_up'),
               style: FONT_CONST.BOLD_DEFAULT_16,
             ),
           ),

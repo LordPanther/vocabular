@@ -17,7 +17,7 @@ class DefaultButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
+      width: 100,
       height: SizeConfig.defaultSize * 5,
       child: TextButton(
         onPressed: onPressed,

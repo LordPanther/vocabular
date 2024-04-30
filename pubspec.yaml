@@ -41,7 +41,7 @@ dependencies:
   audioplayers: ^6.0.0
   permission_handler: ^11.3.0
   google_sign_in: ^6.2.1
-  record: ^4.4.4
+  flutter_sound: ^9.4.6
   # amplify_flutter: ^1.0.0
   # amplify_auth_cognito: ^1.0.0
   # amplify_authenticator: ^1.0.0

@@ -49,8 +49,8 @@ class LoginWithCredential extends LoginEvent {
 }
 
 // When user clicks to google login button
-class LoginWithGoogleSignIn extends LoginEvent {
-  const LoginWithGoogleSignIn();
+class SignInWithGoogleSignIn extends LoginEvent {
+  const SignInWithGoogleSignIn();
 
   @override
   List<Object> get props => [];

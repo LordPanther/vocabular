@@ -2,7 +2,7 @@ import 'package:vocab_app/configs/router.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/presentation/screens/initialize_info/widgets/initialize_info_header.dart';
-import 'package:vocab_app/presentation/screens/initialize_info/widgets/initialize_info_selection.dart';
+import 'package:vocab_app/presentation/screens/initialize_info/widgets/initialize_info_form.dart';
 import 'package:vocab_app/utils/translate.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +19,7 @@ class InitializeInfoScreen extends StatelessWidget {
           child: Column(
             children: [
               InitializeInfoHeader(),
-              InitializeInfoSelection(),
+              InitializeInfoForm(),
             ],
           ),
         ),
@@ -48,7 +48,7 @@ class InitializeInfoScreen extends StatelessWidget {
               (route) => false,
             ),
             child: Text(
-              Translate.of(context).translate("login"),
+              Translate.of(context).translate("sign_in"),
               style: FONT_CONST.BOLD_DEFAULT_16,
             ),
           ),

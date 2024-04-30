@@ -56,7 +56,7 @@ class RegisterScreen extends StatelessWidget {
               (_) => false,
             ),
             child: Text(
-              Translate.of(context).translate('login'),
+              Translate.of(context).translate('sign_in'),
               style: FONT_CONST.BOLD_DEFAULT_16,
             ),
           ),

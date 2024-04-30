@@ -3,6 +3,7 @@ class UtilValidators {
     r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$',
   );
   static final RegExp _passwordRegExp = RegExp(
+    // r'^(?=.*[0-9])(?=.*[!@#$%^&*])(.{6,})$',
     r'^.{4,10}$',
   );
 
@@ -29,7 +30,7 @@ class UtilValidators {
   }
 
   static isValidName(String name) {
-    return name.isNotEmpty;
+    return name.isNotEmpty && name.length <= 12;
   }
 
   static isValidWord(String word) {

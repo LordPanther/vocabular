@@ -14,7 +14,6 @@ import 'package:vocab_app/presentation/common_blocs/profile/profile_event.dart';
 import 'package:vocab_app/utils/translate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'configs/application.dart';
 import 'configs/language.dart';
 import 'configs/router.dart';
@@ -78,11 +77,6 @@ class _AppViewState extends State<AppView> {
                 return BlocListener<AuthenticationBloc, AuthenticationState>(
                   listener: (context, authState) {
                     if (applicationState is ApplicationCompleted) {
-                      // Testing
-
-                      // onNavigate(AppRouter.SPLASH);
-
-                      //Authentication
                       if (authState is Unauthenticated) {
                         onNavigate(AppRouter.LOGIN);
                       } else if (authState is Uninitialized) {

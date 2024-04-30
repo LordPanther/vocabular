@@ -17,7 +17,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginWithCredential>((event, emit) async {
       await _mapLoginWithCredentialToState(event, emit);
     });
-    on<LoginWithGoogleSignIn>((event, emit) async {
+    on<SignInWithGoogleSignIn>((event, emit) async {
       await _mapLoginWithGoogleSignInToState(event, emit);
     });
     on<EmailChanged>((event, emit) async {

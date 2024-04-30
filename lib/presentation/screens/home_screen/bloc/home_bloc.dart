@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vocab_app/data/local/pref.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/data/repository/repository.dart';
@@ -33,12 +34,25 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     var collectionData = await _homeRepository.fetchCollections();
     List<CollectionModel> collections = collectionData.collections;
     List<List<WordModel>> words = collectionData.words;
+    WordModel? recentWord = await _getRecentWord();
 
     HomeResponse homeResponse = HomeResponse(
-      collections: collections,
-      words: words,
-    );
+        collections: collections, words: words, recentWord: recentWord);
     emit(HomeLoaded(homeResponse: homeResponse));
+  }
+
+  Future<WordModel?> _getRecentWord() async {
+    List<String>? recentWord = LocalPref.getStringList("recentWord");
+    if (recentWord != null && recentWord.isNotEmpty) {
+      var word = WordModel(
+        id: recentWord[0],
+        definition: recentWord[2],
+        word: recentWord[1],
+        audioUrl: recentWord[3],
+      );
+      return word;
+    }
+    return null;
   }
 
   /// Create word
@@ -100,6 +114,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 class HomeResponse {
   final List<CollectionModel> collections;
   final List<List<WordModel>> words;
+  final WordModel? recentWord;
 
-  HomeResponse({required this.collections, required this.words});
+  HomeResponse(
+      {required this.collections, required this.words, this.recentWord});
 }

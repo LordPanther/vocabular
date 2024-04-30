@@ -1,9 +1,10 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:flutter/cupertino.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/user_model.dart';
-import 'package:vocab_app/presentation/widgets/buttons/main_button.dart';
+import 'package:vocab_app/presentation/widgets/buttons/text_button.dart';
 import 'package:vocab_app/utils/dialog.dart';
 import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
@@ -26,54 +27,53 @@ class _RegisterFormState extends State<RegisterForm> {
   late RegisterBloc registerBloc;
   late UserModel user;
 
-  // final formKey = GlobalKey<FormState>();
-  // final TextEditingController phoneNumberController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+  late TextEditingController _confirmPasswordController;
 
   bool isShowPassword = false;
   bool isShowConfirmPassword = false;
 
   @override
   void initState() {
-    registerBloc = BlocProvider.of<RegisterBloc>(context);
     super.initState();
+    registerBloc = BlocProvider.of<RegisterBloc>(context);
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    _confirmPasswordController = TextEditingController();
   }
 
   @override
   void dispose() {
-    // phoneNumberController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
   bool get isPopulated =>
-      // phoneNumberController.text.isNotEmpty &&
-      emailController.text.isNotEmpty &&
-      passwordController.text.isNotEmpty &&
-      confirmPasswordController.text.isNotEmpty;
+      _emailController.text.isNotEmpty &&
+      _passwordController.text.isNotEmpty &&
+      _confirmPasswordController.text.isNotEmpty;
 
-  bool isRegisterButtonEnabled() {
+  bool isSignUpButtonEnabled() {
     return registerBloc.state.isFormValid &&
         !registerBloc.state.isSubmitting &&
         isPopulated;
   }
 
-  void onRegister() {
-    if (isRegisterButtonEnabled()) {
+  void onSignUp() {
+    if (isSignUpButtonEnabled()) {
       user = widget.selection!.cloneWith(
-        email: emailController.text,
+        email: _emailController.text,
         // phoneNumber: phoneNumberController.text,
       );
       registerBloc.add(
         Submitted(
           user: user,
-          password: passwordController.text,
-          confirmPassword: confirmPasswordController.text,
+          password: _passwordController.text,
+          confirmPassword: _confirmPasswordController.text,
         ),
       );
     } else {
@@ -115,6 +115,7 @@ class _RegisterFormState extends State<RegisterForm> {
               vertical: SizeConfig.defaultSize * 3,
             ),
             child: Form(
+              key: _formKey,
               child: Column(
                 children: <Widget>[
                   _buildHeaderText(),
@@ -125,7 +126,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   SizedBox(height: SizeConfig.defaultSize * 2),
                   _buildConfirmPasswordInput(),
                   SizedBox(height: SizeConfig.defaultSize * 5),
-                  _buildButtonRegister(),
+                  _buildButtonSignUp(),
                 ],
               ),
             ),
@@ -138,47 +139,18 @@ class _RegisterFormState extends State<RegisterForm> {
   _buildHeaderText() {
     return Center(
       child: Text(
-        Translate.of(context).translate('register'),
+        Translate.of(context).translate('sign_up'),
         style: FONT_CONST.BOLD_DEFAULT_16,
       ),
     );
   }
 
-  /// Phone number
-  // _buildPhoneNumberInput() {
-  //   return TextFormField(
-  //     style: TextStyle(
-  //         color: COLOR_CONST.textColor, fontSize: SizeConfig.defaultSize * 1.6),
-  //     controller: phoneNumberController,
-  //     keyboardType: TextInputType.phone,
-  //     onChanged: (value) {
-  //       registerBloc.add(PhoneChanged(phoneNumber: value));
-  //     },
-  //     validator: (value) {
-  //       return !registerBloc.state.isPhoneValid
-  //           ? Translate.of(context).translate("invalid_phone_number")
-  //           : null;
-  //     },
-  //     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-  //     decoration: InputDecoration(
-  //       labelText: Translate.of(context).translate("phone_number"),
-  //       labelStyle: const TextStyle(color: COLOR_CONST.textColor),
-  //       // suffixIcon: const Icon(Icons.phone_callback_outlined),
-  //       focusedBorder: const OutlineInputBorder(
-  //           borderSide: BorderSide(color: COLOR_CONST.textColor)),
-  //       enabledBorder: const OutlineInputBorder(
-  //           borderSide: BorderSide(color: COLOR_CONST.textColor)),
-  //     ),
-  //   );
-  // }
-
-  /// Build content
   _buildEmailInput() {
     return TextFormField(
       style: TextStyle(
           color: COLOR_CONST.textColor, fontSize: SizeConfig.defaultSize * 1.6),
       cursorColor: COLOR_CONST.textColor,
-      controller: emailController,
+      controller: _emailController,
       onChanged: (value) {
         registerBloc.add(EmailChanged(email: value));
       },
@@ -193,9 +165,9 @@ class _RegisterFormState extends State<RegisterForm> {
         labelStyle: const TextStyle(color: COLOR_CONST.textColor),
         labelText: Translate.of(context).translate('email'),
         focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: COLOR_CONST.textColor)),
+            borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
         enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: COLOR_CONST.textColor)),
+            borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
         // suffixIcon: Icon(Icons.email_outlined),
       ),
     );
@@ -206,7 +178,7 @@ class _RegisterFormState extends State<RegisterForm> {
       style: TextStyle(
           color: COLOR_CONST.textColor, fontSize: SizeConfig.defaultSize * 1.6),
       cursorColor: COLOR_CONST.textColor,
-      controller: passwordController,
+      controller: _passwordController,
       onChanged: (value) {
         registerBloc.add(PasswordChanged(password: value));
       },
@@ -248,10 +220,10 @@ class _RegisterFormState extends State<RegisterForm> {
       style: TextStyle(
           color: COLOR_CONST.textColor, fontSize: SizeConfig.defaultSize * 1.6),
       cursorColor: COLOR_CONST.textColor,
-      controller: confirmPasswordController,
+      controller: _confirmPasswordController,
       onChanged: (value) {
         registerBloc.add(ConfirmPasswordChanged(
-          password: passwordController.text,
+          password: _passwordController.text,
           confirmPassword: value,
         ));
       },
@@ -288,20 +260,18 @@ class _RegisterFormState extends State<RegisterForm> {
     );
   }
 
-  _buildButtonRegister() {
-    return SizedBox(
-      width: SizeConfig.defaultSize * 15,
-      child: MainButton(
-        borderRadius: SizeConfig.defaultSize * 0.5,
-        onPressed: onRegister,
-        backgroundColor: isRegisterButtonEnabled()
-            ? COLOR_CONST.primaryColor
-            : COLOR_CONST.cardShadowColor,
-        child: Text(
-          Translate.of(context).translate('sign_on').toUpperCase(),
-          style: FONT_CONST.BOLD_BLACK_18,
-        ),
-      ),
+  _buildButtonSignUp() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        if (isSignUpButtonEnabled())
+          MainButton(
+            onPressed: onSignUp,
+            buttonName: Translate.of(context).translate('sign_up'),
+            buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
+            buttonIcon: CupertinoIcons.arrow_right,
+          ),
+      ],
     );
   }
 }
