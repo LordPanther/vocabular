@@ -1,12 +1,16 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/configs/size_config.dart';
+import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/presentation/screens/home_screen/bloc/bloc.dart';
 import 'package:vocab_app/presentation/widgets/others/collection_tile.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
+import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
 import 'package:vocab_app/utils/utils.dart';
 
@@ -64,8 +68,41 @@ class _HomeBodyState extends State<HomeBody> {
                   itemBuilder: (context, index) {
                     var collection = collections[index];
                     var words = wordss[index];
-                    return CollectionTile(
-                        collection: collection, words: words, index: index);
+                    return Dismissible(
+                      key: ValueKey(collection.name),
+                      direction: DismissDirection.endToStart,
+                      background: Container(
+                        color: Colors.red,
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(Icons.delete, color: Colors.white),
+                            SizedBox(width: 20),
+                          ],
+                        ),
+                      ),
+                      confirmDismiss: (direction) async {
+                        if (direction == DismissDirection.endToStart) {
+                          final bool dismiss =
+                              await showCollectionRemoveDialog();
+
+                          if (dismiss && collection.name != "default") {
+                            BlocProvider.of<HomeBloc>(context)
+                                .add(RemoveCollection(collection: collection));
+                            return dismiss;
+                          }
+                          UtilSnackBar.showSnackBarContent(context, content: Translate.of(context).translate("default_collection"));
+                          return false;
+                        }
+                        return null;
+                      },
+                      child: CollectionTile(
+                        key: ValueKey(collection.name),
+                        collection: collection,
+                        words: words,
+                        index: index,
+                      ),
+                    );
                   },
                 ),
               ),
@@ -76,5 +113,66 @@ class _HomeBodyState extends State<HomeBody> {
         },
       ),
     );
+  }
+
+  Future<bool> showCollectionRemoveDialog() async {
+    return await showGeneralDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          barrierLabel:
+              MaterialLocalizations.of(context).modalBarrierDismissLabel,
+          barrierColor: Colors.black.withOpacity(0.5),
+          transitionDuration: const Duration(milliseconds: 500),
+          pageBuilder: (BuildContext context, Animation<double> animation,
+              Animation<double> secondaryAnimation) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.all(Radius.circular(SizeConfig.defaultSize)),
+              ),
+              title: Center(
+                child: Text(
+                  Translate.of(context).translate('confirmation'),
+                  style: FONT_CONST.BOLD_DEFAULT_18,
+                ),
+              ),
+              content:
+                  Text(Translate.of(context).translate('remove_collection')),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Text(
+                    Translate.of(context).translate('no'),
+                    style: FONT_CONST.MEDIUM_DEFAULT_18,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Text(
+                    Translate.of(context).translate('yes'),
+                    style: FONT_CONST.MEDIUM_DEFAULT_18,
+                  ),
+                ),
+              ],
+            );
+          },
+          transitionBuilder: (context, animation, secondaryAnimation, child) {
+            return BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 4 * animation.value,
+                sigmaY: 4 * animation.value,
+              ),
+              child: FadeTransition(
+                opacity: animation,
+                child: child,
+              ),
+            );
+          },
+        ) ??
+        false;
   }
 }

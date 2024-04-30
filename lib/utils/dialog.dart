@@ -10,6 +10,65 @@ import 'package:vocab_app/utils/translate.dart';
 import 'package:flutter/material.dart';
 
 class UtilDialog {
+  static Future<bool> showPermissionDialog({
+    required BuildContext context,
+    required String title,
+    required String content,
+  }) async {
+    return await showGeneralDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          barrierLabel:
+              MaterialLocalizations.of(context).modalBarrierDismissLabel,
+          barrierColor: Colors.black.withOpacity(0.5),
+          transitionDuration: const Duration(milliseconds: 500),
+          pageBuilder: (BuildContext context, Animation<double> animation,
+              Animation<double> secondaryAnimation) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.all(Radius.circular(SizeConfig.defaultSize)),
+              ),
+              title: Text(title),
+              content: Text(content),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: FONT_CONST.MEDIUM_DEFAULT_18,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Text(
+                    'Settings',
+                    style: FONT_CONST.MEDIUM_DEFAULT_18,
+                  ),
+                ),
+              ],
+            );
+          },
+          transitionBuilder: (context, animation, secondaryAnimation, child) {
+            return BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 4 * animation.value,
+                sigmaY: 4 * animation.value,
+              ),
+              child: FadeTransition(
+                opacity: animation,
+                child: child,
+              ),
+            );
+          },
+        ) ??
+        false;
+  }
+
   static showSeadrchDetail(
     BuildContext context, {
     String? content,

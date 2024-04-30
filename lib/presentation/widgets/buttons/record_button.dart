@@ -12,6 +12,7 @@ import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/presentation/widgets/buttons/play_button.dart';
 import 'package:vocab_app/utils/snackbar.dart';
+import 'package:vocab_app/utils/utils.dart';
 
 class RecordButton extends StatefulWidget {
   final Function(String filePath) onRecordingChanged;
@@ -38,7 +39,12 @@ class _RecordButtonState extends State<RecordButton> {
     final status = await Permission.microphone.request();
 
     if (status != PermissionStatus.granted) {
-      throw "Microphone permission not granted";
+      bool openSettings = await UtilDialog.showPermissionDialog(
+        context: context,
+        title: Translate.of(context).translate('permission_denied'),
+        content: Translate.of(context).translate('microphone_permission'),
+      );
+      if (openSettings) openAppSettings();
     }
 
     await _recorder.openRecorder();

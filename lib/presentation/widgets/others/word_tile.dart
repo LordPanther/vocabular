@@ -46,7 +46,7 @@ class _WordTileState extends State<WordTile> {
         );
       } else {
         UtilSnackBar.showSnackBarContent(context,
-            content: Translate.of(context).translate("content_one"));
+            content: Translate.of(context).translate("default_word"));
       }
     }
   }
@@ -103,7 +103,7 @@ class _WordTileState extends State<WordTile> {
                   style: FONT_CONST.BOLD_DEFAULT_18,
                 ),
               ),
-              content: Text(Translate.of(context).translate("word_remove")),
+              content: Text(Translate.of(context).translate("remove_word")),
               actions: [
                 TextButton(
                   onPressed: () {

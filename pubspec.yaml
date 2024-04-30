@@ -18,7 +18,6 @@ dependencies:
   flutter_bloc: ^8.1.4
   firebase_core: ^2.25.4
   shared_preferences: ^2.2.2
-  fluttertoast: ^8.2.4
   path_provider: ^2.1.2
   stack_trace: ^1.11.1
   intl: ^0.18.1

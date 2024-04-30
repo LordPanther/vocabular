@@ -87,10 +87,10 @@
   "view_collections": "View your collections",
   "enter_collection": "Please enter collection first...",
   "collection_added": "Collection added",
-  "content_two": "Default collection not deleted",
-  "content_one": "Default word not deleted",
-  "word_remove": "Confirm word removal",
-  "collection_remove": "Confirm collection removal",
+  "default_collection": "Collection cannot be deleted",
+  "default_word": "Word cannot be deleted",
+  "remove_word": "Are you sure you want to remove this word?",
+  "remove_collection": "Are you sure you want to remove this collection",
   "confirmation": "Confirmation",
   "definition": "Definition",
   "collection_exists": "Collection already exists",
@@ -106,5 +106,10 @@
   "guest_sign_in": "Guest Sign In",
   "continue": "Continue",
   "skip": "Skip",
-  "sign_up": "Sign Up"
+  "sign_up": "Sign Up",
+  "permisssion_denied": "Permission Denied",
+  "microphone_permission": "Allow access to microphone",
+  "add_collection": "Collection",
+  "no": "No",
+  "yes": "Yes"
 }
