@@ -83,16 +83,12 @@ class _PlayButtonState extends State<PlayButton> {
 
   Future _playAudio() async {
     await _audioPlayer.resume();
-    if (_playMode != "recording") {
-      widget.onPlayingChanged!(_isPlaying);
-    }
+    if (_playMode != "recording") {}
   }
 
   Future _stopAudio() async {
     await _audioPlayer.pause();
-    if (_playMode != "recording") {
-      widget.onPlayingChanged!(_isPlaying);
-    }
+    if (_playMode != "recording") {}
   }
 
   @override

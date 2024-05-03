@@ -7,28 +7,28 @@ class SignInButton extends StatelessWidget {
   final Function() onPressed;
   final Widget child;
   final String text;
-  final Color backgroundColor;
 
   const SignInButton({
     super.key,
     required this.onPressed,
     required this.child,
     required this.text,
-    this.backgroundColor = COLOR_CONST.primaryColor,
   });
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       height: SizeConfig.defaultSize * 4,
-      child: TextButton(
-        onPressed: onPressed,
-        style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(backgroundColor)),
+      decoration: const BoxDecoration(
+          color: COLOR_CONST.primaryColor,
+          borderRadius: BorderRadius.all(Radius.circular(5))),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             child,
             SizedBox(width: SizeConfig.defaultSize * 0.7),
-            Text(text, overflow: TextOverflow.clip),
+            Text(text, overflow: TextOverflow.ellipsis),
           ],
         ),
       ),

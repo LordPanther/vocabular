@@ -6,14 +6,12 @@ class MainButton extends StatelessWidget {
   final Function() onPressed;
   final String buttonName;
   final TextStyle buttonStyle;
-  final IconData? buttonIcon;
 
   const MainButton({
     super.key,
     required this.onPressed,
     required this.buttonName,
     required this.buttonStyle,
-    this.buttonIcon,
   });
   @override
   Widget build(BuildContext context) {

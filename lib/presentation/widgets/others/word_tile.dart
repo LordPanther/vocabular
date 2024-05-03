@@ -30,9 +30,13 @@ class _WordTileState extends State<WordTile> {
   @override
   void initState() {
     super.initState();
+    print("Audio url ${widget.word.audioUrl}");
 
-    _audioUrl =
-        widget.word.audioUrl?.isNotEmpty ?? false ? widget.word.audioUrl! : "";
+    try {
+      _audioUrl = widget.word.audioUrl!;
+    } catch (e) {
+      _audioUrl;
+    }
   }
 
   void removeWord() async {
@@ -70,16 +74,17 @@ class _WordTileState extends State<WordTile> {
               ),
             ),
           if (!_isPlaying)
-            Text(widget.word.word, style: FONT_CONST.BOLD_BLACK_20),
+            Text(widget.word.word, style: FONT_CONST.MEDIUM_DEFAULT_18),
         ],
       ),
-      subtitle: _wordDefinition(),
+      // subtitle: _wordDefinition(),
       onLongPress: removeWord,
+      onTap: () {},
     );
   }
 
   Widget _wordDefinition() {
-    return Text(widget.word.definition, style: FONT_CONST.REGULAR_DEFAULT_20);
+    return Text(widget.word.definition, style: FONT_CONST.REGULAR_DEFAULT_18);
   }
 
   Future<bool> _showRemoveDialog() async {
@@ -99,7 +104,7 @@ class _WordTileState extends State<WordTile> {
               ),
               title: Center(
                 child: Text(
-                  Translate.of(context).translate("confirmation"),
+                  Translate.of(context).translate("confirm_remove_word"),
                   style: FONT_CONST.BOLD_DEFAULT_18,
                 ),
               ),
@@ -109,13 +114,13 @@ class _WordTileState extends State<WordTile> {
                   onPressed: () {
                     Navigator.of(context).pop(false);
                   },
-                  child: const Text('Cancel'),
+                  child: Text(Translate.of(context).translate("no")),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop(true);
                   },
-                  child: const Text('Remove'),
+                  child: Text(Translate.of(context).translate("yes")),
                 ),
               ],
             );

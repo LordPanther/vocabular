@@ -269,7 +269,6 @@ class _RegisterFormState extends State<RegisterForm> {
             onPressed: onSignUp,
             buttonName: Translate.of(context).translate('sign_up'),
             buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
-            buttonIcon: CupertinoIcons.arrow_right,
           ),
       ],
     );

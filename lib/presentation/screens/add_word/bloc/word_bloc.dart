@@ -1,4 +1,3 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/data/local/pref.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
@@ -7,8 +6,7 @@ import 'package:vocab_app/data/repository/repository.dart';
 import 'package:vocab_app/presentation/screens/add_word/bloc/bloc.dart';
 
 class WordBloc extends Bloc<WordEvent, WordState> {
-  final HomeRepository _homeRepository =
-      AppRepository.collectionsRepository;
+  final HomeRepository _homeRepository = AppRepository.collectionsRepository;
   List<CollectionModel> collections = [];
 
   WordBloc() : super(Initial()) {
@@ -20,12 +18,16 @@ class WordBloc extends Bloc<WordEvent, WordState> {
     });
   }
 
-
   Future<void> _mapAddWordToMap(event, Emitter<WordState> emit) async {
     WordModel word = event.word;
     CollectionModel collection = event.collection;
     bool shareWord = event.share;
-    List<String> storedList = [collection.name, word.word, word.definition, word.audioUrl!];
+    List<String> storedList = [
+      collection.name,
+      word.word,
+      word.definition,
+      word.audioUrl!
+    ];
     try {
       await LocalPref.setStringList("recentWord", storedList);
       await _homeRepository.addWord(collection, word, shareWord);

@@ -170,14 +170,12 @@ class _InitializeInfoFormState extends State<InitializeInfoForm> {
             onPressed: onContinue,
             buttonName: Translate.of(context).translate('continue'),
             buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
-            buttonIcon: CupertinoIcons.arrow_right,
           ),
         if (!isPopulated)
           MainButton(
             onPressed: onContinue,
             buttonName: Translate.of(context).translate('skip'),
             buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
-            buttonIcon: CupertinoIcons.arrow_right,
           ),
       ],
     );

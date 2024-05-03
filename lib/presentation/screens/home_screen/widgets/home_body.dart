@@ -130,11 +130,9 @@ class _HomeBodyState extends State<HomeBody> {
                 borderRadius:
                     BorderRadius.all(Radius.circular(SizeConfig.defaultSize)),
               ),
-              title: Center(
-                child: Text(
-                  Translate.of(context).translate('confirmation'),
-                  style: FONT_CONST.BOLD_DEFAULT_18,
-                ),
+              title: Text(
+                Translate.of(context).translate('confirm_remove_collection'),
+                style: FONT_CONST.BOLD_DEFAULT_18,
               ),
               content:
                   Text(Translate.of(context).translate('remove_collection')),

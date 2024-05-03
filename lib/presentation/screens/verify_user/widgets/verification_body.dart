@@ -76,12 +76,12 @@ class _VerificationBodyState extends State<VerificationBody> {
               children: [
                 Text(
                   Translate.of(context).translate('verification_note'),
-                  style: FONT_CONST.MEDIUM_DEFAULT_18,
+                  style: FONT_CONST.MEDIUM_DEFAULT_16,
                   textAlign: TextAlign.justify,
                 ),
                 SizedBox(height: SizeConfig.defaultSize * 5),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _resendButton(),
                     _continueButton(),
@@ -96,24 +96,18 @@ class _VerificationBodyState extends State<VerificationBody> {
   }
 
   _continueButton() {
-    return SizedBox(
-      width: SizeConfig.defaultSize * 15,
-      child: MainButton(
-        onPressed: goHome,
-        buttonName: Translate.of(context).translate('continue'),
-        buttonStyle: FONT_CONST.BOLD_DEFAULT_20, buttonIcon: null,
-      ),
+    return MainButton(
+      onPressed: goHome,
+      buttonName: Translate.of(context).translate('continue'),
+      buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
     );
   }
 
   _resendButton() {
-    return SizedBox(
-      width: SizeConfig.defaultSize * 15,
-      child: MainButton(
-        onPressed: reVerify,
-        buttonName: Translate.of(context).translate('resend_email_link'),
-        buttonStyle: FONT_CONST.BOLD_DEFAULT_20,
-      ),
+    return MainButton(
+      onPressed: reVerify,
+      buttonName: Translate.of(context).translate('resend_email_link'),
+      buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
     );
   }
 }

@@ -4,8 +4,11 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter_sound/public/flutter_sound_recorder.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
@@ -15,18 +18,20 @@ import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/utils.dart';
 
 class RecordButton extends StatefulWidget {
-  final Function(String filePath) onRecordingChanged;
-  const RecordButton({super.key, required this.onRecordingChanged});
+  const RecordButton({super.key});
 
   @override
-  State<RecordButton> createState() => _RecordButtonState();
+  State<RecordButton> createState() => RecordButtonState();
 }
 
-class _RecordButtonState extends State<RecordButton> {
+class RecordButtonState extends State<RecordButton> {
   final _recorder = FlutterSoundRecorder();
   bool _isRecorderReady = false;
   bool _isRecording = false;
-  String _filePath = "";
+  String? _path = "";
+  Uint8List? _bytes;
+  Uint8List? get fileData => _bytes;
+  String? get path => _path;
 
   @override
   void initState() {
@@ -63,32 +68,67 @@ class _RecordButtonState extends State<RecordButton> {
     setState(() {});
   }
 
-  Future record() async {
-    if (!_isRecorderReady) return;
-    await _recorder.startRecorder(toFile: "audio");
-    _isRecording = true;
+  Future<String> getRecordingPath() async {
+    final Directory appDocumentsDir = await getApplicationDocumentsDirectory();
+    final String recordingPath = '${appDocumentsDir.path}/tempRecording';
+    // Check if the file already exists
+    final existingFile = File(recordingPath);
+    if (existingFile.existsSync()) {
+      // If the file exists, delete it
+      existingFile.deleteSync();
+    }
+    return recordingPath;
+  }
 
-    setState(() {});
+  Future<Uint8List?> getUint8ListFromLocalPath(String? localPath) async {
+    if (localPath == null || localPath.isEmpty) {
+      return null;
+    }
+    try {
+      final file = File(localPath);
+      return await file.readAsBytes();
+    } catch (error) {
+      print('Error reading file: $error');
+      return null;
+    }
+  }
+
+  Future record() async {
+    final String customPath = await getRecordingPath();
+    try {
+      await _recorder.startRecorder(toFile: customPath);
+      setState(() {
+        _isRecording = true;
+      });
+    } on Exception catch (exception) {
+      if (kDebugMode) {
+        print(exception.toString());
+      }
+      return;
+    }
   }
 
   Future stop() async {
     if (!_isRecorderReady) return;
     final path = await _recorder.stopRecorder();
-    _filePath = path!;
+    _path = path;
     _isRecording = false;
+
+    Uint8List? bytes = await getUint8ListFromLocalPath(path);
+    _bytes = bytes;
 
     // Show the dialog to keep or discard the recording
     bool keepRecording = await showKeepDiscardDialog();
     if (keepRecording) {
       //Logic to keep the recording
-      widget.onRecordingChanged(_filePath);
-
       UtilSnackBar.showSnackBarContent(context, content: "Recording saved");
     } else {
       // Logic to delete the recording or handle as discarded
-      File(_filePath).delete();
-      _filePath = "";
-      UtilSnackBar.showSnackBarContent(context, content: "Recording deleted");
+      final tempFile = File(path!);
+      if (tempFile.existsSync()) {
+        tempFile.deleteSync();
+      }
+      UtilSnackBar.showSnackBarContent(context, content: "Recording Discarded");
     }
   }
 
@@ -170,7 +210,7 @@ class _RecordButtonState extends State<RecordButton> {
                     BorderRadius.all(Radius.circular(SizeConfig.defaultSize)),
               ),
               title: PlayButton(
-                audioUrl: _filePath,
+                audioUrl: _path!,
                 playMode: "recording",
               ),
               // content:

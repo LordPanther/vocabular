@@ -27,7 +27,7 @@ class StorageRepository {
 
   /// Return audio URL for sharing with other users
   Future<String> uploadAudioData(String ref, Uint8List fileData) async {
-    var storageRef = storage.refFromURL(ref);
+    var storageRef = storage.ref(ref);
     var uploadTask = await storageRef.putData(fileData);
 
     String downloadURL = await uploadTask.ref.getDownloadURL();

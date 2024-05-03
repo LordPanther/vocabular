@@ -4,11 +4,12 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:vocab_app/configs/config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
-import 'package:vocab_app/data/local/pref.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/data/repository/repository.dart';
@@ -29,6 +30,7 @@ class WordBody extends StatefulWidget {
 
 class _WordBodyState extends State<WordBody> {
   late WordBloc wordBloc;
+  final recordButtonState = GlobalKey<RecordButtonState>();
   final AuthRepository _authRepository = AppRepository.authRepository;
   final StorageRepository _storageRepository = AppRepository.storageRepository;
 
@@ -41,7 +43,6 @@ class _WordBodyState extends State<WordBody> {
   // Audio recording global variables
   bool get isWordPopulated => _word.text.isNotEmpty;
   bool get isDefinitionPopulated => _definition.text.isNotEmpty;
-  String _filePath = "";
 
   @override
   void initState() {
@@ -49,14 +50,24 @@ class _WordBodyState extends State<WordBody> {
     wordBloc = BlocProvider.of<WordBloc>(context);
   }
 
-  void _onAddWord() async {
-    File? audioFile = File(_filePath);
+  void _onAddWord(RecordButtonState state) async {
+    // File? audio;
+    // audio = File(state.filePath);
+    // var exists = audio.absolute.existsSync();
+    // if (!exists) {
+    //   final directory = Directory.systemTemp;
+    //   final byteData = await rootBundle.load(state.filePath);
+    //   final file = File(directory.path);
+    // }
     User? user = _authRepository.loggedFirebaseUser;
-    if (isWordPopulated && isDefinitionPopulated && _collection != null) {
-      String audioUrl = await _storageRepository.uploadAudioFile(
-        _word.text,
-        "vocabusers/audio/${user.uid}/$_collection",
-        audioFile,
+    final fileName = '${_word.text}.m4a';
+    String directoryPath = "/vocabusers/${user.uid}";
+    final storagePath = "$directoryPath/$fileName";
+
+    if (isWordPopulated && _collection != null) {
+      String audioUrl = await _storageRepository.uploadAudioData(
+        storagePath,
+        state.fileData!,
       );
       var newWord = WordModel(
           id: _collection!,
@@ -67,6 +78,10 @@ class _WordBodyState extends State<WordBody> {
       wordBloc.add(
         AddWord(collection: newCollection, word: newWord, share: isShared),
       );
+      final tempFile = File(state.path!);
+      if (tempFile.existsSync()) {
+        tempFile.deleteSync();
+      }
     } else {
       if (!isWordPopulated) {
         UtilSnackBar.showSnackBarContent(context,
@@ -193,11 +208,7 @@ class _WordBodyState extends State<WordBody> {
             bottom: SizeConfig.defaultSize * -2.5,
             right: SizeConfig.defaultSize * 10.5,
             child: RecordButton(
-              onRecordingChanged: (filePath) {
-                setState(() {
-                  _filePath = filePath;
-                });
-              },
+              key: recordButtonState,
             ),
           ),
         ],
@@ -278,7 +289,10 @@ class _WordBodyState extends State<WordBody> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         IconButton(
-          onPressed: _onAddWord,
+          onPressed: () {
+            final state = recordButtonState.currentState!;
+            _onAddWord(state);
+          },
           icon: Icon(
             CupertinoIcons.arrow_right,
             size: SizeConfig.defaultSize * 3,

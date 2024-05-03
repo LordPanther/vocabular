@@ -258,7 +258,6 @@ class _LoginFormState extends State<LoginForm> {
             onPressed: onSignIn,
             buttonName: Translate.of(context).translate('sign_in'),
             buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
-            buttonIcon: CupertinoIcons.arrow_right,
           ),
       ],
     );
@@ -279,7 +278,7 @@ class _LoginFormState extends State<LoginForm> {
   _buildGoogleSignIn() {
     return SignInButton(
       onPressed: onGoogleSignUp,
-      text: Translate.of(context).translate('google_sign_in'),
+      text: Translate.of(context).translate('google'),
       child: Image.asset(IMAGE_CONST.GOOGLE_LOGO),
     );
   }
@@ -287,7 +286,7 @@ class _LoginFormState extends State<LoginForm> {
   _buildGuestSignIn() {
     return SignInButton(
       onPressed: onGuestSignIn,
-      text: Translate.of(context).translate('guest_sign_in'),
+      text: Translate.of(context).translate('guest'),
       child: const Icon(CupertinoIcons.profile_circled),
     );
   }
