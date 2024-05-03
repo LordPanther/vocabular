@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
+import 'dart:js_util';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:vocab_app/configs/config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
+import 'package:vocab_app/data/models/add_word_model.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/data/repository/repository.dart';
@@ -30,6 +32,8 @@ class WordBody extends StatefulWidget {
 
 class _WordBodyState extends State<WordBody> {
   late WordBloc wordBloc;
+  late WordModel word;
+  late CollectionModel collection;
   final recordButtonState = GlobalKey<RecordButtonState>();
   final AuthRepository _authRepository = AppRepository.authRepository;
   final StorageRepository _storageRepository = AppRepository.storageRepository;
@@ -38,7 +42,7 @@ class _WordBodyState extends State<WordBody> {
   final TextEditingController _word = TextEditingController();
   final TextEditingController _definition = TextEditingController();
   String? _collection;
-  bool isShared = false;
+  bool _isShared = false;
 
   // Audio recording global variables
   bool get isWordPopulated => _word.text.isNotEmpty;
@@ -48,35 +52,47 @@ class _WordBodyState extends State<WordBody> {
   void initState() {
     super.initState();
     wordBloc = BlocProvider.of<WordBloc>(context);
+    word = const WordModel();
+    collection = const CollectionModel();
+  }
+
+  Future<List<String>> storageData() async {
+    List<String> data = [];
+    User? user = _authRepository.loggedFirebaseUser;
+    String timeStamp = "${DateTime.now().millisecondsSinceEpoch}";
+    final fileName = "$timeStamp.m4a";
+    String directoryPath = "/vocabusers/${user.uid}";
+    final storagePath = "$directoryPath/$fileName";
+    data.add(timeStamp);
+    data.add(storagePath);
+    return data;
+  }
+
+  Future assignDataToModels(List<String> storage, String audioUrl) async {
+    word.cloneWith(
+      id: _collection,
+      word: _word.text,
+      definition: _definition.text,
+      audioUrl: audioUrl,
+      timeStamp: storage[0],
+      isShared: _isShared,
+    );
+    collection.cloneWith(name: _collection);
   }
 
   void _onAddWord(RecordButtonState state) async {
-    // File? audio;
-    // audio = File(state.filePath);
-    // var exists = audio.absolute.existsSync();
-    // if (!exists) {
-    //   final directory = Directory.systemTemp;
-    //   final byteData = await rootBundle.load(state.filePath);
-    //   final file = File(directory.path);
-    // }
-    User? user = _authRepository.loggedFirebaseUser;
-    final fileName = '${_word.text}.m4a';
-    String directoryPath = "/vocabusers/${user.uid}";
-    final storagePath = "$directoryPath/$fileName";
-
     if (isWordPopulated && _collection != null) {
+      var storage = await storageData();
       String audioUrl = await _storageRepository.uploadAudioData(
-        storagePath,
+        storage[1],
         state.fileData!,
       );
-      var newWord = WordModel(
-          id: _collection!,
-          definition: _definition.text,
-          word: _word.text,
-          audioUrl: audioUrl);
-      var newCollection = CollectionModel(name: _collection!);
+      await assignDataToModels(storage, audioUrl);
+
+      var newWord = AddWordModel(word: word, collection: collection);
+
       wordBloc.add(
-        AddWord(collection: newCollection, word: newWord, share: isShared),
+        AddWord(word: newWord),
       );
       final tempFile = File(state.path!);
       if (tempFile.existsSync()) {
@@ -245,7 +261,7 @@ class _WordBodyState extends State<WordBody> {
     );
   }
 
-  Widget _buildCollectionDropdown(List<String> collections) {
+  Widget _buildCollectionDropdown(List<String?> collections) {
     return DropdownSelectionList(
       action: Translate.of(context).translate("select_collection"),
       items: collections,
@@ -271,11 +287,11 @@ class _WordBodyState extends State<WordBody> {
         ),
         const SizedBox(width: 10),
         Checkbox(
-          value: isShared,
+          value: _isShared,
           onChanged: (value) {
             setState(
               () {
-                isShared = value!;
+                _isShared = value!;
               },
             );
           },

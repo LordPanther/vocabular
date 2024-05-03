@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:vocab_app/data/models/add_word_model.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
-import 'package:vocab_app/data/models/word_model.dart';
 
 abstract class WordState extends Equatable {
   const WordState();
@@ -10,7 +10,7 @@ abstract class WordState extends Equatable {
 }
 
 class WordAdded extends WordState {
-  final WordModel word;
+  final AddWordModel word;
 
   const WordAdded(this.word);
 

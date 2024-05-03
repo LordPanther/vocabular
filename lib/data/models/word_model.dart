@@ -1,16 +1,21 @@
 import 'package:equatable/equatable.dart';
 
 class WordModel extends Equatable {
-  final String id;
-  final String definition;
-  final String word;
+  final String? id;
+  final String? definition;
+  final String? word;
   final String? audioUrl;
+  final String? timeStamp;
+  final bool? isShared;
 
-  const WordModel(
-      {required this.id,
-      required this.definition,
-      required this.word,
-      this.audioUrl});
+  const WordModel({
+    this.id,
+    this.definition,
+    this.word,
+    this.audioUrl,
+    this.timeStamp,
+    this.isShared,
+  });
 
   static WordModel fromMap(Map<String, dynamic> data) {
     return WordModel(
@@ -18,6 +23,8 @@ class WordModel extends Equatable {
       definition: data["definition"] ?? "",
       word: data["word"] ?? "",
       audioUrl: data["audiourl"] ?? "",
+      timeStamp: data["timeStamp"] ?? "",
+      isShared: data["isShared"] ?? "",
     );
   }
 
@@ -26,7 +33,9 @@ class WordModel extends Equatable {
       "id": id,
       "definition": definition,
       "word": word,
-      "audioUrl": audioUrl
+      "audioUrl": audioUrl,
+      "timeStamp": timeStamp,
+      "isShared": isShared,
     };
   }
 
@@ -35,18 +44,22 @@ class WordModel extends Equatable {
     audioUrl,
     definition,
     word,
+    timeStamp,
+    isShared,
   }) {
     return WordModel(
       id: id ?? this.id,
       definition: definition ?? this.definition,
       word: word ?? this.word,
       audioUrl: audioUrl ?? this.audioUrl,
+      timeStamp: timeStamp ?? this.timeStamp,
+      isShared: isShared ?? this.isShared,
     );
   }
 
   @override
   String toString() {
-    return "WordModel:{id:$id, definition:$definition, word:$word, audio:$audioUrl}";
+    return "WordModel:{id:$id, definition:$definition, word:$word, audio:$audioUrl, timeStamp:$timeStamp, isShared: $isShared}";
   }
 
   @override
@@ -55,5 +68,7 @@ class WordModel extends Equatable {
         definition,
         word,
         audioUrl,
+        timeStamp,
+        isShared,
       ];
 }

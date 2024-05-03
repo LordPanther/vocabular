@@ -16,15 +16,6 @@ class StorageRepository {
     return downloadURL;
   }
 
-  Future<String> uploadAudioFile(String word, String ref, File file) async {
-    SettableMetadata metadata = SettableMetadata(contentType: 'audio/mp3');
-    var storageRef = storage.ref(ref).child('/$word.mp3');
-    var uploadTask = await storageRef.putFile(file, metadata);
-
-    String downloadURL = await uploadTask.ref.getDownloadURL();
-    return downloadURL;
-  }
-
   /// Return audio URL for sharing with other users
   Future<String> uploadAudioData(String ref, Uint8List fileData) async {
     var storageRef = storage.ref(ref);

@@ -69,7 +69,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         for (var collection in data.collections) {
           for (var words in data.words) {
             results.addAll(words.where((word) =>
-                word.word.toLowerCase().contains(keyword.toLowerCase())));
+                word.word!.toLowerCase().contains(keyword.toLowerCase())));
           }
         }
 

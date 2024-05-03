@@ -130,7 +130,7 @@ class _SearchScreenState extends State<SearchScreen> {
         itemCount: words.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text(words[index].word),
+            title: Text(words[index].word!),
             // subtitle: Column(
             //   children: [
             //     Text(words[index].definition),

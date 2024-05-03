@@ -66,7 +66,7 @@ class _DailyWordWidgetState extends State<DailyWordWidget> {
 
   _buildWord() {
     return Text(
-      wordMap.word,
+      wordMap.word!,
       style: FONT_CONST.MEDIUM_DEFAULT_20,
       maxLines: 2,
     );
@@ -74,7 +74,7 @@ class _DailyWordWidgetState extends State<DailyWordWidget> {
 
   _buildPartOfSpeech() {
     return Text(
-      wordMap.definition,
+      wordMap.definition!,
       style: FONT_CONST.REGULAR_DEFAULT_16,
       maxLines: 2,
     );
@@ -90,7 +90,7 @@ class _DailyWordWidgetState extends State<DailyWordWidget> {
             style: FONT_CONST.MEDIUM_DEFAULT_16,
           ),
           Text(
-            wordMap.definition,
+            wordMap.definition!,
             style: FONT_CONST.REGULAR_DEFAULT_16,
           ),
         ],

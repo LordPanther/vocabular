@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:vocab_app/data/models/collections_model.dart';
+import 'package:vocab_app/data/models/add_word_model.dart';
 import 'package:vocab_app/data/models/models.dart';
 import 'package:vocab_app/data/repository/home_repository/home_repo.dart';
 import 'package:vocab_app/utils/collection_data.dart';
@@ -16,19 +16,21 @@ class FirebaseHomeRepository implements HomeRepository {
   /// Called once on registration to create collections:[defaultcollections]
   @override
   Future<void> createDefaultCollection(UserModel user) async {
-    CollectionModel collection = const CollectionModel(
-      name: "default",
-    );
-    WordModel word = WordModel(
-        id: collection.name,
+    var word = const AddWordModel(
+      word: WordModel(
+        id: "default",
+        word: "vocabular",
         definition:
             "The worlds best app for all those words you use everyday, everywhere.",
-        word: "vocabular");
-    bool sharedWord = true;
+        timeStamp: "0000",
+        isShared: true,
+      ),
+      collection: CollectionModel(name: "default"),
+    );
 
     try {
       // Create default collection
-      await addWord(collection, word, sharedWord);
+      await addWord(word);
     } catch (error) {
       if (kDebugMode) {
         print(error);
@@ -54,16 +56,15 @@ class FirebaseHomeRepository implements HomeRepository {
   }
 
   @override
-  Future<void> addWord(
-      CollectionModel collection, WordModel word, bool shareWord) async {
+  Future<void> addWord(AddWordModel word) async {
     User? user = _firebaseAuth.currentUser;
     try {
       await _userHome
           .collection("vocabusers")
           .doc(user!.uid)
           .collection("collections")
-          .doc(collection.name)
-          .set({word.word: word.toMap()}, SetOptions(merge: true));
+          .doc(word.collection.name)
+          .set({word.word.word!: word.toMap()}, SetOptions(merge: true));
     } catch (error) {
       if (kDebugMode) {
         print(error);
@@ -80,7 +81,7 @@ class FirebaseHomeRepository implements HomeRepository {
           .doc(user!.uid)
           .collection("collections")
           .doc(collection.name)
-          .update({word.word: FieldValue.delete()});
+          .update({word.word!: FieldValue.delete()});
     } catch (error) {
       if (kDebugMode) {
         print(error);
@@ -147,7 +148,10 @@ class FirebaseHomeRepository implements HomeRepository {
       data.forEach(
         (key, value) {
           words.add(WordModel(
-              id: value["id"], definition: value["definition"], word: key));
+              id: value["id"],
+              definition: value["definition"],
+              word: key,
+              timeStamp: value["timeStamp"]));
         },
       );
       return words; // Return the list of words here

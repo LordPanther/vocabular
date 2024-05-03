@@ -1,3 +1,4 @@
+import 'package:vocab_app/data/models/add_word_model.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/data/models/user_model.dart';
@@ -12,7 +13,7 @@ abstract class HomeRepository {
 
   /// Add a new word [word]
   Future<void> addWord(
-      CollectionModel collection, WordModel word, bool shareWord);
+      AddWordModel word);
 
   /// Remove this word [word]
   Future<void> removeWord(CollectionModel collection, WordModel word);

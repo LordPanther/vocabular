@@ -1,7 +1,5 @@
-
 import 'package:equatable/equatable.dart';
-import 'package:vocab_app/data/models/collections_model.dart';
-import 'package:vocab_app/data/models/word_model.dart';
+import 'package:vocab_app/data/models/add_word_model.dart';
 
 class WordEvent extends Equatable {
   const WordEvent();
@@ -11,14 +9,11 @@ class WordEvent extends Equatable {
 }
 
 class AddWord extends WordEvent {
-  final WordModel word;
-  final CollectionModel collection;
-  final bool share;
-  const AddWord(
-      {required this.collection, required this.word, required this.share});
+  final AddWordModel word;
+  const AddWord({required this.word});
 
   @override
-  List<Object> get props => [collection, word];
+  List<Object> get props => [word];
 }
 
 class LoadWordScreen extends WordEvent {}

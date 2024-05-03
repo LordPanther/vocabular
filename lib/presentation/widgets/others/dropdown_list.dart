@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:vocab_app/configs/config.dart';
 
 class DropdownSelectionList extends StatefulWidget {
-  final List<String> items;
+  final List<String?> items;
   final String action;
   final void Function(String?) onItemSelected;
 
   const DropdownSelectionList(
-      {super.key, required this.action, required this.items, required this.onItemSelected});
+      {super.key,
+      required this.action,
+      required this.items,
+      required this.onItemSelected});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -34,10 +37,10 @@ class _DropdownSelectionListState extends State<DropdownSelectionList> {
         });
         widget.onItemSelected(newValue);
       },
-      items: widget.items.map<DropdownMenuItem<String>>((String value) {
+      items: widget.items.map<DropdownMenuItem<String>>((String? value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Center(child: Text(value.toUpperCase())),
+          child: Center(child: Text(value!.toUpperCase())),
         );
       }).toList(),
     );

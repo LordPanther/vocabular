@@ -18,7 +18,7 @@ class CollectionsModelCard extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Text(
-        Translate.of(context).translate(collection.name).toUpperCase(),
+        Translate.of(context).translate(collection.name!).toUpperCase(),
         style: FONT_CONST.BOLD_WHITE_16,
       ),
     );

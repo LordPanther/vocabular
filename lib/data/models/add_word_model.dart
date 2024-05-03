@@ -1,59 +1,48 @@
 import 'package:equatable/equatable.dart';
+import 'package:vocab_app/data/models/collections_model.dart';
+import 'package:vocab_app/data/models/word_model.dart';
 
-class WordModel extends Equatable {
-  final String id;
-  final String definition;
-  final String word;
-  final String? audioUrl;
+class AddWordModel extends Equatable {
+  final WordModel word;
+  final CollectionModel collection;
 
-  const WordModel(
-      {required this.id,
-      required this.definition,
-      required this.word,
-      this.audioUrl});
+  const AddWordModel({
+    required this.word,
+    required this.collection
+  });
 
-  static WordModel fromMap(Map<String, dynamic> data) {
-    return WordModel(
-      id: data["id"] ?? "",
-      definition: data["definition"] ?? "",
+  static AddWordModel fromMap(Map<String, dynamic> data) {
+    return AddWordModel(
       word: data["word"] ?? "",
-      audioUrl: data["audiourl"] ?? "",
+      collection: data["collection"] ?? "",
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      "id": id,
-      "definition": definition,
       "word": word,
-      "audioUrl": audioUrl
+      "collection": collection
     };
   }
 
-  WordModel cloneWith({
-    id,
-    audioUrl,
-    definition,
+  AddWordModel cloneWith({
     word,
+    collection,
   }) {
-    return WordModel(
-      id: id ?? this.id,
-      definition: definition ?? this.definition,
+    return AddWordModel(
       word: word ?? this.word,
-      audioUrl: audioUrl ?? this.audioUrl,
+      collection: collection ?? this.collection,
     );
   }
 
   @override
   String toString() {
-    return "WordModel:{id:$id, definition:$definition, word:$word, audio:$audioUrl}";
+    return "AddWordModel:{id:$word, definition:$collection}";
   }
 
   @override
   List<Object?> get props => [
-        id,
-        definition,
         word,
-        audioUrl,
+        collection,
       ];
 }

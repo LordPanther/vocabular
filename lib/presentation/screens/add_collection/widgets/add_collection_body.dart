@@ -146,7 +146,7 @@ class _AddCollectionBodyState extends State<AddCollectionBody> {
     );
   }
 
-  Widget _buildCollectionDropdown(List<String> collections) {
+  Widget _buildCollectionDropdown(List<String?> collections) {
     return DropdownSelectionList(
       action: Translate.of(context).translate("view_collections"),
       items: collections,

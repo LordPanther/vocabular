@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:vocab_app/configs/size_config.dart';
@@ -56,7 +55,7 @@ class _CollectionTileState extends State<CollectionTile> {
                     : '',
             style: FONT_CONST.REGULAR_DEFAULT_16),
         title: Text(
-            _collection.name[0].toUpperCase() + _collection.name.substring(1),
+            _collection.name![0].toUpperCase() + _collection.name!.substring(1),
             style: FONT_CONST.MEDIUM_DEFAULT_18),
         children: _buildWordsList(_words),
       ),

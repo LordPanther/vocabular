@@ -12,9 +12,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<LoadHome>((event, emit) async {
       await _mapLoadHomeToMap(event, emit);
     });
-    on<CreateWord>((event, emit) async {
-      await _mapCreateWordToMap(event, emit);
-    });
+    // on<CreateWord>((event, emit) async {
+    //   await _mapCreateWordToMap(event, emit);
+    // });
     on<CreateCollection>((event, emit) async {
       await _mapCreateCollectionToMap(event, emit);
     });
@@ -49,6 +49,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         definition: recentWord[2],
         word: recentWord[1],
         audioUrl: recentWord[3],
+        timeStamp: recentWord[4],
       );
       return word;
     }
@@ -56,17 +57,17 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   /// Create word
-  Future<void> _mapCreateWordToMap(event, Emitter<HomeState> emit) async {
-    WordModel word = event.word;
-    CollectionModel collection = event.collection;
-    bool shareWord = event.shareWord;
-    try {
-      await _homeRepository.addWord(collection, word, shareWord);
-      await _mapLoadHomeToMap(event, emit);
-    } catch (error) {
-      emit(HomeLoadFailure(error.toString()));
-    }
-  }
+  // Future<void> _mapCreateWordToMap(event, Emitter<HomeState> emit) async {
+  //   WordModel word = event.word;
+  //   CollectionModel collection = event.collection;
+  //   bool shareWord = event.shareWord;
+  //   try {
+  //     await _homeRepository.addWord(collection, word, shareWord);
+  //     await _mapLoadHomeToMap(event, emit);
+  //   } catch (error) {
+  //     emit(HomeLoadFailure(error.toString()));
+  //   }
+  // }
 
   /// Create collection
   Future<void> _mapCreateCollectionToMap(event, Emitter<HomeState> emit) async {

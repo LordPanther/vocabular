@@ -94,16 +94,16 @@ class UtilDialog {
                 child: const CircularVolumeIcon(),
               ),
               SizedBox(width: SizeConfig.defaultSize * 2),
-              Text(word[0].toUpperCase() + word.substring(1)),
+              Text(word![0].toUpperCase() + word!.substring(1)),
             ],
           ),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text(words[index].definition),
+                Text(words[index].definition!),
                 SizedBox(height: SizeConfig.defaultSize * 5),
                 Text(
-                    'Collection: ${words[index].id[0].toUpperCase() + words[index].id.substring(1)}'),
+                    'Collection: ${words[index].id![0].toUpperCase() + words[index].id!.substring(1)}'),
               ],
             ),
           ),

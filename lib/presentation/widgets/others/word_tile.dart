@@ -74,7 +74,7 @@ class _WordTileState extends State<WordTile> {
               ),
             ),
           if (!_isPlaying)
-            Text(widget.word.word, style: FONT_CONST.MEDIUM_DEFAULT_18),
+            Text(widget.word.word!, style: FONT_CONST.MEDIUM_DEFAULT_18),
         ],
       ),
       // subtitle: _wordDefinition(),
@@ -84,7 +84,7 @@ class _WordTileState extends State<WordTile> {
   }
 
   Widget _wordDefinition() {
-    return Text(widget.word.definition, style: FONT_CONST.REGULAR_DEFAULT_18);
+    return Text(widget.word.definition!, style: FONT_CONST.REGULAR_DEFAULT_18);
   }
 
   Future<bool> _showRemoveDialog() async {
