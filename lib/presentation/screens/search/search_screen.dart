@@ -131,13 +131,6 @@ class _SearchScreenState extends State<SearchScreen> {
         itemBuilder: (context, index) {
           return ListTile(
             title: Text(words[index].word!),
-            // subtitle: Column(
-            //   children: [
-            //     Text(words[index].definition),
-            //     SizedBox(height: SizeConfig.defaultSize * 5),
-            //     Text(words[index].id),
-            //   ],
-            // ),
             onTap: () {
               // Implement onTap action if needed
               UtilDialog.showSeadrchDetail(context, index: index, words: words);

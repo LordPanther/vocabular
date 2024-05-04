@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:vocab_app/configs/config.dart';
 
 class MainButton extends StatelessWidget {
   final Function() onPressed;

@@ -94,7 +94,7 @@ class UtilDialog {
                 child: const CircularVolumeIcon(),
               ),
               SizedBox(width: SizeConfig.defaultSize * 2),
-              Text(word![0].toUpperCase() + word!.substring(1)),
+              Text(word![0].toUpperCase() + word.substring(1)),
             ],
           ),
           content: SingleChildScrollView(

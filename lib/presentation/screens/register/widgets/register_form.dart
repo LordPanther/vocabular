@@ -1,6 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'package:flutter/cupertino.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/user_model.dart';

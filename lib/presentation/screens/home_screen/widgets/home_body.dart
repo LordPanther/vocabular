@@ -87,11 +87,16 @@ class _HomeBodyState extends State<HomeBody> {
                               await showCollectionRemoveDialog();
 
                           if (dismiss && collection.name != "default") {
-                            BlocProvider.of<HomeBloc>(context)
-                                .add(RemoveCollection(collection: collection));
-                            return dismiss;
+                            if (collection.name != "default") {
+                              BlocProvider.of<HomeBloc>(context).add(
+                                  RemoveCollection(collection: collection));
+                              return dismiss;
+                            } else {
+                              UtilSnackBar.showSnackBarContent(context,
+                                  content: Translate.of(context)
+                                      .translate("default_collection"));
+                            }
                           }
-                          UtilSnackBar.showSnackBarContent(context, content: Translate.of(context).translate("default_collection"));
                           return false;
                         }
                         return null;

@@ -1,5 +1,4 @@
 import 'package:vocab_app/configs/size_config.dart';
-import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/presentation/common_blocs/auth/auth_bloc.dart';
 import 'package:vocab_app/presentation/common_blocs/auth/auth_event.dart';

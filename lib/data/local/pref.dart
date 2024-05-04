@@ -1,5 +1,4 @@
 import 'package:vocab_app/configs/application.dart';
-import 'package:vocab_app/data/models/word_model.dart';
 
 class LocalPref {
   static Future<bool> clear() {

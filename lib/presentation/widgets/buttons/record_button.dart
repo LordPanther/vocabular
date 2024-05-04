@@ -88,7 +88,9 @@ class RecordButtonState extends State<RecordButton> {
       final file = File(localPath);
       return await file.readAsBytes();
     } catch (error) {
-      print('Error reading file: $error');
+      if (kDebugMode) {
+        print('Error reading file: $error');
+      }
       return null;
     }
   }

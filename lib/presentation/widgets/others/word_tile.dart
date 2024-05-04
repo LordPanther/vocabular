@@ -2,6 +2,7 @@
 
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/configs/size_config.dart';
@@ -30,7 +31,9 @@ class _WordTileState extends State<WordTile> {
   @override
   void initState() {
     super.initState();
-    print("Audio url ${widget.word.audioUrl}");
+    if (kDebugMode) {
+      print("Audio url ${widget.word.audioUrl}");
+    }
 
     try {
       _audioUrl = widget.word.audioUrl!;
@@ -83,9 +86,6 @@ class _WordTileState extends State<WordTile> {
     );
   }
 
-  Widget _wordDefinition() {
-    return Text(widget.word.definition!, style: FONT_CONST.REGULAR_DEFAULT_18);
-  }
 
   Future<bool> _showRemoveDialog() async {
     return await showGeneralDialog<bool>(
