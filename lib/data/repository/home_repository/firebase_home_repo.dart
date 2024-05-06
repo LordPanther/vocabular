@@ -11,11 +11,13 @@ import 'package:vocab_app/utils/collection_data.dart';
 class FirebaseHomeRepository implements HomeRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final _userHome = FirebaseFirestore.instance;
+  String get userType => _firebaseAuth.currentUser!.isAnonymous ? "vocabguests" : "vocabusers";
+  User get user => _firebaseAuth.currentUser!;
 
   /// [FirebaseAuthRepository]
   /// Called once on registration to create collections:[defaultcollections]
   @override
-  Future<void> createDefaultCollection(UserModel user) async {
+  Future<void> createDefaultCollection() async {
     var word = const AddWordModel(
       word: WordModel(
         id: "default",
@@ -30,7 +32,7 @@ class FirebaseHomeRepository implements HomeRepository {
 
     try {
       // Create default collection
-      await addWord(word);
+      await addWord(word.word);
     } catch (error) {
       if (kDebugMode) {
         print(error);
@@ -56,15 +58,15 @@ class FirebaseHomeRepository implements HomeRepository {
   }
 
   @override
-  Future<void> addWord(AddWordModel word) async {
-    User? user = _firebaseAuth.currentUser;
+  Future<void> addWord(WordModel word) async {
+
     try {
       await _userHome
-          .collection("vocabusers")
-          .doc(user!.uid)
+          .collection(userType)
+          .doc(user.uid)
           .collection("collections")
-          .doc(word.collection.name)
-          .set({word.word.word!: word.toMap()}, SetOptions(merge: true));
+          .doc(word.id)
+          .set({word.word!: word.toMap()}, SetOptions(merge: true));
     } catch (error) {
       if (kDebugMode) {
         print(error);
@@ -74,11 +76,10 @@ class FirebaseHomeRepository implements HomeRepository {
 
   @override
   Future<void> removeWord(CollectionModel collection, WordModel word) async {
-    User? user = _firebaseAuth.currentUser;
     try {
       await _userHome
-          .collection("vocabusers")
-          .doc(user!.uid)
+          .collection(userType)
+          .doc(user.uid)
           .collection("collections")
           .doc(collection.name)
           .update({word.word!: FieldValue.delete()});
@@ -91,12 +92,11 @@ class FirebaseHomeRepository implements HomeRepository {
 
   /// Create collection
   Future<void> addColllectionToUi(CollectionModel collection) async {
-    User? user = _firebaseAuth.currentUser;
 
     try {
       await _userHome
-          .collection("vocabusers")
-          .doc(user!.uid)
+          .collection(userType)
+          .doc(user.uid)
           .collection("collections")
           .doc(collection.name)
           .set({});
@@ -110,12 +110,11 @@ class FirebaseHomeRepository implements HomeRepository {
   /// Get a list of collections in collections along with their words
   @override
   Future<CollectionData> fetchCollections() async {
-    User? user = _firebaseAuth.currentUser;
     List<CollectionModel> userCollections = [];
     List<List<WordModel>> userWords = [];
     var snapshot = await _userHome
-        .collection("vocabusers")
-        .doc(user!.uid)
+        .collection(userType)
+        .doc(user.uid)
         .collection("collections")
         .get();
 
@@ -132,13 +131,12 @@ class FirebaseHomeRepository implements HomeRepository {
 
   /// Fetch words for a specific collection
   Future<List<WordModel>> fetchWords(DocumentSnapshot doc) async {
-    User? user = _firebaseAuth.currentUser;
     List<WordModel> words = [];
 
     try {
       var snapshot = await _userHome
-          .collection("vocabusers")
-          .doc(user!.uid)
+          .collection(userType)
+          .doc(user.uid)
           .collection("collections")
           .doc(doc.id)
           .get();
@@ -166,12 +164,11 @@ class FirebaseHomeRepository implements HomeRepository {
 
   @override
   Future<void> removeCollection(CollectionModel collection) async {
-    User? user = _firebaseAuth.currentUser;
 
     try {
       await _userHome
-          .collection("vocabusers")
-          .doc(user!.uid)
+          .collection(userType)
+          .doc(user.uid)
           .collection("collections")
           .doc(collection.name)
           .delete();

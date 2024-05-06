@@ -16,12 +16,15 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final bool _viewUser = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(height: SizeConfig.defaultSize * 7),
             ProfileHeader(),
             _buildProfileMenuButton(
               text: Translate.of(context).translate("profile"),
@@ -52,8 +55,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       leading: icon,
       title: text,
       onPressed: onPressed,
-      trailing:
-          const Icon(Icons.arrow_forward_ios, color: COLOR_CONST.textColor),
     );
   }
 }

@@ -48,8 +48,10 @@ class _AppViewState extends State<AppView> {
     _navigator!.pushNamedAndRemoveUntil(route, (route) => false);
   }
 
-  void loadData() {
-    BlocProvider.of<ProfileBloc>(context).add(LoadProfile());
+  void loadData(String userType) {
+    userType == "user"
+        ? BlocProvider.of<ProfileBloc>(context).add(LoadProfile("user"))
+        : BlocProvider.of<ProfileBloc>(context).add(LoadProfile("guest"));
   }
 
   @override
@@ -82,7 +84,9 @@ class _AppViewState extends State<AppView> {
                       } else if (authState is Uninitialized) {
                         onNavigate(AppRouter.SPLASH);
                       } else if (authState is Authenticated) {
-                        loadData();
+                        authState.loggedFirebaseUser.isAnonymous
+                            ? loadData("guest")
+                            : loadData("user");
                         onNavigate(AppRouter.HOME);
                       }
                     } else {

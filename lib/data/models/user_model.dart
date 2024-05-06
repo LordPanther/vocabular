@@ -3,52 +3,42 @@ import 'package:equatable/equatable.dart';
 /// User model
 class UserModel extends Equatable {
   /// The current user's id.
-  final String id;
+  final String? id;
 
   /// The current user's email address.
-  final String email;
+  final String? email;
 
   /// The current user's first name (display name).
-  final String firstName;
+  final String? firstName;
 
   /// The current user's last name (display name).
-  final String lastName;
+  final String? lastName;
 
   /// Url for the current user's photo.
-  final String avatar;
+  final String? avatar;
 
   /// The user's phone number
-  final String phoneNumber;
-
-  /// The users verification status
-  final String verificationStatus;
-
-  /// The users verification status
-  final String tier;
+  final String? username;
 
   /// Constructor
   const UserModel({
-    required this.email,
-    required this.id,
-    required this.tier,
-    required this.firstName,
-    required this.lastName,
-    required this.avatar,
-    required this.phoneNumber,
-    required this.verificationStatus,
+    this.email,
+    this.id,
+    this.firstName,
+    this.lastName,
+    this.avatar,
+    this.username
   });
 
   /// Json data from server turns into model data
   static UserModel fromMap(Map<String, dynamic> data) {
     return UserModel(
       id: data["id"] ?? "",
-      tier: data["tier"] ?? "",
       firstName: data["firstName"] ?? "",
       lastName: data["lastName"] ?? "",
       email: data["email"] ?? "",
       avatar: data["avatar"] ?? "",
-      phoneNumber: data["phoneNumber"] ?? "",
-      verificationStatus: data["verificationStatus"] ?? "",
+      username: data["username"] ?? "",
     );
   }
 
@@ -57,12 +47,10 @@ class UserModel extends Equatable {
     return {
       "id": id,
       "email": email,
-      "tier": tier,
       "firstName": firstName,
       "lastName": lastName,
       "avatar": avatar,
-      "phoneNumber": phoneNumber,
-      "verificationStatus": verificationStatus,
+      "username": username,
     };
   }
 
@@ -70,9 +58,7 @@ class UserModel extends Equatable {
   UserModel cloneWith({
     email,
     id,
-    tier,
-    phoneNumber,
-    verificationStatus,
+    username,
     firstName,
     lastName,
     avatar,
@@ -80,18 +66,16 @@ class UserModel extends Equatable {
     return UserModel(
       email: email ?? this.email,
       id: id ?? this.id,
-      tier: tier ?? this.tier,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       avatar: avatar ?? this.avatar,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      verificationStatus: verificationStatus ?? this.verificationStatus,
+      username: username ?? this.username,
     );
   }
 
   @override
   String toString() {
-    return "UserModel:{email:$email, firstName:$firstName, tier:$tier ,lastName:$lastName, phoneNumber:$phoneNumber, avatar:$avatar}";
+    return "UserModel:{email:$email, firstName:$firstName,lastName:$lastName, username:$username, avatar:$avatar}";
   }
 
   /// Compare two users
@@ -99,11 +83,9 @@ class UserModel extends Equatable {
   List<Object?> get props => [
         email,
         id,
-        tier,
+        username,
         firstName,
         lastName,
         avatar,
-        phoneNumber,
-        verificationStatus,
       ];
 }

@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter_sound/public/flutter_sound_recorder.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:vocab_app/configs/router.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
@@ -18,7 +20,8 @@ import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/utils.dart';
 
 class RecordButton extends StatefulWidget {
-  const RecordButton({super.key});
+  final User user;
+  const RecordButton({super.key, required this.user});
 
   @override
   State<RecordButton> createState() => RecordButtonState();
@@ -60,12 +63,21 @@ class RecordButtonState extends State<RecordButton> {
   }
 
   void onRecord() async {
-    if (_isRecording) {
-      await stop();
+    if (!widget.user.isAnonymous) {
+      if (_isRecording) {
+        await stop();
+      } else {
+        await record();
+      }
+      setState(() {});
     } else {
-      await record();
+      bool signUp = await UtilDialog.showGuestDialog(
+          context: context, content: Translate.of(context).translate('switch'));
+
+      if (signUp) {
+        Navigator.of(context).pushNamed(AppRouter.SWITCH_USER);
+      }
     }
-    setState(() {});
   }
 
   Future<String> getRecordingPath() async {

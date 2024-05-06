@@ -2,15 +2,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vocab_app/configs/router.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
-import 'package:vocab_app/constants/image_constant.dart';
 import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/presentation/screens/search/search/search_screen_bloc.dart';
 import 'package:vocab_app/presentation/screens/search/search/search_screen_event.dart';
 import 'package:vocab_app/presentation/screens/search/search/search_screen_state.dart';
 import 'package:vocab_app/presentation/screens/search/widgets/search_bar.dart';
+import 'package:vocab_app/presentation/widgets/buttons/text_button.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
 import 'package:vocab_app/utils/utils.dart';
 
@@ -82,9 +83,12 @@ class _SearchScreenState extends State<SearchScreen> {
             style: FONT_CONST.BOLD_DEFAULT_26,
           ),
           Wrap(
-            children: List.generate(state.recentKeywords.length, (index) {
-              return _buildSuggestionItem(state.recentKeywords[index]);
-            }),
+            children: List.generate(
+              state.recentKeywords.length,
+              (index) {
+                return _buildSuggestionItem(state.recentKeywords[index]);
+              },
+            ),
           ),
         ],
       );
@@ -114,7 +118,15 @@ class _SearchScreenState extends State<SearchScreen> {
         children: [
           recentSearchWidget,
           SizedBox(height: SizeConfig.defaultSize * 3),
-          hotKeywordsWidget
+          hotKeywordsWidget,
+          SizedBox(height: SizeConfig.defaultSize * 10),
+          MainButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            buttonName: Translate.of(context).translate('back'),
+            buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
+          )
         ],
       ),
     );
@@ -140,12 +152,23 @@ class _SearchScreenState extends State<SearchScreen> {
       );
     } else {
       return Center(
-        child: Image.asset(
-          IMAGE_CONST.NOT_FOUND,
-          width: SizeConfig.defaultSize * 25,
-          height: SizeConfig.defaultSize * 25,
-        ),
-      );
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            Translate.of(context).translate("no_word"),
+            style: FONT_CONST.MEDIUM_PRIMARY_18,
+          ),
+          SizedBox(height: SizeConfig.defaultSize * 10),
+          MainButton(
+            onPressed: () {
+              Navigator.of(context).popAndPushNamed(AppRouter.WORD);
+            },
+            buttonName: Translate.of(context).translate('add_word'),
+            buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
+          ),
+        ],
+      ));
     }
   }
 
@@ -165,7 +188,7 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
         decoration: BoxDecoration(
           color: COLOR_CONST.primaryColor.withOpacity(0.3),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(5),
         ),
         child: Text(
           keyword,

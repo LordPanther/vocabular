@@ -14,11 +14,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginEvent>((event, emit) {
       transformEvents(const Duration(milliseconds: 300));
     });
-    on<LoginWithCredential>((event, emit) async {
+    on<SignInWithCredentials>((event, emit) async {
       await _mapLoginWithCredentialToState(event, emit);
     });
     on<SignInWithGoogleSignIn>((event, emit) async {
       await _mapLoginWithGoogleSignInToState(event, emit);
+    });
+    on<SignInAsGuest>((event, emit) async {
+      await _mapSignInAsGuest(event, emit);
     });
     on<EmailChanged>((event, emit) async {
       await _mapEmailChangedToState(event, emit);
@@ -78,6 +81,25 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
+  Future<void> _mapSignInAsGuest(event, Emitter<LoginState> emit) async {
+    try {
+      emit(LoginState.logging());
+
+      await _authRepository.signUpAsGuest();
+      bool isLoggedIn = _authRepository.isLoggedIn();
+
+      if (isLoggedIn) {
+        emit(LoginState.success());
+      } else {
+        final message = _authRepository.authException;
+        emit(LoginState.failure("$message guest"));
+      }
+    } catch (error) {
+      final message = _authRepository.authException;
+      emit(LoginState.failure(message));
+    }
+  }
+
   /// Map from login event => states
   Future<void> _mapLoginWithCredentialToState(
       event, Emitter<LoginState> emit) async {
@@ -95,7 +117,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         final message = _authRepository.authException;
         emit(LoginState.failure(message));
       }
-    } catch (e) {
+    } catch (error) {
       final message = _authRepository.authException;
       emit(LoginState.failure(message));
     }

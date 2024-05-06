@@ -28,8 +28,6 @@ class AuthenticationBloc
 
       await Future.delayed(const Duration(seconds: 5));
 
-      // bool isVerified = _authRepository.isVerified();
-
       if (isLoggedIn) {
         final loggedFirebaseUser = _authRepository.loggedFirebaseUser;
         emit(Authenticated(loggedFirebaseUser));

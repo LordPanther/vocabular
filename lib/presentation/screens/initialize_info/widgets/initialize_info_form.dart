@@ -35,12 +35,10 @@ class _InitializeInfoFormState extends State<InitializeInfoForm> {
       UserModel selection = UserModel(
         email: "",
         id: "",
-        tier: "",
+        username: "",
         firstName: _firstNameController.text,
         lastName: _lastNameController.text,
         avatar: "",
-        phoneNumber: "",
-        verificationStatus: "",
       );
       Navigator.pushReplacementNamed(
         context,

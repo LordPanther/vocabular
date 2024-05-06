@@ -60,7 +60,7 @@
   "login_form": "Faka elinye igama...",
   "add": "Faka",
   "add_definition": "Incazelo",
-  "add_word": "Igama",
+  "add_word": "+ Faka Igama",
   "collection_name": "Iqoqo",
   "something_wrong": "Kunenkinga ekhona",
   "load_failure": "Inkinga yoku load-a.",
@@ -77,7 +77,7 @@
   "dictionary": "Isichazamazwi",
   "select_collection": "Khetha iqoqo",
   "share_word": "Nikeza abanye igama",
-  "add_new_word": "Faka igama elisha",
+  "add_new_word": "Faka Igama Elisha",
   "add_new_collection": "Faka iqoqo elisha",
   "word_added": "Igama lifakekile",
   "word_checker": "Faka igama kuqala",
@@ -104,6 +104,7 @@
   "email_field_validator": "Faka i-email",
   "google": "Google",
   "guest": "Isivakashi",
+  "guest_user": "Uyisivakashi",
   "continue": "Qhubeka",
   "skip": "Yeqa",
   "sign_up": "Bhalisa",
@@ -111,5 +112,10 @@
   "microphone_permission": "Nikeza i-microphone imvume",
   "add_collection": "Iqoqo",
   "no": "Cha",
-  "yes": "Yebo"
+  "yes": "Yebo",
+  "recent_search": "Amagama ogcine ukuwabheka",
+  "hot_keywords": "Amagama asheshayo",
+  "no_word": "Awunalo leligama",
+  "cancel": "Hlehla",
+  "back": "Hlehla"
 }

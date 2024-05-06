@@ -60,7 +60,7 @@
   "login_form": "Add a new word...",
   "add": "Add",
   "add_definition": "Definition",
-  "add_word": "Word",
+  "add_word": "+ Add Word",
   "collection_name": "Add Collection",
   "something_wrong": "Something went wrong.",
   "load_failure": "Load failure.",
@@ -77,7 +77,7 @@
   "dictionary": "Dictionary",
   "select_collection": "Select a collection",
   "share_word": "Share this word",
-  "add_new_word": "Add new word...",
+  "add_new_word": "Add New Word...",
   "add_new_collection": "Add new collection...",
   "word_added": "Word added...",
   "word_checker": "Please add a word first...",
@@ -104,6 +104,7 @@
   "email_field_validator": "Please enter your email",
   "google": "Google",
   "guest": "Guest",
+  "guest_user": "Guest",
   "continue": "Continue",
   "skip": "Skip",
   "sign_up": "Sign Up",
@@ -111,5 +112,11 @@
   "microphone_permission": "Allow access to microphone",
   "add_collection": "Collection",
   "no": "No",
-  "yes": "Yes"
+  "yes": "Yes",
+  "recent_search": "Recent search",
+  "hot_keywords": "Hot keywords",
+  "no_word": "No word matches your search",
+  "cancel": "Cancel",
+  "back": "Go back",
+  "switch": "You are currently signed in as a guest, full features of this application will only be available when you sign up for free."
 }

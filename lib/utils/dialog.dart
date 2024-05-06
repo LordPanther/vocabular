@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:vocab_app/configs/router.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
@@ -10,6 +11,69 @@ import 'package:vocab_app/utils/translate.dart';
 import 'package:flutter/material.dart';
 
 class UtilDialog {
+  static Future<bool> showGuestDialog({
+    required BuildContext context,
+    required String content,
+  }) async {
+    return await showGeneralDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          barrierLabel:
+              MaterialLocalizations.of(context).modalBarrierDismissLabel,
+          barrierColor: Colors.black.withOpacity(0.5),
+          transitionDuration: const Duration(milliseconds: 500),
+          pageBuilder: (BuildContext context, Animation<double> animation,
+              Animation<double> secondaryAnimation) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.all(Radius.circular(SizeConfig.defaultSize)),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(content),
+                  SizedBox(height: SizeConfig.defaultSize * 3),
+                  Center(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      child: Text(Translate.of(context).translate("sign_in"),
+                          style: FONT_CONST.MEDIUM_DEFAULT_18),
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Text(
+                    Translate.of(context).translate("close"),
+                    style: FONT_CONST.MEDIUM_DEFAULT_18,
+                  ),
+                ),
+              ],
+            );
+          },
+          transitionBuilder: (context, animation, secondaryAnimation, child) {
+            return BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 4 * animation.value,
+                sigmaY: 4 * animation.value,
+              ),
+              child: FadeTransition(
+                opacity: animation,
+                child: child,
+              ),
+            );
+          },
+        ) ??
+        false;
+  }
+
   static Future<bool> showPermissionDialog({
     required BuildContext context,
     required String title,
@@ -87,6 +151,10 @@ class UtilDialog {
         // Display word details in the popup
         var word = words[index].word;
         return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.all(Radius.circular(SizeConfig.defaultSize)),
+          ),
           title: Row(
             children: [
               GestureDetector(
@@ -94,7 +162,8 @@ class UtilDialog {
                 child: const CircularVolumeIcon(),
               ),
               SizedBox(width: SizeConfig.defaultSize * 2),
-              Text(word![0].toUpperCase() + word.substring(1)),
+              Text(word![0].toUpperCase() + word.substring(1),
+                  style: FONT_CONST.MEDIUM_DEFAULT_20),
             ],
           ),
           content: SingleChildScrollView(
@@ -102,8 +171,16 @@ class UtilDialog {
               children: <Widget>[
                 Text(words[index].definition!),
                 SizedBox(height: SizeConfig.defaultSize * 5),
-                Text(
-                    'Collection: ${words[index].id![0].toUpperCase() + words[index].id!.substring(1)}'),
+                GestureDetector(
+                    onTap: () {
+                      Navigator.of(context)
+                        ..pop()
+                        ..pop()
+                        ..pushNamed(AppRouter.HOME);
+                    },
+                    child: Text(
+                      'Collection: ${words[index].id!.toUpperCase()}',
+                    )),
               ],
             ),
           ),
@@ -112,7 +189,8 @@ class UtilDialog {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Close'),
+              child: Text(Translate.of(context).translate("close"),
+                  style: FONT_CONST.MEDIUM_DEFAULT_18),
             ),
           ],
         );
@@ -146,6 +224,10 @@ class UtilDialog {
       pageBuilder: (BuildContext context, Animation<double> animation,
           Animation<double> secondaryAnimation) {
         return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.all(Radius.circular(SizeConfig.defaultSize)),
+          ),
           content: Text(content!),
           actions: <Widget>[
             TextButton(
@@ -190,6 +272,10 @@ class UtilDialog {
       pageBuilder: (BuildContext context, Animation<double> animation,
           Animation<double> secondaryAnimation) {
         return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.all(Radius.circular(SizeConfig.defaultSize)),
+          ),
           title: Text(
             title ?? Translate.of(context).translate("message_for_you"),
             style: FONT_CONST.MEDIUM_PRIMARY_20,
@@ -266,6 +352,10 @@ class UtilDialog {
       pageBuilder: (BuildContext context, Animation<double> animation,
           Animation<double> secondaryAnimation) {
         return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.all(Radius.circular(SizeConfig.defaultSize)),
+          ),
           title: Text(
             title ?? Translate.of(context).translate("message_for_you"),
             style: FONT_CONST.MEDIUM_PRIMARY_24,
@@ -307,42 +397,3 @@ class UtilDialog {
     );
   }
 }
-
-// Template
-
-// showGeneralDialog(
-//       context: context,
-//       barrierDismissible: false,
-//       barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-//       barrierColor: Colors.black.withOpacity(0.5),
-//       transitionDuration: const Duration(milliseconds: 500),
-//       pageBuilder: (BuildContext context, Animation<double> animation,
-//           Animation<double> secondaryAnimation) {
-// return AlertDialog(
-//           content: Text(content!),
-//           actions: <Widget>[
-//             TextButton(
-//               onPressed: onClose ?? () => Navigator.pop(context),
-//               child: Center(
-//                 child: Text(
-//                   Translate.of(context).translate("close"),
-//                   style: FONT_CONST.MEDIUM_PRIMARY_18,
-//                 ),
-//               ),
-//             )
-//           ],
-//         );
-//       },
-//       transitionBuilder: (context, animation, secondaryAnimation, child) {
-//         return BackdropFilter(
-//           filter: ImageFilter.blur(
-//             sigmaX: 4 * animation.value,
-//             sigmaY: 4 * animation.value,
-//           ),
-//           child: FadeTransition(
-//             opacity: animation,
-//             child: child,
-//           ),
-//         );
-//       },
-//     );

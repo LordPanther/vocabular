@@ -16,20 +16,23 @@ class SignInButton extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: SizeConfig.defaultSize * 4,
-      decoration: const BoxDecoration(
-          color: COLOR_CONST.primaryColor,
-          borderRadius: BorderRadius.all(Radius.circular(5))),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            child,
-            SizedBox(width: SizeConfig.defaultSize * 0.7),
-            Text(text, overflow: TextOverflow.ellipsis),
-          ],
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        height: SizeConfig.defaultSize * 4,
+        decoration: const BoxDecoration(
+            color: COLOR_CONST.primaryColor,
+            borderRadius: BorderRadius.all(Radius.circular(5))),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              child,
+              SizedBox(width: SizeConfig.defaultSize * 0.7),
+              Text(text, overflow: TextOverflow.ellipsis),
+            ],
+          ),
         ),
       ),
     );

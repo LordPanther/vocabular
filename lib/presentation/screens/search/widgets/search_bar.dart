@@ -1,5 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/configs/size_config.dart';
@@ -18,18 +19,21 @@ class SearchingBar extends StatefulWidget {
 }
 
 class _SearchingBarState extends State<SearchingBar> {
+  String _keyword = "";
   @override
   void initState() {
     super.initState();
 
     widget.searchController.addListener(() {
-      final keyword = widget.searchController.text;
-      BlocProvider.of<SearchBloc>(context).add(KeywordChanged(keyword));
+      setState(() {
+        _keyword = widget.searchController.text;
+      });
+      BlocProvider.of<SearchBloc>(context).add(KeywordChanged(_keyword));
     });
   }
 
   void onClearSearchField() {
-    if (widget.searchController.text.isNotEmpty) {
+    if (_keyword.isNotEmpty) {
       widget.searchController.clear();
     }
   }
@@ -52,25 +56,28 @@ class _SearchingBarState extends State<SearchingBar> {
           ),
         ],
       ),
-      child: Row(
-        children: <Widget>[
-          IconButton(
-            icon:
-                const Icon(Icons.arrow_back_ios, color: COLOR_CONST.textColor),
-            onPressed: () => Navigator.pop(context),
-          ),
-          Expanded(
-            child: SearchFieldWidget(
-              searchController: widget.searchController,
-              hintText:
-                  Translate.of(context).translate("search_by_product_name"),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: <Widget>[
+            // IconButton(
+            //   icon: const Icon(Icons.arrow_back_ios,
+            //       color: COLOR_CONST.textColor),
+            //   onPressed: () => Navigator.pop(context),
+            // ),
+            Expanded(
+              child: SearchFieldWidget(
+                searchController: widget.searchController,
+                hintText: Translate.of(context).translate("search"),
+              ),
             ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.cancel_outlined),
-            onPressed: onClearSearchField,
-          ),
-        ],
+            if (_keyword.isNotEmpty)
+              IconButton(
+                icon: const Icon(CupertinoIcons.clear),
+                onPressed: onClearSearchField,
+              ),
+          ],
+        ),
       ),
     );
   }

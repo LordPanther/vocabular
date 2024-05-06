@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vocab_app/configs/router.dart';
 import 'package:vocab_app/data/models/models.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/constants.dart';
@@ -11,7 +12,7 @@ import 'package:vocab_app/presentation/widgets/buttons/circle_icon_button.dart';
 import 'package:vocab_app/utils/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
-import 'package:vocab_app/utils/translate.dart';
+import 'package:vocab_app/utils/utils.dart';
 
 class ProfileHeader extends StatelessWidget {
   ProfileHeader({
@@ -21,25 +22,35 @@ class ProfileHeader extends StatelessWidget {
   final ImagePickerPlatform picker = ImagePickerPlatform.instance;
   late final XFile? file;
 
-  void onUploadAvatar(BuildContext context) async {
+  void onUploadAvatar(BuildContext context, UserModel user) async {
     File? imageFile;
-    var file = await picker.getImageFromSource(
-        source: ImageSource.gallery,
-        options: const ImagePickerOptions(
-          maxWidth: 480,
-          maxHeight: 680,
-          imageQuality: 50,
-        ));
 
-    if (file != null) {
-      imageFile = File(file.path);
-      // ignore: use_build_context_synchronously
-      BlocProvider.of<ProfileBloc>(context).add(UploadAvatar(imageFile));
+    if (user.avatar != null) {
+      var file = await picker.getImageFromSource(
+          source: ImageSource.gallery,
+          options: const ImagePickerOptions(
+            maxWidth: 480,
+            maxHeight: 680,
+            imageQuality: 50,
+          ));
+
+      if (file != null) {
+        imageFile = File(file.path);
+        // ignore: use_build_context_synchronously
+        BlocProvider.of<ProfileBloc>(context).add(UploadAvatar(imageFile));
+      } else {
+        // ignore: use_build_context_synchronously
+        UtilSnackBar.showSnackBarContent(context,
+            // ignore: use_build_context_synchronously
+            content: Translate.of(context).translate('no_image'));
+      }
     } else {
-      // ignore: use_build_context_synchronously
-      UtilSnackBar.showSnackBarContent(context,
-          // ignore: use_build_context_synchronously
-          content: Translate.of(context).translate('no_image'));
+      bool signUp = await UtilDialog.showGuestDialog(
+          context: context, content: Translate.of(context).translate('switch'));
+
+      if (signUp) {
+        Navigator.of(context).pushNamed(AppRouter.SWITCH_USER);
+      }
     }
   }
 
@@ -69,11 +80,13 @@ class ProfileHeader extends StatelessWidget {
                   children: [
                     _buildProfilePicture(context, state.loggedUser),
                     SizedBox(height: SizeConfig.defaultSize * 3),
-                    Text(
-                      "${state.loggedUser.firstName} ${state.loggedUser.lastName}",
-                      style: FONT_CONST.BOLD_DEFAULT_18,
-                      softWrap: true,
-                    )
+                    state.loggedUser.firstName != null
+                        ? Text(
+                            "${state.loggedUser.firstName} ${state.loggedUser.lastName}",
+                            style: FONT_CONST.MEDIUM_DEFAULT_18,
+                            softWrap: true,
+                          )
+                        : Text(Translate.of(context).translate('guest_user')),
                   ],
                 );
               }),
@@ -95,11 +108,11 @@ class ProfileHeader extends StatelessWidget {
           width: SizeConfig.defaultSize * 15,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: 2),
+            border: Border.all(color: COLOR_CONST.primaryColor, width: 2),
           ),
           child: CircleAvatar(
-            backgroundImage: loggedUser.avatar.isNotEmpty
-                ? NetworkImage(loggedUser.avatar)
+            backgroundImage: loggedUser.avatar != null
+                ? NetworkImage(loggedUser.avatar!)
                 : const AssetImage(IMAGE_CONST.DEFAULT_AVATAR)
                     as ImageProvider<Object>,
           ),
@@ -108,8 +121,8 @@ class ProfileHeader extends StatelessWidget {
           right: 0,
           bottom: 0,
           child: CircleIconButton(
-            onPressed: () => onUploadAvatar(context),
-            svgIcon: ICON_CONST.ADD,
+            onPressed: () => onUploadAvatar(context, loggedUser),
+            svgIcon: ICON_CONST.CAMERA,
             color: COLOR_CONST.cardShadowColor,
             size: SizeConfig.defaultSize * 2,
           ),

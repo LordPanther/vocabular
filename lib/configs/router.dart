@@ -1,9 +1,11 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vocab_app/bottom_navigation.dart';
 import 'package:vocab_app/presentation/screens/add_collection/add_collection_screen.dart';
 import 'package:vocab_app/presentation/screens/add_word/word_screen.dart';
+import 'package:vocab_app/presentation/screens/guest_to_user_screen/guest_to_user_screen.dart';
 import 'package:vocab_app/presentation/screens/profile/profile_screen.dart';
 import 'package:vocab_app/presentation/screens/search/search_screen.dart';
 import 'package:vocab_app/presentation/screens/settings/setting_screen.dart';
@@ -32,6 +34,7 @@ class AppRouter {
   static const String SEARCH = '/search';
   static const String WORD = '/word';
   static const String COLLECTION = '/collection';
+  static const String SWITCH_USER = '/switch_user';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -55,6 +58,13 @@ class AppRouter {
       case LOGIN:
         return MaterialPageRoute(
           builder: (_) => const LoginScreen(),
+        );
+      case SWITCH_USER:
+        var user = settings.arguments as User;
+        return MaterialPageRoute(
+          builder: (_) => GuestToUserScreen(
+            user: user
+          ),
         );
       case WORD:
         return MaterialPageRoute(

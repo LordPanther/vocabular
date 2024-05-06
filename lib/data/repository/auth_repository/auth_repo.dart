@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../models/user_model.dart';
+import 'package:vocab_app/data/models/user_model.dart';
 
 abstract class AuthRepository {
   User get loggedFirebaseUser;
@@ -8,6 +8,10 @@ abstract class AuthRepository {
   Future<void> signUp(UserModel newUser, String password);
 
   Future<void> logInWithEmailAndPassword(String email, String password);
+
+  Future<void> switchUser(UserModel user, String password);
+
+  Future<void> signUpAsGuest();
 
   Future<void> verify();
 

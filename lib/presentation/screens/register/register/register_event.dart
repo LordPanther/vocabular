@@ -90,10 +90,10 @@ class Submitted extends RegisterEvent {
   });
 
   @override
-  List<Object> get props => [user.email];
+  List<Object> get props => [user.email!];
 
   @override
   String toString() {
-    return 'Submitted{name: ${user.firstName}, phoneNumber: ${user.phoneNumber}, email: ${user.email}, password: $password, confirmPassword: $confirmPassword}';
+    return 'Submitted{name: ${user.firstName}, username: ${user.username}, email: ${user.email}, password: $password, confirmPassword: $confirmPassword}';
   }
 }

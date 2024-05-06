@@ -18,17 +18,6 @@ class FirebaseUserRepository implements UserRepository {
   }
 
   @override
-  Future<UserModel> getUserById(String uid) async {
-    return await _userCollection
-        .doc(uid)
-        .get()
-        .then((doc) => UserModel.fromMap(doc.data()!))
-        .catchError((error) {
-      return error;
-    });
-  }
-
-  @override
   Future<void> addUserData(
       UserModel newUser) async {
     await _userCollection

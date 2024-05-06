@@ -1,5 +1,7 @@
 export 'user_repository/user_repo.dart';
 export 'user_repository/firebase_user_repo.dart';
+export 'guest_repository/guest_repo.dart';
+export 'guest_repository/firebase_guest_repo.dart';
 export 'auth_repository/auth_repo.dart';
 export 'auth_repository/firebase_auth_repo.dart';
 export 'feedback_repository/feedback_repo.dart';

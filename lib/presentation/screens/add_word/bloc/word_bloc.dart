@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/data/local/pref.dart';
 import 'package:vocab_app/data/models/add_word_model.dart';
@@ -7,6 +8,8 @@ import 'package:vocab_app/presentation/screens/add_word/bloc/bloc.dart';
 
 class WordBloc extends Bloc<WordEvent, WordState> {
   final HomeRepository _homeRepository = AppRepository.collectionsRepository;
+  final AuthRepository _authRepository = AppRepository.authRepository;
+  User get user => _authRepository.loggedFirebaseUser;
   List<CollectionModel> collections = [];
 
   WordBloc() : super(Initial()) {
@@ -36,7 +39,7 @@ class WordBloc extends Bloc<WordEvent, WordState> {
     
     try {
       await LocalPref.setStringList("recentWord", storedList);
-      await _homeRepository.addWord(word);
+      await _homeRepository.addWord(word.word);
       emit(WordAdded(word));
     } catch (error) {
       emit(WordAddFailure(error.toString()));
@@ -47,7 +50,7 @@ class WordBloc extends Bloc<WordEvent, WordState> {
     try {
       var collectionData = await _homeRepository.fetchCollections();
       collections = collectionData.collections;
-      emit(Loaded(collections));
+      emit(Loaded(collections, user));
     } catch (error) {
       emit(CollectionFailure(error.toString()));
     }

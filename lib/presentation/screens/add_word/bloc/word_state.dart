@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vocab_app/data/models/add_word_model.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 
@@ -25,8 +26,9 @@ class WordAdded extends WordState {
 
 class Loaded extends WordState {
   final List<CollectionModel> collections;
+  final User user; 
 
-  const Loaded(this.collections);
+  const Loaded(this.collections, this.user);
 
   @override
   List<Object> get props => [collections];

@@ -2,6 +2,9 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:vocab_app/data/models/guest_user_model.dart';
+import 'package:vocab_app/data/repository/guest_repository/guest_repo.dart';
+import 'package:vocab_app/data/repository/guest_repository/firebase_guest_repo.dart';
 import 'package:vocab_app/data/repository/home_repository/home_repo.dart';
 import 'package:vocab_app/data/repository/home_repository/firebase_home_repo.dart';
 
@@ -14,6 +17,7 @@ class FirebaseAuthRepository extends AuthRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final UserRepository _userRepository = FirebaseUserRepository();
   final HomeRepository _homeRepository = FirebaseHomeRepository();
+  final GuestRepository _guestRepository = FirebaseGuestRepository();
   // final UserModel user;
 
   String _authException = "Authentication Failure";
@@ -31,35 +35,76 @@ class FirebaseAuthRepository extends AuthRepository {
 
   @override
   Future<void> signUp(UserModel user, String password) async {
+    if (kDebugMode) {
+      print('Method: EmailPassword');
+    }
     try {
       var userId = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: user.email,
+        email: user.email!,
         password: password,
       );
       // Add ID for new user
       var updatedUserDetails = user.cloneWith(id: userId.user!.uid);
       // Create new doc in users collection
       await _userRepository.addUserData(updatedUserDetails);
-      await create(updatedUserDetails);
+      await create();
     } on FirebaseAuthException catch (e) {
       _authException = e.message.toString();
     }
   }
 
-  Future<void> create(UserModel updatedUserDetails) async {
+  @override
+  Future<void> switchUser(UserModel user, String password) async {
+    if (kDebugMode) {
+      print('Method: GuestToUser');
+    }
     try {
-      await _homeRepository.createDefaultCollection(updatedUserDetails);
+      var credential =
+          EmailAuthProvider.credential(email: user.email!, password: password);
+      var userCredential =
+          await loggedFirebaseUser.linkWithCredential(credential);
+
+      // Add ID for new user
+
+      if (userCredential.user != null) {
+        var updatedUserDetails = user.cloneWith(id: userCredential.user!.uid);
+        await _userRepository.addUserData(updatedUserDetails);
+      }
+      // Create new doc in users collection
+      await create();
+    } on FirebaseAuthException catch (e) {
+      _authException = e.message.toString();
+    }
+  }
+
+  @override
+  Future<void> signUpAsGuest() async {
+    if (kDebugMode) {
+      print('Method: GuestSignIn');
+    }
+    try {
+      UserCredential? guestId = await _firebaseAuth.signInAnonymously();
+      GuestModel guestDetails = GuestModel(
+          id: guestId.user!.uid, username: "guest${guestId.user!.uid}");
+
+      await _guestRepository.addGuestData(guestDetails);
+      await create();
     } on FirebaseAuthException catch (error) {
       _authException = error.message.toString();
+    }
+  }
+
+  Future<void> create() async {
+    try {
+      await _homeRepository.createDefaultCollection();
+    } catch (error) {
+      _authException = "Failed to create default collection";
     }
   }
 
   /// If user is not logged in
   @override
   Future<void> resetPassword(String email) async {
-    // PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    // String packageName = packageInfo.packageName;
-
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
@@ -74,9 +119,6 @@ class FirebaseAuthRepository extends AuthRepository {
 
       if (user != null) {
         await user.sendEmailVerification();
-      }
-      if (kDebugMode) {
-        print("VerificationState: Verification email sent");
       }
     } on FirebaseAuthException catch (e) {
       _authException = e.message.toString();
@@ -122,13 +164,26 @@ class FirebaseAuthRepository extends AuthRepository {
 
   @override
   Future<void> logOut() async {
-    await _firebaseAuth.signOut().catchError((error) {
-      if (kIsWeb) {
-        if (kDebugMode) {
-          print(error);
+    if (loggedFirebaseUser.isAnonymous) {
+      var uid = loggedFirebaseUser.uid;
+      await _guestRepository.removeGuestData(uid);
+      await loggedFirebaseUser.delete().catchError((error) {
+        if (kIsWeb) {
+          if (kDebugMode) {
+            print(error);
+          }
         }
-      }
-    });
+      });
+      print("Guest deleted");
+    } else {
+      await _firebaseAuth.signOut().catchError((error) {
+        if (kIsWeb) {
+          if (kDebugMode) {
+            print(error);
+          }
+        }
+      });
+    }
   }
 
   @override

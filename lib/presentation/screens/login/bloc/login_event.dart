@@ -38,11 +38,11 @@ class PasswordChanged extends LoginEvent {
 }
 
 /// When user clicks to login button
-class LoginWithCredential extends LoginEvent {
+class SignInWithCredentials extends LoginEvent {
   final String email;
   final String password;
 
-  const LoginWithCredential({required this.email, required this.password});
+  const SignInWithCredentials({required this.email, required this.password});
 
   @override
   List<Object> get props => [email, password];
@@ -51,6 +51,13 @@ class LoginWithCredential extends LoginEvent {
 // When user clicks to google login button
 class SignInWithGoogleSignIn extends LoginEvent {
   const SignInWithGoogleSignIn();
+
+  @override
+  List<Object> get props => [];
+}
+
+class SignInAsGuest extends LoginEvent {
+  const SignInAsGuest();
 
   @override
   List<Object> get props => [];

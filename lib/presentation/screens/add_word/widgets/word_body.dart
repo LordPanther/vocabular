@@ -14,6 +14,7 @@ import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/data/repository/repository.dart';
 import 'package:vocab_app/presentation/screens/add_word/bloc/bloc.dart';
 import 'package:vocab_app/presentation/widgets/buttons/record_button.dart';
+import 'package:vocab_app/presentation/widgets/buttons/text_button.dart';
 import 'package:vocab_app/presentation/widgets/others/dropdown_list.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
 import 'package:vocab_app/utils/dialog.dart';
@@ -56,9 +57,10 @@ class _WordBodyState extends State<WordBody> {
   Future<List<String>> storageData() async {
     List<String> data = [];
     User? user = _authRepository.loggedFirebaseUser;
+    String userType = user.isAnonymous ? "vocabguests" : "vocabusers";
     String timeStamp = "${DateTime.now().millisecondsSinceEpoch}";
     final fileName = "$timeStamp.m4a";
-    String directoryPath = "/vocabusers/${user.uid}";
+    String directoryPath = "/$userType/${user.uid}";
     final storagePath = "$directoryPath/$fileName";
     data.add(timeStamp);
     data.add(storagePath);
@@ -151,7 +153,7 @@ class _WordBodyState extends State<WordBody> {
                   SizedBox(height: SizeConfig.defaultSize * 5),
                   _buildWordTextField(),
                   SizedBox(height: SizeConfig.defaultSize * 3),
-                  _buildTextFieldWithRecordButton(),
+                  _buildTextFieldWithRecordButton(state.user),
                   SizedBox(height: SizeConfig.defaultSize * 1),
                   _buildCollectionDropdown(collections),
                   SizedBox(height: SizeConfig.defaultSize * 3),
@@ -210,7 +212,7 @@ class _WordBodyState extends State<WordBody> {
     );
   }
 
-  Widget _buildTextFieldWithRecordButton() {
+  Widget _buildTextFieldWithRecordButton(User user) {
     return Padding(
       padding: EdgeInsets.only(bottom: SizeConfig.defaultSize * 4),
       child: Stack(
@@ -222,6 +224,7 @@ class _WordBodyState extends State<WordBody> {
             right: SizeConfig.defaultSize * 10.5,
             child: RecordButton(
               key: recordButtonState,
+              user: user,
             ),
           ),
         ],
@@ -299,17 +302,22 @@ class _WordBodyState extends State<WordBody> {
 
   Widget _buildButtonProcessAction() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IconButton(
+        MainButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          buttonName: Translate.of(context).translate('cancel'),
+          buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
+        ),
+        MainButton(
           onPressed: () {
             final state = recordButtonState.currentState!;
             _onAddWord(state);
           },
-          icon: Icon(
-            CupertinoIcons.arrow_right,
-            size: SizeConfig.defaultSize * 3,
-          ),
+          buttonName: Translate.of(context).translate('add_word'),
+          buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
         ),
       ],
     );

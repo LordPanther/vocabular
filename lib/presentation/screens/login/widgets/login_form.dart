@@ -54,7 +54,7 @@ class _LoginFormState extends State<LoginForm> {
 
   void onSignIn() {
     if (isLoginButtonEnabled()) {
-      _loginBloc.add(LoginWithCredential(
+      _loginBloc.add(SignInWithCredentials(
         email: _emailController.text,
         password: _passwordController.text,
       ));
@@ -62,7 +62,7 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void onGuestSignIn() {
-    // _loginBloc.add(const SignInWithGoogleSignIn());
+    _loginBloc.add(const SignInAsGuest());
   }
 
   void onGoogleSignUp() {
@@ -161,7 +161,7 @@ class _LoginFormState extends State<LoginForm> {
   _buildHeaderText() {
     return Center(
       child: Text(
-        Translate.of(context).translate('sign_in'),
+        Translate.of(context).translate("sign_in"),
         style: FONT_CONST.BOLD_DEFAULT_18,
       ),
     );
@@ -179,13 +179,13 @@ class _LoginFormState extends State<LoginForm> {
       },
       validator: (_) {
         return !_loginBloc.state.isEmailValid
-            ? Translate.of(context).translate('invalid_email')
+            ? Translate.of(context).translate("invalid_email")
             : null;
       },
       autovalidateMode: AutovalidateMode.always,
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
-          labelText: Translate.of(context).translate('email'),
+          labelText: Translate.of(context).translate("email"),
           labelStyle: const TextStyle(color: COLOR_CONST.textColor),
           // prefixIcon: const Icon(Icons.email_outlined, color: Colors.white),
           focusedBorder: const OutlineInputBorder(
@@ -206,7 +206,7 @@ class _LoginFormState extends State<LoginForm> {
       },
       validator: (_) {
         return !_loginBloc.state.isPasswordValid
-            ? Translate.of(context).translate('invalid_password')
+            ? Translate.of(context).translate("invalid_password")
             : null;
       },
       onEditingComplete: () {},
@@ -214,7 +214,7 @@ class _LoginFormState extends State<LoginForm> {
       keyboardType: TextInputType.text,
       obscureText: !_isShowPassword,
       decoration: InputDecoration(
-          labelText: Translate.of(context).translate('password'),
+          labelText: Translate.of(context).translate("password"),
           labelStyle: const TextStyle(color: COLOR_CONST.textColor),
           // prefixIcon: const Icon(Icons.lock_outline, color: Colors.white),
           suffixIcon: IconButton(
@@ -242,7 +242,7 @@ class _LoginFormState extends State<LoginForm> {
       child: GestureDetector(
         onTap: onForgotPassword,
         child: Text(
-          Translate.of(context).translate('forgot_password'),
+          Translate.of(context).translate("forgot_password"),
           style: FONT_CONST.BOLD_DEFAULT_16,
         ),
       ),
@@ -256,7 +256,7 @@ class _LoginFormState extends State<LoginForm> {
         if (isLoginButtonEnabled())
           MainButton(
             onPressed: onSignIn,
-            buttonName: Translate.of(context).translate('sign_in'),
+            buttonName: Translate.of(context).translate("sign_in"),
             buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
           ),
       ],
@@ -268,7 +268,7 @@ class _LoginFormState extends State<LoginForm> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         SizedBox(width: SizeConfig.defaultSize * 1),
-        Text(Translate.of(context).translate('or'),
+        Text(Translate.of(context).translate("or"),
             style: FONT_CONST.MEDIUM_DEFAULT_16),
         SizedBox(width: SizeConfig.defaultSize * 1),
       ],
@@ -278,7 +278,7 @@ class _LoginFormState extends State<LoginForm> {
   _buildGoogleSignIn() {
     return SignInButton(
       onPressed: onGoogleSignUp,
-      text: Translate.of(context).translate('google'),
+      text: Translate.of(context).translate("google"),
       child: Image.asset(IMAGE_CONST.GOOGLE_LOGO),
     );
   }
@@ -286,7 +286,7 @@ class _LoginFormState extends State<LoginForm> {
   _buildGuestSignIn() {
     return SignInButton(
       onPressed: onGuestSignIn,
-      text: Translate.of(context).translate('guest'),
+      text: Translate.of(context).translate("guest"),
       child: const Icon(CupertinoIcons.profile_circled),
     );
   }

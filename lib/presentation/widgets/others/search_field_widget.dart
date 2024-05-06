@@ -26,7 +26,7 @@ class SearchFieldWidget extends StatelessWidget {
     return Container(
       height: height ?? SizeConfig.defaultSize * 5,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(SizeConfig.defaultSize * 2),
+        borderRadius: BorderRadius.circular(SizeConfig.defaultSize * .5),
         color: COLOR_CONST.cardShadowColor.withOpacity(0.3),
       ),
       child: TextField(

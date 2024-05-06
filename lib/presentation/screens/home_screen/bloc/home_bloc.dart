@@ -34,10 +34,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     var collectionData = await _homeRepository.fetchCollections();
     List<CollectionModel> collections = collectionData.collections;
     List<List<WordModel>> words = collectionData.words;
-    WordModel? recentWord = await _getRecentWord();
+    // WordModel? recentWord = await _getRecentWord();
 
-    HomeResponse homeResponse = HomeResponse(
-        collections: collections, words: words, recentWord: recentWord);
+    HomeResponse homeResponse =
+        HomeResponse(collections: collections, words: words);
     emit(HomeLoaded(homeResponse: homeResponse));
   }
 
