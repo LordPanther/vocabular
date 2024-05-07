@@ -85,15 +85,13 @@ class GuestToUserBloc extends Bloc<GuestToUserEvent, GuestToUserState> {
     String password = event.password;
     try {
       emit(GuestToUserState.loading());
-      await _authRepository.signUp(user, password);
+      await _authRepository.switchUser(user, password);
 
       bool isLoggedIn = _authRepository.isLoggedIn();
       if (isLoggedIn) {
         emit(GuestToUserState.success());
       } else {
         final message = _authRepository.authException;
-        // await _authRepository.loggedFirebaseUser.delete();
-        // await _userRepository.removeUserData(user);
         emit(GuestToUserState.failure(message));
       }
     } catch (e) {

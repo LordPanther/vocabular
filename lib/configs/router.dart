@@ -60,11 +60,8 @@ class AppRouter {
           builder: (_) => const LoginScreen(),
         );
       case SWITCH_USER:
-        var user = settings.arguments as User;
         return MaterialPageRoute(
-          builder: (_) => GuestToUserScreen(
-            user: user
-          ),
+          builder: (_) => GuestToUserScreen(),
         );
       case WORD:
         return MaterialPageRoute(

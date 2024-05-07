@@ -73,6 +73,8 @@ class FirebaseAuthRepository extends AuthRepository {
       // Create new doc in users collection
       await create();
     } on FirebaseAuthException catch (e) {
+      // await loggedFirebaseUser.delete();
+      await _userRepository.removeUserData(user);
       _authException = e.message.toString();
     }
   }

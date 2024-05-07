@@ -1,6 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vocab_app/configs/router.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
@@ -17,8 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 
 class GuestToUserForm extends StatefulWidget {
-  final User? user;
-  const GuestToUserForm({super.key, this.user});
+  const GuestToUserForm({super.key});
   @override
   _GuestToUserFormState createState() => _GuestToUserFormState();
 }
@@ -65,9 +63,7 @@ class _GuestToUserFormState extends State<GuestToUserForm> {
 
   void onSignUp() {
     if (isSignUpButtonEnabled()) {
-      user = user.cloneWith(
-        email: _emailController.text,
-      );
+      user = UserModel(email: _emailController.text);
       guestToUserBloc.add(
         SwitchUser(
           user: user,
@@ -266,7 +262,7 @@ class _GuestToUserFormState extends State<GuestToUserForm> {
         if (isSignUpButtonEnabled())
           MainButton(
             onPressed: onSignUp,
-            buttonName: Translate.of(context).translate('switch'),
+            buttonName: Translate.of(context).translate('sign_up'),
             buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
           ),
       ],

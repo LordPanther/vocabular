@@ -39,7 +39,7 @@ class UtilDialog {
                       onTap: () {
                         Navigator.of(context).pop(true);
                       },
-                      child: Text(Translate.of(context).translate("sign_in"),
+                      child: Text(Translate.of(context).translate("sign_up"),
                           style: FONT_CONST.MEDIUM_DEFAULT_18),
                     ),
                   ),

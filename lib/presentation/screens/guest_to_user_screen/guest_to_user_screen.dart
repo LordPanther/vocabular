@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/presentation/common_blocs/auth/bloc.dart';
@@ -12,9 +11,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../configs/config.dart';
 
 class GuestToUserScreen extends StatelessWidget {
-  final User user;
 
-  const GuestToUserScreen({super.key, required this.user});
+  const GuestToUserScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +22,12 @@ class GuestToUserScreen extends StatelessWidget {
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
           backgroundColor: COLOR_CONST.backgroundColor,
-          body: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
+          body: const SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
             child: Column(
               children: [
-                const GuestToUserHeader(),
-                GuestToUserForm(user: user),
+                GuestToUserHeader(),
+                GuestToUserForm(),
               ],
             ),
           ),
