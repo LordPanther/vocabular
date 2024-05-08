@@ -22,7 +22,7 @@ class WordModel extends Equatable {
       id: data["id"] ?? "",
       definition: data["definition"] ?? "",
       word: data["word"] ?? "",
-      audioUrl: data["audiourl"] ?? "",
+      audioUrl: data["audioUrl"] ?? "",
       timeStamp: data["timeStamp"] ?? "",
       isShared: data["isShared"] ?? "",
     );

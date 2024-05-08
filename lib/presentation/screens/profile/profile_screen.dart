@@ -1,12 +1,28 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
-import 'package:vocab_app/presentation/common_blocs/auth/bloc.dart';
-import 'package:vocab_app/configs/config.dart';
-import 'package:vocab_app/constants/constants.dart';
-import 'package:vocab_app/presentation/screens/profile/profile_header.dart';
-import 'package:vocab_app/presentation/widgets/others/custom_list_tile.dart';
-import 'package:vocab_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
+import 'package:vocab_app/configs/config.dart';
+import 'package:vocab_app/configs/router.dart';
+import 'package:vocab_app/configs/size_config.dart';
+import 'package:vocab_app/constants/color_constant.dart';
+import 'package:vocab_app/constants/font_constant.dart';
+import 'package:vocab_app/constants/icon_constant.dart';
+import 'package:vocab_app/constants/image_constant.dart';
+import 'package:vocab_app/data/models/user_model.dart';
+import 'package:vocab_app/presentation/common_blocs/auth/auth_bloc.dart';
+import 'package:vocab_app/presentation/common_blocs/auth/auth_event.dart';
+import 'package:vocab_app/presentation/common_blocs/profile/profile_bloc.dart';
+import 'package:vocab_app/presentation/common_blocs/profile/profile_event.dart';
+import 'package:vocab_app/presentation/common_blocs/profile/profile_state.dart';
+import 'package:vocab_app/presentation/widgets/buttons/circle_icon_button.dart';
+import 'package:vocab_app/presentation/widgets/buttons/text_button.dart';
+import 'package:vocab_app/presentation/widgets/others/loading.dart';
+import 'package:vocab_app/utils/dialog.dart';
+import 'package:vocab_app/utils/snackbar.dart';
+import 'package:vocab_app/utils/translate.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -16,45 +32,203 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final bool _viewUser = false;
+  ImagePickerPlatform picker = ImagePickerPlatform.instance;
+  File? imageFile;
+  late final XFile? file;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> retrieveLostData() async {
+    final LostDataResponse response = await picker.getLostData();
+    if (response.isEmpty) {
+      return;
+    }
+    if (response.file != null) {
+      file = response.file;
+    }
+  }
+
+  void onUploadAvatar(BuildContext context, UserModel user) async {
+    File? imageFile;
+
+    if (user.avatar != null) {
+      var file = await picker.getImageFromSource(
+          source: ImageSource.gallery,
+          options: const ImagePickerOptions(
+            maxWidth: 480,
+            maxHeight: 680,
+            imageQuality: 50,
+          ));
+
+      if (file != null) {
+        imageFile = File(file.path);
+        // ignore: use_build_context_synchronously
+        BlocProvider.of<ProfileBloc>(context).add(UploadAvatar(imageFile));
+      }
+    } else {
+      bool signUp = await UtilDialog.showGuestDialog(
+          context: context, content: Translate.of(context).translate('switch'));
+
+      if (signUp) {
+        Navigator.of(context).pushNamed(AppRouter.SWITCH_USER);
+      }
+    }
+  }
+
+  void onEditUserDetails(ProfileLoaded state) async {
+    UserModel? updatedUserDetails =
+        await UtilDialog.updateUserDetails(context: context, state: state);
+
+    if (updatedUserDetails != null) {
+      BlocProvider.of<ProfileBloc>(context)
+          .add(UpdateUserDetails(updatedUserDetails));
+    }
+  }
+
+  void onLogout() {
+    BlocProvider.of<AuthenticationBloc>(context).add(LogOut());
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(height: SizeConfig.defaultSize * 7),
-            ProfileHeader(),
-            _buildProfileMenuButton(
-              text: Translate.of(context).translate("profile"),
-              icon: Icon(CupertinoIcons.profile_circled,
-                  size: SizeConfig.defaultSize * 3),
-              onPressed: () {},
-            ),
-            _buildProfileMenuButton(
-              text: Translate.of(context).translate("log_out"),
-              icon: Icon(CupertinoIcons.return_icon,
-                  size: SizeConfig.defaultSize * 3),
-              onPressed: () {
-                BlocProvider.of<AuthenticationBloc>(context).add(LogOut());
-              },
-            ),
-          ],
-        ),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: BlocBuilder<ProfileBloc, ProfileState>(
+        builder: (context, state) {
+          if (state is ProfileLoading) {
+            return const Loading();
+          }
+          if (state is ProfileLoaded) {
+            return Scaffold(
+              body: SafeArea(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: SizeConfig.defaultSize * 5),
+                      _buildProfileHeader(state),
+                      _profileBody(state),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
+          if (state is ProfileLoadFailure) {
+            return Center(
+              child: Text(Translate.of(context).translate("fall_back_error")),
+            );
+          }
+          return Center(
+            child: Text(Translate.of(context).translate("fall_back_error")),
+          );
+        },
       ),
     );
   }
 
-  _buildProfileMenuButton({
-    required String text,
-    required Icon icon,
-    required Function() onPressed,
-  }) {
-    return CustomListTile(
-      leading: icon,
-      title: text,
-      onPressed: onPressed,
+  Widget _buildProfileHeader(ProfileLoaded state) {
+    return SizedBox(
+      width: double.infinity,
+      height: SizeConfig.defaultSize * 30,
+      child: FutureBuilder(
+        future: retrieveLostData(),
+        builder: ((context, snapshot) {
+          return Center(
+            child: _buildProfilePicture(context, state.loggedUser),
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget _profileBody(ProfileLoaded state) {
+    var user = state.loggedUser;
+    var userDetails = [
+      user.username,
+      user.email,
+      user.firstname,
+      user.lastname,
+    ];
+
+    return Padding(
+      padding: EdgeInsets.only(
+        left: SizeConfig.defaultSize * 1.5,
+        right: SizeConfig.defaultSize * 1.5,
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                onPressed: () => onEditUserDetails(state),
+                icon: const Icon(CupertinoIcons.pen),
+              ),
+            ],
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: userDetails.length,
+            itemBuilder: (context, index) {
+              final detail = userDetails[index];
+              return detail != null
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(detail),
+                        SizedBox(height: SizeConfig.defaultSize * 2),
+                      ],
+                    )
+                  : const SizedBox.shrink(); // Skips null values
+            },
+          ),
+          SizedBox(height: SizeConfig.defaultSize * 5),
+          _buildLogoutButton(),
+        ],
+      ),
+    );
+  }
+
+  _buildLogoutButton() {
+    return MainButton(
+      onPressed: onLogout,
+      buttonName: Translate.of(context).translate('log_out'),
+      buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
+    );
+  }
+
+  _buildProfilePicture(BuildContext context, UserModel loggedUser) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          height: SizeConfig.defaultSize * 15,
+          width: SizeConfig.defaultSize * 15,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: COLOR_CONST.primaryColor, width: 2),
+          ),
+          child: CircleAvatar(
+            backgroundImage: loggedUser.avatar != null
+                ? NetworkImage(loggedUser.avatar!)
+                : const AssetImage(IMAGE_CONST.DEFAULT_AVATAR)
+                    as ImageProvider<Object>,
+          ),
+        ),
+        Positioned(
+          right: 0,
+          bottom: 0,
+          child: CircleIconButton(
+            onPressed: () => onUploadAvatar(context, loggedUser),
+            svgIcon: ICON_CONST.CAMERA,
+            color: COLOR_CONST.cardShadowColor,
+            size: SizeConfig.defaultSize * 2,
+          ),
+        )
+      ],
     );
   }
 }

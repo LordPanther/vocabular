@@ -94,6 +94,6 @@ class Submitted extends RegisterEvent {
 
   @override
   String toString() {
-    return 'Submitted{name: ${user.firstName}, username: ${user.username}, email: ${user.email}, password: $password, confirmPassword: $confirmPassword}';
+    return 'Submitted{name: ${user.firstname}, username: ${user.username}, email: ${user.email}, password: $password, confirmPassword: $confirmPassword}';
   }
 }

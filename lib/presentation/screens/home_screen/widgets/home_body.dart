@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/font_constant.dart';
-import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/presentation/screens/home_screen/bloc/bloc.dart';
 import 'package:vocab_app/presentation/widgets/others/collection_tile.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
@@ -15,9 +14,7 @@ import 'package:vocab_app/utils/translate.dart';
 import 'package:vocab_app/utils/utils.dart';
 
 class HomeBody extends StatefulWidget {
-  final Function(List<CollectionModel>) sendCollections;
-
-  const HomeBody({super.key, required this.sendCollections});
+  const HomeBody({super.key});
 
   @override
   State<HomeBody> createState() => _HomeBodyState();
@@ -114,7 +111,7 @@ class _HomeBodyState extends State<HomeBody> {
             );
           }
           return Center(
-              child: Text(Translate.of(context).translate("error_three")));
+              child: Text(Translate.of(context).translate("load_failure")));
         },
       ),
     );

@@ -1,6 +1,5 @@
 // ignore_for_file: constant_identifier_names
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vocab_app/bottom_navigation.dart';
 import 'package:vocab_app/presentation/screens/add_collection/add_collection_screen.dart';
@@ -61,7 +60,7 @@ class AppRouter {
         );
       case SWITCH_USER:
         return MaterialPageRoute(
-          builder: (_) => GuestToUserScreen(),
+          builder: (_) => const GuestToUserScreen(),
         );
       case WORD:
         return MaterialPageRoute(

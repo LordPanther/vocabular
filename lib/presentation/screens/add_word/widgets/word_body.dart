@@ -41,59 +41,58 @@ class _WordBodyState extends State<WordBody> {
   final TextEditingController _definition = TextEditingController();
   String? _collection;
   bool _isShared = false;
+  String? _audioUrl = "";
 
   // Audio recording global variables
   bool get isWordPopulated => _word.text.isNotEmpty;
   bool get isDefinitionPopulated => _definition.text.isNotEmpty;
+  User? get user => _authRepository.loggedFirebaseUser;
 
   @override
   void initState() {
     super.initState();
     wordBloc = BlocProvider.of<WordBloc>(context);
-    word = const WordModel();
-    collection = const CollectionModel();
   }
 
-  Future<List<String>> storageData() async {
-    List<String> data = [];
-    User? user = _authRepository.loggedFirebaseUser;
-    String userType = user.isAnonymous ? "vocabguests" : "vocabusers";
-    String timeStamp = "${DateTime.now().millisecondsSinceEpoch}";
+  Future<String> storageData(String? timeStamp) async {
     final fileName = "$timeStamp.m4a";
-    String directoryPath = "/$userType/${user.uid}";
+    String directoryPath = "/vocabusers/${user!.uid}";
     final storagePath = "$directoryPath/$fileName";
-    data.add(timeStamp);
-    data.add(storagePath);
-    return data;
+    return storagePath;
   }
 
-  Future assignDataToModels(List<String> storage, String audioUrl) async {
-    word.cloneWith(
+  Future assignDataToModels(String? timeStamp) async {
+    word = WordModel(
       id: _collection,
       word: _word.text,
       definition: _definition.text,
-      audioUrl: audioUrl,
-      timeStamp: storage[0],
+      audioUrl: _audioUrl,
+      timeStamp: timeStamp!,
       isShared: _isShared,
     );
-    collection.cloneWith(name: _collection);
+    collection = CollectionModel(name: _collection);
   }
 
-  void _onAddWord(RecordButtonState state) async {
+  void _onAddWord() async {
+    String? timeStamp = "${DateTime.now().millisecondsSinceEpoch}";
+
     if (isWordPopulated && _collection != null) {
-      var storage = await storageData();
-      String audioUrl = await _storageRepository.uploadAudioData(
-        storage[1],
-        state.fileData!,
-      );
-      await assignDataToModels(storage, audioUrl);
+      if (!user!.isAnonymous) {
+        var storagePath = await storageData(timeStamp);
+        _audioUrl = await _storageRepository.uploadAudioData(
+          storagePath,
+          recordButtonState.currentState!.fileData!,
+        );
+      }
+
+      await assignDataToModels(timeStamp);
 
       var newWord = AddWordModel(word: word, collection: collection);
 
       wordBloc.add(
         AddWord(word: newWord),
       );
-      final tempFile = File(state.path!);
+      final tempFile = File(recordButtonState.currentState!.path!);
       if (tempFile.existsSync()) {
         tempFile.deleteSync();
       }
@@ -166,11 +165,11 @@ class _WordBodyState extends State<WordBody> {
           }
           if (state is CollectionFailure) {
             return Center(
-              child: Text(Translate.of(context).translate("error_three")),
+              child: Text(Translate.of(context).translate("load_failure")),
             );
           }
           return Center(
-            child: Text(Translate.of(context).translate("error_one")),
+            child: Text(Translate.of(context).translate("fall_back_error")),
           );
         },
       ),
@@ -313,8 +312,7 @@ class _WordBodyState extends State<WordBody> {
         ),
         MainButton(
           onPressed: () {
-            final state = recordButtonState.currentState!;
-            _onAddWord(state);
+            _onAddWord();
           },
           buttonName: Translate.of(context).translate('add_word'),
           buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,

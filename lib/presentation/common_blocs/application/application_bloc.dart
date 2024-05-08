@@ -14,11 +14,11 @@ class ApplicationBloc extends Bloc<ApplicationEvent, ApplicationState> {
 
   ApplicationBloc() : super(ApplicationInitial()) {
     on<SetupApplicationEvent>((event, emit) async {
-      await mapEventToState(emit);
+      await _mapEventToState(emit);
     });
   }
 
-  Future<void> mapEventToState(Emitter<ApplicationState> emit) async {
+  Future<void> _mapEventToState(Emitter<ApplicationState> emit) async {
     /// Setup SharedPreferences
     await application.setPreferences();
 

@@ -60,7 +60,7 @@
   "login_form": "Faka elinye igama...",
   "add": "Faka",
   "add_definition": "Incazelo",
-  "add_word": "+ Faka Igama",
+  "add_word": "Faka Igama",
   "collection_name": "Iqoqo",
   "something_wrong": "Kunenkinga ekhona",
   "load_failure": "Inkinga yoku load-a.",
@@ -70,6 +70,7 @@
   "password_reset": "I-password isishintshile",
   "reset_failure": "I-password ayishintshanga",
   "inactive_button": "I-button alinamsebenzi",
+  "fall_back_error": "Kunenkinga kwi-system.",
   "app_name": "Vocabula®",
   "reset_link": "Ungakhathazeki, faka i-email yakho. Sizokubuyisela i-account yakho",
   "reset_email": "Sithumela i email yokushinstha i-password yakho",
@@ -118,6 +119,7 @@
   "no_word": "Awunalo leligama",
   "cancel": "Hlehla",
   "back": "Hlehla",
-  "switch": "Okwamanje usebenzisa le-application njengesivakashi, ama-feature aphelele uzowathola uma usubhalise ngokuphelelisiwe mahhala."
-  
+  "switch": "Okwamanje usebenzisa le-application njengesivakashi, ama-feature aphelele uzowathola uma usubhalise ngokuphelelisiwe mahhala.",
+  "update_user": "Imininingwane",
+  "update": "Vuselela"
 }

@@ -60,16 +60,17 @@
   "login_form": "Add a new word...",
   "add": "Add",
   "add_definition": "Definition",
-  "add_word": "+ Add Word",
+  "add_word": "Add Word",
   "collection_name": "Add Collection",
   "something_wrong": "Something went wrong.",
-  "load_failure": "Load failure.",
+  "load_failure": "Failed to load data.",
   "profile_created": "Profile created successfully",
   "no_image": "No picture",
   "new_password": "Please enter a new password.This will be your new password from now onwards.",
   "password_reset": "Password reset success",
   "reset_failure": "Password reset failure",
   "inactive_button": "Button not yet supported",
+  "fall_back_error": "There was an internal error.",
   "app_name": "Vocabula®",
   "reset_link": "Don't worry! Please enter your email. We will send you a link to return to your account.",
   "reset_email": "Sending password reset email",
@@ -118,5 +119,7 @@
   "no_word": "No word matches your search",
   "cancel": "Cancel",
   "back": "Go back",
-  "switch": "You are currently signed in as a guest, full features of this application will only be available when you sign up for free."
+  "switch": "You are currently signed in as a guest, full features of this application will only be available when you sign up for free.",
+  "update_user": "Update Details",
+  "update": "Update"
 }

@@ -2,13 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vocab_app/configs/config.dart';
 import 'package:vocab_app/constants/constants.dart';
-import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/utils/translate.dart';
 
 class HomeHeader extends StatelessWidget {
-  final List<CollectionModel> collections;
 
-  const HomeHeader({super.key, required this.collections});
+  const HomeHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +36,7 @@ class HomeHeader extends StatelessWidget {
                 size: SizeConfig.defaultIconSize,
               ),
               onPressed: () => Navigator.pushNamed(
-                  context, AppRouter.SEARCH) //_onOptionDialog(context),
+                  context, AppRouter.SEARCH)
               ),
         ],
       ),

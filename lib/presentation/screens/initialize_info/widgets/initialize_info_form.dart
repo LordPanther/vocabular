@@ -36,8 +36,8 @@ class _InitializeInfoFormState extends State<InitializeInfoForm> {
         email: "",
         id: "",
         username: "",
-        firstName: _firstNameController.text,
-        lastName: _lastNameController.text,
+        firstname: _firstNameController.text,
+        lastname: _lastNameController.text,
         avatar: "",
       );
       Navigator.pushReplacementNamed(

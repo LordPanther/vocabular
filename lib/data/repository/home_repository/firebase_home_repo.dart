@@ -11,7 +11,8 @@ import 'package:vocab_app/utils/collection_data.dart';
 class FirebaseHomeRepository implements HomeRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final _userHome = FirebaseFirestore.instance;
-  String get userType => _firebaseAuth.currentUser!.isAnonymous ? "vocabguests" : "vocabusers";
+  String get userType =>
+      _firebaseAuth.currentUser!.isAnonymous ? "vocabguests" : "vocabusers";
   User get user => _firebaseAuth.currentUser!;
 
   /// [FirebaseAuthRepository]
@@ -59,7 +60,6 @@ class FirebaseHomeRepository implements HomeRepository {
 
   @override
   Future<void> addWord(WordModel word) async {
-
     try {
       await _userHome
           .collection(userType)
@@ -92,7 +92,6 @@ class FirebaseHomeRepository implements HomeRepository {
 
   /// Create collection
   Future<void> addColllectionToUi(CollectionModel collection) async {
-
     try {
       await _userHome
           .collection(userType)
@@ -148,6 +147,7 @@ class FirebaseHomeRepository implements HomeRepository {
           words.add(WordModel(
               id: value["id"],
               definition: value["definition"],
+              audioUrl: value["audioUrl"],
               word: key,
               timeStamp: value["timeStamp"]));
         },
@@ -164,7 +164,6 @@ class FirebaseHomeRepository implements HomeRepository {
 
   @override
   Future<void> removeCollection(CollectionModel collection) async {
-
     try {
       await _userHome
           .collection(userType)

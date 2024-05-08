@@ -1,13 +1,18 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/word_model.dart';
+import 'package:vocab_app/presentation/screens/home_screen/bloc/bloc.dart';
 import 'package:vocab_app/presentation/widgets/others/word_tile.dart';
+import 'package:vocab_app/utils/snackbar.dart';
+import 'package:vocab_app/utils/translate.dart';
 
 class CollectionTile extends StatefulWidget {
   final CollectionModel collection;
@@ -57,18 +62,106 @@ class _CollectionTileState extends State<CollectionTile> {
         title: Text(
             _collection.name![0].toUpperCase() + _collection.name!.substring(1),
             style: FONT_CONST.MEDIUM_DEFAULT_18),
-        children: _buildWordsList(_words),
+        children: _buildWordsList(_words, _collection),
       ),
     );
   }
 
-  List<Widget> _buildWordsList(List<WordModel> words) {
-    return words
-        .map(
-          (word) => WordTile(
-            word: word,
+  List<Widget> _buildWordsList(
+      List<WordModel> words, CollectionModel collection) {
+    return words.map((word) {
+      return Dismissible(
+        key: ValueKey(word
+            .word), // Ensure you have a unique identifier, `id` in this case
+        direction: DismissDirection.endToStart, // Set the direction of dismiss
+        confirmDismiss: (direction) async {
+          if (direction == DismissDirection.endToStart) {
+            final bool dismiss = await showCollectionRemoveDialog();
+
+            if (dismiss && word.word != "vocabular") {
+              BlocProvider.of<HomeBloc>(context)
+                  .add(RemoveWord(collection: collection, word: word));
+              return dismiss;
+            } else {
+              UtilSnackBar.showSnackBarContent(context,
+                  content: Translate.of(context).translate("default_word"));
+            }
+            return false;
+          }
+          return null;
+        },
+        background: Container(
+          color: Colors.red,
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Icon(Icons.delete, color: Colors.white),
+              SizedBox(width: 20),
+            ],
           ),
-        )
-        .toList();
+        ),
+        child: WordTile(
+          word: word,
+        ),
+      );
+    }).toList();
+  }
+
+  Future<bool> showCollectionRemoveDialog() async {
+    return await showGeneralDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          barrierLabel:
+              MaterialLocalizations.of(context).modalBarrierDismissLabel,
+          barrierColor: Colors.black.withOpacity(0.5),
+          transitionDuration: const Duration(milliseconds: 500),
+          pageBuilder: (BuildContext context, Animation<double> animation,
+              Animation<double> secondaryAnimation) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.all(Radius.circular(SizeConfig.defaultSize)),
+              ),
+              title: Text(
+                Translate.of(context).translate('confirm_remove_word'),
+                style: FONT_CONST.BOLD_DEFAULT_18,
+              ),
+              content: Text(Translate.of(context).translate('remove_word')),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Text(
+                    Translate.of(context).translate('no'),
+                    style: FONT_CONST.MEDIUM_DEFAULT_18,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Text(
+                    Translate.of(context).translate('yes'),
+                    style: FONT_CONST.MEDIUM_DEFAULT_18,
+                  ),
+                ),
+              ],
+            );
+          },
+          transitionBuilder: (context, animation, secondaryAnimation, child) {
+            return BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 4 * animation.value,
+                sigmaY: 4 * animation.value,
+              ),
+              child: FadeTransition(
+                opacity: animation,
+                child: child,
+              ),
+            );
+          },
+        ) ??
+        false;
   }
 }

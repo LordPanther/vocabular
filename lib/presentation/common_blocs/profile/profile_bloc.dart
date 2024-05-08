@@ -8,11 +8,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
+  ///Repo
   final AuthRepository _authRepository = AppRepository.authRepository;
   final UserRepository _userRepository = AppRepository.userRepository;
-  final GuestRepository _guestRepository = AppRepository.guestRepository;
   final StorageRepository _storageRepository = AppRepository.storageRepository;
   StreamSubscription? _profileStreamSub;
+
+  /// User
   UserModel? _loggedUser;
   User get user => _authRepository.loggedFirebaseUser;
 
@@ -22,6 +24,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     });
     on<UploadAvatar>((event, emit) async {
       await _mapUploadAvatarToState(event, emit);
+    });
+    on<UpdateUserDetails>((event, emit) async {
+      await _mapUpdateUserDetailsToState(event, emit);
     });
     on<ProfileUpdated>((event, emit) async {
       await _mapProfileUpdatedToState(event, emit);
@@ -41,8 +46,20 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         var updatedUser = const UserModel(id: null);
         add(ProfileUpdated(updatedUser));
       }
-    } catch (e) {
-      emit(ProfileLoadFailure(e.toString()));
+    } on Exception catch (exception) {
+      emit(ProfileLoadFailure(exception.toString()));
+    }
+  }
+
+  Future<void> _mapUpdateUserDetailsToState(
+      event, Emitter<ProfileState> emit) async {
+    _loggedUser = event.updatedUserDetails.toMap();
+
+    try {
+      await _userRepository.updateUserData(_loggedUser!);
+      emit(ProfileLoaded(_loggedUser!));
+    } on Exception catch (exception) {
+      emit(ProfileLoadFailure(exception.toString()));
     }
   }
 
@@ -59,9 +76,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       var updatedUser = _loggedUser!.cloneWith(avatar: imageUrl);
       // Update user's avatar
       await _userRepository.updateUserData(updatedUser);
-    } catch (e) {
+    } on Exception catch (exception) {
       if (kDebugMode) {
-        print(e);
+        print(exception);
       }
     }
   }
@@ -72,8 +89,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     try {
       _loggedUser = event.updatedUser;
       emit(ProfileLoaded(event.updatedUser));
-    } catch (e) {
-      emit(ProfileLoadFailure(e.toString()));
+    } on Exception catch (exception) {
+      emit(ProfileLoadFailure(exception.toString()));
     }
   }
 

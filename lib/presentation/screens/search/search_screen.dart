@@ -63,10 +63,10 @@ class _SearchScreenState extends State<SearchScreen> {
         }
         if (state is SearchFailure) {
           return Center(
-              child: Text(Translate.of(context).translate('error_three')));
+              child: Text(Translate.of(context).translate("load_failure")));
         }
         return Center(
-            child: Text(Translate.of(context).translate('error_one')));
+            child: Text(Translate.of(context).translate("fall_back_error")));
       },
     );
   }

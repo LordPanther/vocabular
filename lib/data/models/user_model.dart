@@ -9,10 +9,10 @@ class UserModel extends Equatable {
   final String? email;
 
   /// The current user's first name (display name).
-  final String? firstName;
+  final String? firstname;
 
   /// The current user's last name (display name).
-  final String? lastName;
+  final String? lastname;
 
   /// Url for the current user's photo.
   final String? avatar;
@@ -21,21 +21,20 @@ class UserModel extends Equatable {
   final String? username;
 
   /// Constructor
-  const UserModel({
-    this.email,
-    this.id,
-    this.firstName,
-    this.lastName,
-    this.avatar,
-    this.username
-  });
+  const UserModel(
+      {this.email,
+      this.id,
+      this.firstname,
+      this.lastname,
+      this.avatar,
+      this.username});
 
   /// Json data from server turns into model data
   static UserModel fromMap(Map<String, dynamic> data) {
     return UserModel(
       id: data["id"] ?? "",
-      firstName: data["firstName"] ?? "",
-      lastName: data["lastName"] ?? "",
+      firstname: data["firstName"] ?? "",
+      lastname: data["lastName"] ?? "",
       email: data["email"] ?? "",
       avatar: data["avatar"] ?? "",
       username: data["username"] ?? "",
@@ -47,8 +46,8 @@ class UserModel extends Equatable {
     return {
       "id": id,
       "email": email,
-      "firstName": firstName,
-      "lastName": lastName,
+      "firstName": firstname,
+      "lastName": lastname,
       "avatar": avatar,
       "username": username,
     };
@@ -66,8 +65,8 @@ class UserModel extends Equatable {
     return UserModel(
       email: email ?? this.email,
       id: id ?? this.id,
-      firstName: firstName ?? this.firstName,
-      lastName: lastName ?? this.lastName,
+      firstname: firstName ?? this.firstname,
+      lastname: lastName ?? this.lastname,
       avatar: avatar ?? this.avatar,
       username: username ?? this.username,
     );
@@ -75,7 +74,7 @@ class UserModel extends Equatable {
 
   @override
   String toString() {
-    return "UserModel:{email:$email, firstName:$firstName,lastName:$lastName, username:$username, avatar:$avatar}";
+    return "UserModel:{email:$email, firstName:$firstname,lastName:$lastname, username:$username, avatar:$avatar}";
   }
 
   /// Compare two users
@@ -84,8 +83,8 @@ class UserModel extends Equatable {
         email,
         id,
         username,
-        firstName,
-        lastName,
+        firstname,
+        lastname,
         avatar,
       ];
 }

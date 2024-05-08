@@ -1,6 +1,5 @@
 import 'dart:io';
 // import 'package:vocab_app/presentation/common_blocs/profile/bloc.dart';
-import 'package:vocab_app/data/models/guest_user_model.dart';
 import 'package:vocab_app/data/models/models.dart';
 import 'package:equatable/equatable.dart';
 
@@ -14,6 +13,15 @@ class LoadProfile extends ProfileEvent {
   final String userType;
 
   LoadProfile(this.userType);
+}
+
+class UpdateUserDetails extends ProfileEvent {
+  final UserModel updatedUserDetails;
+
+  UpdateUserDetails(this.updatedUserDetails);
+
+  @override
+  List<Object> get props => [updatedUserDetails];
 }
 
 /// Upload user avatar

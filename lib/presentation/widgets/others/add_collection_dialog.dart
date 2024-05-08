@@ -117,14 +117,12 @@ class _AddCollectionDialogState extends State<AddCollectionDialog> {
   }
 
   _buildCollectionExists() {
-    return collectionExists
-        ? Center(
+    return Center(
             child: Text(
               Translate.of(context).translate("collection_exists"),
               style: FONT_CONST.BOLD_PRIMARY_18,
             ),
-          )
-        : const Text("");
+          );
   }
 
   _buildButtonProcessAction() {
