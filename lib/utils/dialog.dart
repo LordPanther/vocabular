@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:vocab_app/configs/router.dart';
 import 'package:vocab_app/configs/size_config.dart';
@@ -43,8 +44,11 @@ class UtilDialog {
             borderRadius:
                 BorderRadius.all(Radius.circular(SizeConfig.defaultSize)),
           ),
-          title: Text(
-            Translate.of(context).translate("update_user"),
+          title: Center(
+            child: Text(
+              Translate.of(context).translate("update_user"),
+              style: FONT_CONST.MEDIUM_DEFAULT_20,
+            ),
           ),
           content: SingleChildScrollView(
             child: Column(
@@ -65,7 +69,7 @@ class UtilDialog {
                     ),
                   ),
                 ),
-                SizedBox(height: SizeConfig.defaultSize),
+                SizedBox(height: SizeConfig.defaultSize * 2),
                 TextFormField(
                   controller: email,
                   decoration: const InputDecoration(
@@ -81,7 +85,7 @@ class UtilDialog {
                     ),
                   ),
                 ),
-                SizedBox(height: SizeConfig.defaultSize),
+                SizedBox(height: SizeConfig.defaultSize * 2),
                 TextFormField(
                   controller: firstName,
                   decoration: const InputDecoration(
@@ -97,7 +101,7 @@ class UtilDialog {
                     ),
                   ),
                 ),
-                SizedBox(height: SizeConfig.defaultSize),
+                SizedBox(height: SizeConfig.defaultSize * 2),
                 TextFormField(
                   controller: lastName,
                   decoration: const InputDecoration(
@@ -129,14 +133,14 @@ class UtilDialog {
             ),
             TextButton(
               onPressed: () {
-                if (firstName.text.isNotEmpty) {
-                  UserModel updatedDetails = UserModel(
-                    email: firstName.text,
+                if (email.text.isNotEmpty) {
+                  var updatedData = state.loggedUser.cloneWith(
+                    email: email.text,
                     firstname: firstName.text,
                     lastname: lastName.text,
                     username: username.text,
                   );
-                  Navigator.of(context).pop(updatedDetails);
+                  Navigator.of(context).pop(updatedData);
                 } else {
                   UtilSnackBar.showSnackBarContent(context,
                       content: "Cannot have empty email field");

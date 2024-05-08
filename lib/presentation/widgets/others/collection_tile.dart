@@ -81,6 +81,7 @@ class _CollectionTileState extends State<CollectionTile> {
             if (dismiss && word.word != "vocabular") {
               BlocProvider.of<HomeBloc>(context)
                   .add(RemoveWord(collection: collection, word: word));
+              words.remove(word);
               return dismiss;
             } else {
               UtilSnackBar.showSnackBarContent(context,

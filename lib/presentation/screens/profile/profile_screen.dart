@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:vocab_app/configs/config.dart';
-import 'package:vocab_app/configs/router.dart';
-import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/constants/icon_constant.dart';
@@ -21,7 +19,6 @@ import 'package:vocab_app/presentation/widgets/buttons/circle_icon_button.dart';
 import 'package:vocab_app/presentation/widgets/buttons/text_button.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
 import 'package:vocab_app/utils/dialog.dart';
-import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -79,12 +76,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void onEditUserDetails(ProfileLoaded state) async {
-    UserModel? updatedUserDetails =
+    var updatedDetails =
         await UtilDialog.updateUserDetails(context: context, state: state);
 
-    if (updatedUserDetails != null) {
+    if (updatedDetails!.email != null) {
       BlocProvider.of<ProfileBloc>(context)
-          .add(UpdateUserDetails(updatedUserDetails));
+          .add(UpdateUserDetails(updatedDetails));
     }
   }
 
@@ -148,15 +145,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     var user = state.loggedUser;
     var userDetails = [
       user.username,
+      "${user.firstname} ${user.lastname}",
       user.email,
-      user.firstname,
-      user.lastname,
     ];
 
     return Padding(
-      padding: EdgeInsets.only(
-        left: SizeConfig.defaultSize * 1.5,
-        right: SizeConfig.defaultSize * 1.5,
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.defaultSize * 3,
       ),
       child: Column(
         children: [
@@ -169,6 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ),
+          SizedBox(height: SizeConfig.defaultSize * 3),
           ListView.builder(
             shrinkWrap: true,
             itemCount: userDetails.length,
@@ -193,10 +189,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _buildLogoutButton() {
-    return MainButton(
-      onPressed: onLogout,
-      buttonName: Translate.of(context).translate('log_out'),
-      buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        MainButton(
+          onPressed: onLogout,
+          buttonName: Translate.of(context).translate('log_out'),
+          buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
+        ),
+      ],
     );
   }
 

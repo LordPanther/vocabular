@@ -53,10 +53,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   Future<void> _mapUpdateUserDetailsToState(
       event, Emitter<ProfileState> emit) async {
-    _loggedUser = event.updatedUserDetails.toMap();
-
     try {
-      await _userRepository.updateUserData(_loggedUser!);
+      await _userRepository.updateUserData(event.updatedUserDetails);
       emit(ProfileLoaded(_loggedUser!));
     } on Exception catch (exception) {
       emit(ProfileLoadFailure(exception.toString()));

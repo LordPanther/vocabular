@@ -2,7 +2,6 @@
 
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/configs/config.dart';
@@ -79,10 +78,12 @@ class _WordBodyState extends State<WordBody> {
     if (isWordPopulated && _collection != null) {
       if (!user!.isAnonymous) {
         var storagePath = await storageData(timeStamp);
-        _audioUrl = await _storageRepository.uploadAudioData(
-          storagePath,
-          recordButtonState.currentState!.fileData!,
-        );
+        if (recordButtonState.currentState!.fileData != null) {
+          _audioUrl = await _storageRepository.uploadAudioData(
+            storagePath,
+            recordButtonState.currentState!.fileData!,
+          );
+        }
       }
 
       await assignDataToModels(timeStamp);

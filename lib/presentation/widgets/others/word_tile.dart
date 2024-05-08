@@ -2,15 +2,8 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/font_constant.dart';
-import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/word_model.dart';
-import 'package:vocab_app/presentation/screens/home_screen/bloc/home_bloc.dart';
-import 'package:vocab_app/presentation/screens/home_screen/bloc/home_event.dart';
-import 'package:vocab_app/presentation/widgets/buttons/play_button.dart';
-import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/utils.dart';
 
 class WordTile extends StatefulWidget {
@@ -23,7 +16,6 @@ class WordTile extends StatefulWidget {
 }
 
 class _WordTileState extends State<WordTile> {
-  bool _isPlaying = false;
   String _audioUrl = "";
 
   @override
@@ -49,46 +41,28 @@ class _WordTileState extends State<WordTile> {
     );
   }
 
-  void removeWord() async {
-    bool removeWord = await UtilDialog.showRemoveDialog(context: context);
-    var collection = CollectionModel(name: widget.word.id);
-    var word = widget.word.word != "vocabular";
-    if (removeWord) {
-      if (word) {
-        BlocProvider.of<HomeBloc>(context).add(
-          RemoveWord(collection: collection, word: widget.word),
-        );
-      } else {
-        UtilSnackBar.showSnackBarContent(context,
-            content: Translate.of(context).translate("default_word"));
-      }
-    }
-  }
+  // void removeWord() async {
+  //   bool removeWord = await UtilDialog.showRemoveDialog(context: context);
+  //   var collection = CollectionModel(name: widget.word.id);
+  //   var word = widget.word.word != "vocabular";
+  //   if (removeWord) {
+  //     if (word) {
+  //       BlocProvider.of<HomeBloc>(context).add(
+  //         RemoveWord(collection: collection, word: widget.word),
+  //       );
+  //       widget.removeWord(word);
+  //     } else {
+  //       UtilSnackBar.showSnackBarContent(context,
+  //           content: Translate.of(context).translate("default_word"));
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Row(
-        children: [
-          if (_audioUrl.isNotEmpty)
-            Padding(
-              padding: EdgeInsets.only(right: SizeConfig.defaultSize * 2),
-              child: PlayButton(
-                playMode: "audio",
-                audioUrl: _audioUrl,
-                onPlayingChanged: (bool isPlaying) {
-                  _isPlaying = !isPlaying;
-
-                  setState(() {});
-                },
-              ),
-            ),
-          if (!_isPlaying)
-            Text(widget.word.word!, style: FONT_CONST.MEDIUM_DEFAULT_18),
-        ],
-      ),
-      // subtitle: _wordDefinition(),
-      onLongPress: removeWord,
+      title: Text(widget.word.word!, style: FONT_CONST.MEDIUM_DEFAULT_18),
+      minVerticalPadding: 5,
       onTap: onViewWord,
     );
   }

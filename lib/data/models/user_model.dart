@@ -58,15 +58,15 @@ class UserModel extends Equatable {
     email,
     id,
     username,
-    firstName,
-    lastName,
+    firstname,
+    lastname,
     avatar,
   }) {
     return UserModel(
       email: email ?? this.email,
       id: id ?? this.id,
-      firstname: firstName ?? this.firstname,
-      lastname: lastName ?? this.lastname,
+      firstname: firstname ?? this.firstname,
+      lastname: lastname ?? this.lastname,
       avatar: avatar ?? this.avatar,
       username: username ?? this.username,
     );
