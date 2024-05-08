@@ -428,7 +428,7 @@ class UtilDialog {
     BuildContext context, {
     required String? tooltip,
     required WordModel word,
-    Function()? onPressed,
+    Function()? onEditWord,
   }) {
     showGeneralDialog(
       context: context,
@@ -444,15 +444,34 @@ class UtilDialog {
                 BorderRadius.all(Radius.circular(SizeConfig.defaultSize)),
           ),
           title: word.audioUrl != null
-              ? Row(
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     PlayButton(
                       audioUrl: word.audioUrl!,
                       playMode: "audio",
+                      onPlayingChanged: (isPlaying) {},
                     ),
-                    SizedBox(width: SizeConfig.defaultSize * 2),
-                    Text(word.word![0].toUpperCase() + word.word!.substring(1),
-                        style: FONT_CONST.MEDIUM_DEFAULT_20),
+                    SizedBox(height: SizeConfig.defaultSize * 2),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                            word.word![0].toUpperCase() +
+                                word.word!.substring(1),
+                            style: FONT_CONST.MEDIUM_DEFAULT_20),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.of(context).popAndPushNamed(
+                                AppRouter.WORD,
+                                arguments: word);
+                          },
+                          icon: const Icon(CupertinoIcons.pen),
+                          tooltip: tooltip,
+                        ),
+                      ],
+                    ),
                   ],
                 )
               : Row(
@@ -460,17 +479,21 @@ class UtilDialog {
                   children: [
                     Text(word.word![0].toUpperCase() + word.word!.substring(1),
                         style: FONT_CONST.MEDIUM_DEFAULT_20),
-                    IconButton(
-                      onPressed: onPressed,
-                      icon: const Icon(CupertinoIcons.add_circled),
-                      tooltip: tooltip,
-                    ),
+                    if (word.word != "vocabular")
+                      IconButton(
+                        onPressed: onEditWord,
+                        icon: const Icon(CupertinoIcons.pen),
+                        tooltip: tooltip,
+                      ),
                   ],
                 ),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text(word.definition!),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Text(word.definition!, softWrap: true),
+                ),
                 SizedBox(height: SizeConfig.defaultSize * 5),
                 GestureDetector(
                     onTap: () {

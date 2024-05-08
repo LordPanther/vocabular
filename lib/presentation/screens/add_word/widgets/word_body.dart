@@ -21,7 +21,8 @@ import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
 
 class WordBody extends StatefulWidget {
-  const WordBody({super.key});
+  final WordModel? word;
+  const WordBody({super.key, this.word});
 
   @override
   State<WordBody> createState() => _WordBodyState();
@@ -36,11 +37,12 @@ class _WordBodyState extends State<WordBody> {
   final StorageRepository _storageRepository = AppRepository.storageRepository;
 
   // Controllers/word
-  final TextEditingController _word = TextEditingController();
-  final TextEditingController _definition = TextEditingController();
+  late TextEditingController _word;
+  late TextEditingController _definition;
   String? _collection;
   bool _isShared = false;
   String? _audioUrl = "";
+  bool _isEditing = false;
 
   // Audio recording global variables
   bool get isWordPopulated => _word.text.isNotEmpty;
@@ -50,6 +52,24 @@ class _WordBodyState extends State<WordBody> {
   @override
   void initState() {
     super.initState();
+    if (widget.word != null) {
+      word = WordModel(
+        id: widget.word!.id,
+        definition: widget.word!.definition,
+        word: widget.word!.word,
+        audioUrl: widget.word!.audioUrl,
+      );
+
+      _isEditing = true;
+      _collection = widget.word!.id;
+
+      _word = TextEditingController(text: word.word);
+      _definition = TextEditingController(text: word.definition);
+    }
+
+    _word = TextEditingController();
+    _definition = TextEditingController();
+
     wordBloc = BlocProvider.of<WordBloc>(context);
   }
 
@@ -155,7 +175,9 @@ class _WordBodyState extends State<WordBody> {
                   SizedBox(height: SizeConfig.defaultSize * 3),
                   _buildTextFieldWithRecordButton(state.user),
                   SizedBox(height: SizeConfig.defaultSize * 1),
-                  _buildCollectionDropdown(collections),
+                  _isEditing
+                      ? Text(_collection!.toUpperCase())
+                      : _buildCollectionDropdown(collections),
                   SizedBox(height: SizeConfig.defaultSize * 3),
                   _buildCheckbox(),
                   SizedBox(height: SizeConfig.defaultSize * 5),

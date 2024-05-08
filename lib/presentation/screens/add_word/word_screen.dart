@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/presentation/screens/add_word/bloc/bloc.dart';
 import 'package:vocab_app/presentation/screens/add_word/widgets/word_body.dart';
 import 'package:vocab_app/presentation/screens/add_word/widgets/word_header.dart';
 
 class WordScreen extends StatefulWidget {
-  const WordScreen({super.key});
+  final WordModel? word;
+  const WordScreen({super.key, this.word});
 
   @override
   State<WordScreen> createState() => _WordScreenState();
@@ -20,13 +22,13 @@ class _WordScreenState extends State<WordScreen> {
           onTap: () => FocusScope.of(context).unfocus(),
           child: Builder(
             builder: (context) {
-              return const Scaffold(
+              return Scaffold(
                 body: SafeArea(
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        WordHeader(),
-                        WordBody(),
+                        const WordHeader(),
+                        WordBody(word: widget.word),
                       ],
                     ),
                   ),

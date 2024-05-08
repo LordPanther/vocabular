@@ -37,26 +37,13 @@ class _WordTileState extends State<WordTile> {
       context,
       word: widget.word,
       tooltip: "Add audio definition",
-      onPressed: () {},
+      onEditWord: onAddRecording,
     );
   }
 
-  // void removeWord() async {
-  //   bool removeWord = await UtilDialog.showRemoveDialog(context: context);
-  //   var collection = CollectionModel(name: widget.word.id);
-  //   var word = widget.word.word != "vocabular";
-  //   if (removeWord) {
-  //     if (word) {
-  //       BlocProvider.of<HomeBloc>(context).add(
-  //         RemoveWord(collection: collection, word: widget.word),
-  //       );
-  //       widget.removeWord(word);
-  //     } else {
-  //       UtilSnackBar.showSnackBarContent(context,
-  //           content: Translate.of(context).translate("default_word"));
-  //     }
-  //   }
-  // }
+  void onAddRecording() async {
+    // UtilDialog.
+  }
 
   @override
   Widget build(BuildContext context) {

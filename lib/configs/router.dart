@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:vocab_app/bottom_navigation.dart';
+import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/presentation/screens/add_collection/add_collection_screen.dart';
 import 'package:vocab_app/presentation/screens/add_word/word_screen.dart';
 import 'package:vocab_app/presentation/screens/guest_to_user_screen/guest_to_user_screen.dart';
@@ -63,8 +64,11 @@ class AppRouter {
           builder: (_) => const GuestToUserScreen(),
         );
       case WORD:
+        var word = settings.arguments as WordModel;
         return MaterialPageRoute(
-          builder: (_) => const WordScreen(),
+          builder: (_) => WordScreen(
+            word: word,
+          ),
         );
       case REGISTER:
         var selection = settings.arguments as UserModel;
