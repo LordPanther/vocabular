@@ -7,6 +7,7 @@ import 'package:vocab_app/constants/constants.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/repository/app_repository.dart';
 import 'package:vocab_app/data/repository/home_repository/home_repo.dart';
+import 'package:vocab_app/presentation/widgets/buttons/text_button.dart';
 import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
 
@@ -109,33 +110,37 @@ class _AddCollectionDialogState extends State<AddCollectionDialog> {
           labelText: Translate.of(context).translate('collection_name'),
           labelStyle: const TextStyle(color: COLOR_CONST.textColor),
           // prefixIcon: const Icon(Icons.email_outlined, color: Colors.white),
-          focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
-          enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: COLOR_CONST.primaryColor))),
+          focusedBorder: OutlineInputBorder(
+              borderSide:
+                  BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: COLOR_CONST.primaryColor.withOpacity(0.3)))),
     );
   }
 
   _buildCollectionExists() {
     return Center(
-            child: Text(
-              Translate.of(context).translate("collection_exists"),
-              style: FONT_CONST.BOLD_PRIMARY_18,
-            ),
-          );
+      child: Text(
+        Translate.of(context).translate("collection_exists"),
+        style: FONT_CONST.BOLD_PRIMARY_18,
+      ),
+    );
   }
 
   _buildButtonProcessAction() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IconButton(
+        CustomTextButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(CupertinoIcons.xmark),
+          buttonName: Translate.of(context).translate('back'),
+          buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
         ),
-        IconButton(
+        CustomTextButton(
           onPressed: onCreateCollection,
-          icon: const Icon(CupertinoIcons.arrow_right),
+          buttonName: Translate.of(context).translate('add_collection'),
+          buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
         ),
       ],
     );

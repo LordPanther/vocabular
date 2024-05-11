@@ -60,11 +60,6 @@ class _SearchingBarState extends State<SearchingBar> {
         padding: const EdgeInsets.all(8.0),
         child: Row(
           children: <Widget>[
-            // IconButton(
-            //   icon: const Icon(Icons.arrow_back_ios,
-            //       color: COLOR_CONST.textColor),
-            //   onPressed: () => Navigator.pop(context),
-            // ),
             Expanded(
               child: SearchFieldWidget(
                 searchController: widget.searchController,

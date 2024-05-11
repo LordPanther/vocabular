@@ -38,11 +38,15 @@ class _SearchScreenState extends State<SearchScreen> {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
-          child: Column(
-            children: [
-              SearchingBar(searchController: searchControler),
-              Expanded(child: _buildContent()),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SearchingBar(searchController: searchControler),
+                Expanded(child: _buildContent()),
+              ],
+            ),
           ),
         ),
       ),
@@ -80,7 +84,7 @@ class _SearchScreenState extends State<SearchScreen> {
         children: [
           Text(
             Translate.of(context).translate("recent_search"),
-            style: FONT_CONST.BOLD_DEFAULT_26,
+            style: FONT_CONST.BOLD_DEFAULT_20,
           ),
           Wrap(
             children: List.generate(
@@ -100,7 +104,7 @@ class _SearchScreenState extends State<SearchScreen> {
         children: [
           Text(
             Translate.of(context).translate("hot_keywords"),
-            style: FONT_CONST.BOLD_DEFAULT_26,
+            style: FONT_CONST.BOLD_DEFAULT_20,
           ),
           Wrap(
             children: List.generate(state.hotKeywords.length, (index) {
@@ -120,7 +124,7 @@ class _SearchScreenState extends State<SearchScreen> {
           SizedBox(height: SizeConfig.defaultSize * 3),
           hotKeywordsWidget,
           SizedBox(height: SizeConfig.defaultSize * 10),
-          MainButton(
+          CustomTextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -160,7 +164,7 @@ class _SearchScreenState extends State<SearchScreen> {
             style: FONT_CONST.MEDIUM_PRIMARY_18,
           ),
           SizedBox(height: SizeConfig.defaultSize * 10),
-          MainButton(
+          CustomTextButton(
             onPressed: () {
               Navigator.of(context).popAndPushNamed(AppRouter.WORD);
             },
@@ -187,7 +191,7 @@ class _SearchScreenState extends State<SearchScreen> {
           right: SizeConfig.defaultSize,
         ),
         decoration: BoxDecoration(
-          color: COLOR_CONST.primaryColor.withOpacity(0.3),
+          color: COLOR_CONST.primaryColor.withOpacity(0.3).withOpacity(0.3),
           borderRadius: BorderRadius.circular(5),
         ),
         child: Text(

@@ -65,10 +65,10 @@ class _WordBodyState extends State<WordBody> {
 
       _word = TextEditingController(text: word.word);
       _definition = TextEditingController(text: word.definition);
+    } else {
+      _word = TextEditingController();
+      _definition = TextEditingController();
     }
-
-    _word = TextEditingController();
-    _definition = TextEditingController();
 
     wordBloc = BlocProvider.of<WordBloc>(context);
   }
@@ -175,12 +175,16 @@ class _WordBodyState extends State<WordBody> {
                   SizedBox(height: SizeConfig.defaultSize * 3),
                   _buildTextFieldWithRecordButton(state.user),
                   SizedBox(height: SizeConfig.defaultSize * 1),
-                  _isEditing
-                      ? Text(_collection!.toUpperCase())
-                      : _buildCollectionDropdown(collections),
-                  SizedBox(height: SizeConfig.defaultSize * 3),
-                  _buildCheckbox(),
-                  SizedBox(height: SizeConfig.defaultSize * 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _isEditing
+                          ? Text(_collection!.toUpperCase())
+                          : _buildCollectionDropdown(collections),
+                      _buildCheckbox(),
+                    ],
+                  ),
+                  SizedBox(height: SizeConfig.defaultSize * 7),
                   _buildButtonProcessAction(),
                 ],
               ),
@@ -222,13 +226,14 @@ class _WordBodyState extends State<WordBody> {
       decoration: InputDecoration(
         labelText: Translate.of(context).translate('add_word'),
         labelStyle: const TextStyle(color: COLOR_CONST.textColor),
-        focusedBorder: const OutlineInputBorder(
+        focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: COLOR_CONST.primaryColor,
+            color: COLOR_CONST.primaryColor.withOpacity(0.3),
           ),
         ),
-        enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: COLOR_CONST.primaryColor),
+        enabledBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3)),
         ),
       ),
     );
@@ -273,11 +278,13 @@ class _WordBodyState extends State<WordBody> {
         ),
         labelText: Translate.of(context).translate('add_definition'),
         labelStyle: const TextStyle(color: COLOR_CONST.textColor),
-        focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: COLOR_CONST.primaryColor),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3)),
         ),
-        enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: COLOR_CONST.primaryColor),
+        enabledBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3)),
         ),
       ),
     );
@@ -299,15 +306,11 @@ class _WordBodyState extends State<WordBody> {
 
   Widget _buildCheckbox() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Expanded(
-          child: Text(
-            Translate.of(context).translate("share_word"),
-            overflow: TextOverflow.ellipsis,
-          ),
+        Text(
+          Translate.of(context).translate("share_word"),
+          overflow: TextOverflow.ellipsis,
         ),
-        const SizedBox(width: 10),
         Checkbox(
           value: _isShared,
           onChanged: (value) {
@@ -326,14 +329,14 @@ class _WordBodyState extends State<WordBody> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        MainButton(
+        CustomTextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
           buttonName: Translate.of(context).translate('cancel'),
           buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
         ),
-        MainButton(
+        CustomTextButton(
           onPressed: () {
             _onAddWord();
           },

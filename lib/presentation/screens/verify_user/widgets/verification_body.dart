@@ -95,7 +95,7 @@ class _VerificationBodyState extends State<VerificationBody> {
   }
 
   _continueButton() {
-    return MainButton(
+    return CustomTextButton(
       onPressed: goHome,
       buttonName: Translate.of(context).translate('continue'),
       buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
@@ -103,7 +103,7 @@ class _VerificationBodyState extends State<VerificationBody> {
   }
 
   _resendButton() {
-    return MainButton(
+    return CustomTextButton(
       onPressed: reVerify,
       buttonName: Translate.of(context).translate('resend_email_link'),
       buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,

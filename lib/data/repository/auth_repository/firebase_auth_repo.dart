@@ -136,7 +136,26 @@ class FirebaseAuthRepository extends AuthRepository {
         password: password,
       );
     } on FirebaseAuthException catch (e) {
-      _authException = e.message.toString();
+      switch (e.toString()) {
+        case "invalid-email":
+          _authException =
+              "We're sorry, but the email provided is invalid. Please double-check the email address and try again.";
+          break;
+        case "user-disabled":
+          _authException =
+              "Your account has been disabled. Please reach out to our support team for further assistance.";
+          break;
+        case "user-not-found":
+          _authException =
+              "We couldn't find an account associated with the provided email. Please make sure you've entered the correct email address or consider signing up if you haven't already.";
+          break;
+        case "wrong-password":
+          _authException =
+              "The password you entered is incorrect. Please ensure you're entering the correct password and try again. If you've forgotten your password, you can reset it through the 'Forgot Password' option.";
+          break;
+        default:
+          "Something went wrong";
+      }
     }
   }
 
@@ -177,7 +196,9 @@ class FirebaseAuthRepository extends AuthRepository {
           }
         }
       });
-      print("Guest deleted");
+      if (kDebugMode) {
+        print("Guest deleted");
+      }
     } else {
       await _firebaseAuth.signOut().catchError((error) {
         if (kIsWeb) {

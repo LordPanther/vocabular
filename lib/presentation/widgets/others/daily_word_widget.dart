@@ -49,13 +49,13 @@ class _DailyWordWidgetState extends State<DailyWordWidget> {
 
   _buildWordAudio() {
     return GestureDetector(
-      onTap: (){},
+      onTap: () {},
       child: Container(
         height: 40,
         width: 40,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: COLOR_CONST.primaryColor),
+            color: COLOR_CONST.primaryColor.withOpacity(0.3)),
         child: const Icon(
           CupertinoIcons.speaker_3_fill,
           color: COLOR_CONST.backgroundColor,

@@ -56,64 +56,68 @@ class UtilDialog {
               children: [
                 TextFormField(
                   controller: username,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Username',
-                    labelStyle: TextStyle(color: COLOR_CONST.textColor),
+                    labelStyle: const TextStyle(color: COLOR_CONST.textColor),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: COLOR_CONST.primaryColor,
+                        color: COLOR_CONST.primaryColor.withOpacity(0.3),
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: COLOR_CONST.primaryColor),
+                      borderSide: BorderSide(
+                          color: COLOR_CONST.primaryColor.withOpacity(0.3)),
                     ),
                   ),
                 ),
                 SizedBox(height: SizeConfig.defaultSize * 2),
                 TextFormField(
                   controller: email,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Email',
-                    labelStyle: TextStyle(color: COLOR_CONST.textColor),
+                    labelStyle: const TextStyle(color: COLOR_CONST.textColor),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: COLOR_CONST.primaryColor,
+                        color: COLOR_CONST.primaryColor.withOpacity(0.3),
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: COLOR_CONST.primaryColor),
+                      borderSide: BorderSide(
+                          color: COLOR_CONST.primaryColor.withOpacity(0.3)),
                     ),
                   ),
                 ),
                 SizedBox(height: SizeConfig.defaultSize * 2),
                 TextFormField(
                   controller: firstName,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'First Name',
-                    labelStyle: TextStyle(color: COLOR_CONST.textColor),
+                    labelStyle: const TextStyle(color: COLOR_CONST.textColor),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: COLOR_CONST.primaryColor,
+                        color: COLOR_CONST.primaryColor.withOpacity(0.3),
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: COLOR_CONST.primaryColor),
+                      borderSide: BorderSide(
+                          color: COLOR_CONST.primaryColor.withOpacity(0.3)),
                     ),
                   ),
                 ),
                 SizedBox(height: SizeConfig.defaultSize * 2),
                 TextFormField(
                   controller: lastName,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Last Name',
-                    labelStyle: TextStyle(color: COLOR_CONST.textColor),
+                    labelStyle: const TextStyle(color: COLOR_CONST.textColor),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: COLOR_CONST.primaryColor,
+                        color: COLOR_CONST.primaryColor.withOpacity(0.3),
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: COLOR_CONST.primaryColor),
+                      borderSide: BorderSide(
+                          color: COLOR_CONST.primaryColor.withOpacity(0.3)),
                     ),
                   ),
                 ),
@@ -600,11 +604,15 @@ class UtilDialog {
             borderRadius:
                 BorderRadius.all(Radius.circular(SizeConfig.defaultSize)),
           ),
-          title: Text(
-            title ?? Translate.of(context).translate("message_for_you"),
-            style: FONT_CONST.MEDIUM_PRIMARY_20,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: Text(content!),
+              ),
+            ],
           ),
-          content: Text(content!),
           actions: <Widget>[
             TextButton(
               onPressed: onClose ?? () => Navigator.of(context).pop(),
@@ -680,27 +688,20 @@ class UtilDialog {
             borderRadius:
                 BorderRadius.all(Radius.circular(SizeConfig.defaultSize)),
           ),
-          title: Text(
-            title ?? Translate.of(context).translate("message_for_you"),
-            style: FONT_CONST.MEDIUM_PRIMARY_24,
-          ),
           content: content,
           actions: <Widget>[
             TextButton(
               child: Text(
                 Translate.of(context).translate("close"),
-                style: FONT_CONST.MEDIUM_PRIMARY_18,
+                style: FONT_CONST.MEDIUM_DEFAULT_18,
               ),
               onPressed: () => Navigator.pop(context, false),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
-              style: TextButton.styleFrom(
-                backgroundColor: COLOR_CONST.primaryColor,
-              ),
               child: Text(
                 confirmButtonText,
-                style: FONT_CONST.REGULAR_WHITE_18,
+                style: FONT_CONST.MEDIUM_DEFAULT_18,
               ),
             ),
           ],

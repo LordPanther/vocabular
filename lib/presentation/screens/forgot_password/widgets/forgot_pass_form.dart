@@ -1,4 +1,3 @@
-
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:vocab_app/configs/router.dart';
@@ -140,7 +139,7 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
     return DefaultButton(
       onPressed: onSendResetEmail,
       backgroundColor: isSendResetEmailButtonEnabled()
-          ? COLOR_CONST.primaryColor
+          ? COLOR_CONST.primaryColor.withOpacity(0.3)
           : COLOR_CONST.cardShadowColor,
       child: Text(
         Translate.of(context).translate('confirm_email').toUpperCase(),

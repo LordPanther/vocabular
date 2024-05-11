@@ -11,6 +11,7 @@ import 'package:vocab_app/presentation/screens/add_collection/bloc/collection_ev
 import 'package:vocab_app/presentation/screens/add_collection/bloc/collection_state.dart';
 import 'package:vocab_app/presentation/screens/home_screen/bloc/home_bloc.dart';
 import 'package:vocab_app/presentation/screens/home_screen/bloc/home_event.dart';
+import 'package:vocab_app/presentation/widgets/buttons/text_button.dart';
 import 'package:vocab_app/presentation/widgets/others/dropdown_list.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
 import 'package:vocab_app/utils/dialog.dart';
@@ -91,7 +92,7 @@ class _AddCollectionBodyState extends State<AddCollectionBody> {
                   _buildCollectionTextField(),
                   SizedBox(height: SizeConfig.defaultSize * 3),
                   _buildCollectionDropdown(collections),
-                  SizedBox(height: SizeConfig.defaultSize * 5),
+                  SizedBox(height: SizeConfig.defaultSize * 7),
                   _buildButtonProcessAction(),
                 ],
               ),
@@ -132,25 +133,31 @@ class _AddCollectionBodyState extends State<AddCollectionBody> {
       autovalidateMode: AutovalidateMode.always,
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
-        labelText: Translate.of(context).translate('add_collection'),
+        labelText: Translate.of(context).translate('collection'),
         labelStyle: const TextStyle(color: COLOR_CONST.textColor),
-        focusedBorder: const OutlineInputBorder(
+        focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: COLOR_CONST.primaryColor,
+            color: COLOR_CONST.primaryColor.withOpacity(0.3),
           ),
         ),
-        enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: COLOR_CONST.primaryColor),
+        enabledBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3)),
         ),
       ),
     );
   }
 
   Widget _buildCollectionDropdown(List<String?> collections) {
-    return DropdownSelectionList(
-      action: Translate.of(context).translate("view_collections"),
-      items: collections,
-      onItemSelected: (String? selecteItem) {},
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        DropdownSelectionList(
+          action: Translate.of(context).translate("view_collections"),
+          items: collections,
+          onItemSelected: (String? selecteItem) {},
+        ),
+      ],
     );
   }
 
@@ -158,21 +165,17 @@ class _AddCollectionBodyState extends State<AddCollectionBody> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IconButton(
+        CustomTextButton(
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           },
-          icon: Icon(
-            CupertinoIcons.xmark,
-            size: SizeConfig.defaultSize * 3,
-          ),
+          buttonName: Translate.of(context).translate('cancel'),
+          buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
         ),
-        IconButton(
+        CustomTextButton(
           onPressed: onAddCollection,
-          icon: Icon(
-            CupertinoIcons.arrow_right,
-            size: SizeConfig.defaultSize * 3,
-          ),
+          buttonName: Translate.of(context).translate('add_collection'),
+          buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
         ),
       ],
     );

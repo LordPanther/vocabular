@@ -192,7 +192,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        MainButton(
+        CustomTextButton(
           onPressed: onLogout,
           buttonName: Translate.of(context).translate('log_out'),
           buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
@@ -210,7 +210,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           width: SizeConfig.defaultSize * 15,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: COLOR_CONST.primaryColor, width: 2),
+            border: Border.all(
+                color: COLOR_CONST.primaryColor.withOpacity(0.3), width: 2),
           ),
           child: CircleAvatar(
             backgroundImage: loggedUser.avatar != null

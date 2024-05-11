@@ -121,10 +121,12 @@ class _InitializeInfoFormState extends State<InitializeInfoForm> {
           labelText: Translate.of(context).translate("first_name"),
           labelStyle: const TextStyle(color: COLOR_CONST.textColor),
           // suffixIcon: const Icon(Icons.person_outline),
-          focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
-          enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: COLOR_CONST.primaryColor))),
+          focusedBorder: OutlineInputBorder(
+              borderSide:
+                  BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: COLOR_CONST.primaryColor.withOpacity(0.3)))),
     );
   }
 
@@ -151,10 +153,12 @@ class _InitializeInfoFormState extends State<InitializeInfoForm> {
           labelText: Translate.of(context).translate("last_name"),
           labelStyle: const TextStyle(color: COLOR_CONST.textColor),
           // suffixIcon: const Icon(Icons.person_outline),
-          focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
-          enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: COLOR_CONST.primaryColor))),
+          focusedBorder: OutlineInputBorder(
+              borderSide:
+                  BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: COLOR_CONST.primaryColor.withOpacity(0.3)))),
     );
   }
 
@@ -163,13 +167,13 @@ class _InitializeInfoFormState extends State<InitializeInfoForm> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         if (isPopulated)
-          MainButton(
+          CustomTextButton(
             onPressed: onContinue,
             buttonName: Translate.of(context).translate('continue'),
             buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
           ),
         if (!isPopulated)
-          MainButton(
+          CustomTextButton(
             onPressed: onContinue,
             buttonName: Translate.of(context).translate('skip'),
             buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,

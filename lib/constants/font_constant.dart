@@ -37,7 +37,7 @@ class FONT_CONST {
       REGULAR_DEFAULT.copyWith(fontSize: SizeConfig.defaultSize * 2);
 
   static final REGULAR_PRIMARY =
-      REGULAR.copyWith(color: COLOR_CONST.primaryColor);
+      REGULAR.copyWith(color: COLOR_CONST.primaryColor.withOpacity(0.3));
   static final REGULAR_PRIMARY_16 =
       REGULAR_PRIMARY.copyWith(fontSize: SizeConfig.defaultSize * 1.6);
   static final REGULAR_PRIMARY_18 =
@@ -63,7 +63,7 @@ class FONT_CONST {
       MEDIUM_DEFAULT.copyWith(fontSize: SizeConfig.defaultSize * 2);
 
   static final MEDIUM_PRIMARY =
-      MEDIUM.copyWith(color: COLOR_CONST.primaryColor);
+      MEDIUM.copyWith(color: COLOR_CONST.primaryColor.withOpacity(0.3));
   static final MEDIUM_PRIMARY_16 =
       MEDIUM_PRIMARY.copyWith(fontSize: SizeConfig.defaultSize * 1.6);
   static final MEDIUM_PRIMARY_18 =
@@ -102,7 +102,8 @@ class FONT_CONST {
   static final BOLD_DEFAULT_26 =
       BOLD_DEFAULT.copyWith(fontSize: SizeConfig.defaultSize * 2.6);
 
-  static final BOLD_PRIMARY = BOLD.copyWith(color: COLOR_CONST.primaryColor);
+  static final BOLD_PRIMARY =
+      BOLD.copyWith(color: COLOR_CONST.primaryColor.withOpacity(0.3));
   static final BOLD_PRIMARY_16 =
       BOLD_PRIMARY.copyWith(fontSize: SizeConfig.defaultSize * 1.6);
   static final BOLD_PRIMARY_18 =

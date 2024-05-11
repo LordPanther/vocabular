@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 
-
 class Loading extends StatelessWidget {
   const Loading({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: Center(
             child: CircularProgressIndicator(
-              valueColor:
-                  AlwaysStoppedAnimation<Color>(COLOR_CONST.primaryColor),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                  COLOR_CONST.primaryColor.withOpacity(0.3)),
             ),
           ),
         ),

@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class MainButton extends StatelessWidget {
+class CustomTextButton extends StatelessWidget {
   final Function() onPressed;
   final String buttonName;
   final TextStyle buttonStyle;
 
-  const MainButton({
+  const CustomTextButton({
     super.key,
     required this.onPressed,
     required this.buttonName,

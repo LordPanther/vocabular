@@ -188,10 +188,12 @@ class _LoginFormState extends State<LoginForm> {
           labelText: Translate.of(context).translate("email"),
           labelStyle: const TextStyle(color: COLOR_CONST.textColor),
           // prefixIcon: const Icon(Icons.email_outlined, color: Colors.white),
-          focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
-          enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: COLOR_CONST.primaryColor))),
+          focusedBorder: OutlineInputBorder(
+              borderSide:
+                  BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: COLOR_CONST.primaryColor.withOpacity(0.3)))),
     );
   }
 
@@ -220,7 +222,7 @@ class _LoginFormState extends State<LoginForm> {
           suffixIcon: IconButton(
             icon: _isShowPassword
                 ? Icon(Icons.visibility_outlined,
-                    color: COLOR_CONST.primaryColor,
+                    color: COLOR_CONST.primaryColor.withOpacity(0.3),
                     size: SizeConfig.defaultSize * 2)
                 : Icon(Icons.visibility_off_outlined,
                     color: COLOR_CONST.textColor,
@@ -229,10 +231,12 @@ class _LoginFormState extends State<LoginForm> {
               setState(() => _isShowPassword = !_isShowPassword);
             },
           ),
-          focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
-          enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: COLOR_CONST.primaryColor))),
+          focusedBorder: OutlineInputBorder(
+              borderSide:
+                  BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
+          enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                  color: COLOR_CONST.primaryColor.withOpacity(0.3)))),
     );
   }
 
@@ -254,7 +258,7 @@ class _LoginFormState extends State<LoginForm> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         if (isLoginButtonEnabled())
-          MainButton(
+          CustomTextButton(
             onPressed: onSignIn,
             buttonName: Translate.of(context).translate("sign_in"),
             buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,

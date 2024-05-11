@@ -48,7 +48,8 @@ class _CollectionTileState extends State<CollectionTile> {
       child: ExpansionTile(
         key: ValueKey(widget.key),
         shape: RoundedRectangleBorder(
-            side: const BorderSide(color: COLOR_CONST.primaryColor),
+            side: BorderSide(
+                color: COLOR_CONST.primaryColor.withOpacity(0.3)),
             borderRadius:
                 BorderRadius.all(Radius.circular(SizeConfig.defaultSize))),
         childrenPadding: EdgeInsets.all(SizeConfig.defaultPadding),

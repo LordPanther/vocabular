@@ -113,7 +113,7 @@ class _ConfirmationBodyState extends State<ConfirmationBody> {
     return DefaultButton(
       onPressed: onConfirmReset,
       backgroundColor: isConfirmResetButtonEnabled()
-          ? COLOR_CONST.primaryColor
+          ? COLOR_CONST.primaryColor.withOpacity(0.3)
           : COLOR_CONST.cardShadowColor,
       child: Text(
         Translate.of(context).translate('confirm_email').toUpperCase(),

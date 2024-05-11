@@ -163,10 +163,12 @@ class _RegisterFormState extends State<RegisterForm> {
       decoration: InputDecoration(
         labelStyle: const TextStyle(color: COLOR_CONST.textColor),
         labelText: Translate.of(context).translate('email'),
-        focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
-        enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
+        focusedBorder: OutlineInputBorder(
+            borderSide:
+                BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
+        enabledBorder: OutlineInputBorder(
+            borderSide:
+                BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
         // suffixIcon: Icon(Icons.email_outlined),
       ),
     );
@@ -264,7 +266,7 @@ class _RegisterFormState extends State<RegisterForm> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         if (isSignUpButtonEnabled())
-          MainButton(
+          CustomTextButton(
             onPressed: onSignUp,
             buttonName: Translate.of(context).translate('sign_up'),
             buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
