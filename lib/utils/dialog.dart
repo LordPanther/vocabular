@@ -448,51 +448,34 @@ class UtilDialog {
             borderRadius:
                 BorderRadius.all(Radius.circular(SizeConfig.defaultSize)),
           ),
-          title: word.audioUrl != null
-              ? Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (!user.loggedFirebaseUser.isAnonymous)
-                      PlayButton(
-                        audioUrl: word.audioUrl!,
-                        playMode: "audio",
-                        onPlayingChanged: (isPlaying) {},
-                      ),
-                    SizedBox(height: SizeConfig.defaultSize * 2),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                            word.word![0].toUpperCase() +
-                                word.word!.substring(1),
-                            style: FONT_CONST.MEDIUM_DEFAULT_20),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.of(context).popAndPushNamed(
-                                AppRouter.WORD,
-                                arguments: word);
-                          },
-                          icon: const Icon(CupertinoIcons.pen),
-                          tooltip: tooltip,
-                        ),
-                      ],
-                    ),
-                  ],
-                )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(word.word![0].toUpperCase() + word.word!.substring(1),
-                        style: FONT_CONST.MEDIUM_DEFAULT_20),
-                    if (word.word != "vocabular")
-                      IconButton(
-                        onPressed: onEditWord,
-                        icon: const Icon(CupertinoIcons.pen),
-                        tooltip: tooltip,
-                      ),
-                  ],
-                ),
+          title: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (!user.currentUser.isAnonymous)
+                if (word.audioUrl!.isNotEmpty || word.audioUrl != null)
+                  PlayButton(
+                    audioUrl: word.audioUrl!,
+                    playMode: "audio",
+                  ),
+              SizedBox(height: SizeConfig.defaultSize * 2),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(word.word![0].toUpperCase() + word.word!.substring(1),
+                      style: FONT_CONST.MEDIUM_DEFAULT_20),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .popAndPushNamed(AppRouter.WORD, arguments: word);
+                    },
+                    icon: const Icon(CupertinoIcons.pen),
+                    tooltip: tooltip,
+                  ),
+                ],
+              ),
+            ],
+          ),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[

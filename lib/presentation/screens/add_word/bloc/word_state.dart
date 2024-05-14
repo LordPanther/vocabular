@@ -24,9 +24,13 @@ class WordAdded extends WordState {
   }
 }
 
+class UpdatingWord extends WordState {}
+
+class AddingWord extends WordState {}
+
 class Loaded extends WordState {
   final List<CollectionModel> collections;
-  final User user; 
+  final User user;
 
   const Loaded(this.collections, this.user);
 

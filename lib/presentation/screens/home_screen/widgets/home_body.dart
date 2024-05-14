@@ -28,8 +28,8 @@ class HomeBody extends StatefulWidget {
 
 class _HomeBodyState extends State<HomeBody> {
   late HomeBloc homeBloc;
-  bool showRecentWord = true;
   late LocalPref localPref;
+  bool _showRecentWord = false;
   final AuthRepository _authRepository = AppRepository.authRepository;
 
   @override
@@ -47,161 +47,171 @@ class _HomeBodyState extends State<HomeBody> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<HomeBloc, HomeState>(
-      listener: (context, state) {
-        // Handle state updates
-      },
-      child: BlocBuilder<HomeBloc, HomeState>(
-        builder: (context, state) {
-          if (state is HomeLoading) {
-            return const Loading();
-          }
-          if (state is HomeLoaded) {
-            var collections = state.homeResponse.collections;
-            var wordss = state.homeResponse.words;
-            var recentWord = state.homeResponse.recentWord;
-            return Expanded(
-              child: Padding(
-                padding: EdgeInsets.all(SizeConfig.defaultPadding),
-                child: Column(
-                  children: [
-                    if (!_authRepository.loggedFirebaseUser.isAnonymous)
-                      StreamBuilder(
-                        stream: localPref.showRecentWord,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            // Check if the stream has data
-                            // Extract the data from the snapshot
-                            bool showRecentWord = snapshot.data as bool;
-                            return showRecentWord
-                                ? Padding(
-                                    padding: EdgeInsets.all(
-                                        SizeConfig.defaultSize * 2),
-                                    child: Container(
-                                      height: SizeConfig.defaultSize * 18,
-                                      width: double.maxFinite,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: COLOR_CONST.primaryColor
-                                                .withOpacity(0.3)),
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      child: SingleChildScrollView(
-                                        child: Padding(
-                                          padding: EdgeInsets.all(
-                                              SizeConfig.defaultSize * 1.5),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              if (recentWord!.audioUrl != null)
-                                                PlayButton(
-                                                    audioUrl:
-                                                        recentWord.audioUrl!,
-                                                    playMode: "audio"),
-                                              SizedBox(
-                                                  height:
-                                                      SizeConfig.defaultSize),
-                                              Text(
-                                                  "Word           : ${recentWord.word!}",
-                                                  style: FONT_CONST
-                                                      .MEDIUM_DEFAULT_16),
-                                              SizedBox(
-                                                  height:
-                                                      SizeConfig.defaultSize),
-                                              Text(
-                                                  "Definition   : ${recentWord.definition!}",
-                                                  style: FONT_CONST
-                                                      .MEDIUM_DEFAULT_16),
-                                              SizedBox(
-                                                  height:
-                                                      SizeConfig.defaultSize),
-                                              Text(
-                                                  "Collection  : ${recentWord.id!.toUpperCase()}",
-                                                  style: FONT_CONST
-                                                      .MEDIUM_DEFAULT_16),
-                                            ],
-                                          ),
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        if (state is HomeLoading) {
+          return const Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Loading(),
+                ],
+              ),
+            ),
+          );
+        }
+        if (state is HomeLoaded) {
+          var collections = state.homeResponse.collections;
+          var words = state.homeResponse.words;
+          var recentWord = state.homeResponse.recentWord;
+          return Expanded(
+            child: Padding(
+              padding: EdgeInsets.all(SizeConfig.defaultPadding),
+              child: Column(
+                children: [
+                  if (!_authRepository.currentUser.isAnonymous)
+                    StreamBuilder(
+                      stream: localPref.showRecentWord,
+                      initialData: _showRecentWord,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          // Check if the stream has data
+                          // Extract the data from the snapshot
+                          bool showRecentWord = snapshot.data as bool;
+                          print("ShowWord: $showRecentWord $_showRecentWord");
+                          return showRecentWord
+                              ? Padding(
+                                  padding: EdgeInsets.all(
+                                      SizeConfig.defaultSize * 2),
+                                  child: Container(
+                                    height: SizeConfig.defaultSize * 18,
+                                    width: double.maxFinite,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: COLOR_CONST.primaryColor
+                                              .withOpacity(0.3)),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: SingleChildScrollView(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(
+                                            SizeConfig.defaultSize * 1.5),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            if (recentWord!.audioUrl != null)
+                                              PlayButton(
+                                                  audioUrl:
+                                                      recentWord.audioUrl!,
+                                                  playMode: "audio"),
+                                            SizedBox(
+                                                height: SizeConfig.defaultSize),
+                                            Text(
+                                                "Word           : ${recentWord.word!}",
+                                                style: FONT_CONST
+                                                    .MEDIUM_DEFAULT_16),
+                                            SizedBox(
+                                                height: SizeConfig.defaultSize),
+                                            Text(
+                                                "Definition   : ${recentWord.definition!}",
+                                                style: FONT_CONST
+                                                    .MEDIUM_DEFAULT_16),
+                                            SizedBox(
+                                                height: SizeConfig.defaultSize),
+                                            Text(
+                                                "Collection  : ${recentWord.id!.toUpperCase()}",
+                                                style: FONT_CONST
+                                                    .MEDIUM_DEFAULT_16),
+                                          ],
                                         ),
                                       ),
                                     ),
-                                  )
-                                : const SizedBox
-                                    .shrink(); // Return a SizedBox if showRecentWord is false
-                          } else {
-                            // Handle the case when the stream has no data
-                            return const SizedBox.shrink();
-                          }
-                        },
-                      ),
-                    Expanded(
-                      child: ReorderableListView.builder(
-                        onReorder: ((oldIndex, newIndex) {
-                          setState(() {
-                            final index =
-                                newIndex > oldIndex ? newIndex - 1 : newIndex;
-
-                            final collection = collections.removeAt(oldIndex);
-                            collections.insert(index, collection);
-                          });
-                        }),
-                        itemCount: collections.length,
-                        itemBuilder: (context, index) {
-                          var collection = collections[index];
-                          var words = wordss[index];
-                          return Dismissible(
-                            key: ValueKey(collection.name),
-                            direction: DismissDirection.endToStart,
-                            background: Container(
-                              color: Colors.red,
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Icon(Icons.delete, color: Colors.white),
-                                  SizedBox(width: 20),
-                                ],
-                              ),
-                            ),
-                            confirmDismiss: (direction) async {
-                              if (direction == DismissDirection.endToStart) {
-                                final bool dismiss =
-                                    await showCollectionRemoveDialog();
-
-                                if (dismiss && collection.name != "default") {
-                                  if (collection.name != "default") {
-                                    BlocProvider.of<HomeBloc>(context).add(
-                                        RemoveCollection(
-                                            collection: collection));
-                                    return dismiss;
-                                  } else {
-                                    UtilSnackBar.showSnackBarContent(context,
-                                        content: Translate.of(context)
-                                            .translate("default_collection"));
-                                  }
-                                }
-                                return false;
-                              }
-                              return null;
-                            },
-                            child: CollectionTile(
-                              key: ValueKey(collection.name),
-                              collection: collection,
-                              words: words,
-                              index: index,
-                            ),
-                          );
-                        },
-                      ),
+                                  ),
+                                )
+                              : const SizedBox
+                                  .shrink(); // Return a SizedBox if showRecentWord is false
+                        } else {
+                          // Handle the case when the stream has no data
+                          return const SizedBox.shrink();
+                        }
+                      },
                     ),
-                  ],
-                ),
+                  Expanded(
+                    child: ReorderableListView.builder(
+                      onReorder: ((oldIndex, newIndex) {
+                        setState(() {
+                          final index =
+                              newIndex > oldIndex ? newIndex - 1 : newIndex;
+
+                          final collection = collections.removeAt(oldIndex);
+                          collections.insert(index, collection);
+                        });
+                      }),
+                      itemCount: collections.length,
+                      itemBuilder: (context, index) {
+                        var collection = collections[index];
+                        return Dismissible(
+                          key: ValueKey(collection.name),
+                          direction: DismissDirection.endToStart,
+                          background: Container(
+                            color: Colors.red,
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Icon(Icons.delete, color: Colors.white),
+                                SizedBox(width: 20),
+                              ],
+                            ),
+                          ),
+                          confirmDismiss: (direction) async {
+                            if (direction == DismissDirection.endToStart) {
+                              final bool dismiss =
+                                  await showCollectionRemoveDialog();
+
+                              if (dismiss && collection.name != "default") {
+                                if (collection.name != "default") {
+                                  BlocProvider.of<HomeBloc>(context).add(
+                                      RemoveCollection(collection: collection));
+                                  return dismiss;
+                                } else {
+                                  UtilSnackBar.showSnackBarContent(context,
+                                      content: Translate.of(context)
+                                          .translate("default_collection"));
+                                }
+                              }
+                              return false;
+                            }
+                            return null;
+                          },
+                          child: CollectionTile(
+                            key: ValueKey(collection.name),
+                            collection: collection,
+                            words: words,
+                            index: index,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-            );
-          }
-          return Center(
-              child: Text(Translate.of(context).translate("load_failure")));
-        },
-      ),
+            ),
+          );
+        }
+        return Expanded(
+          child: Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                Translate.of(context).translate("load_failure"),
+              ),
+            ],
+          )),
+        );
+      },
     );
   }
 

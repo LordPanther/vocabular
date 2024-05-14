@@ -17,6 +17,8 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
     });
   }
 
+  
+
   Future<void> _mapLanguageChangedState(
       event, Emitter<AppSettingsState> emit) async {
     if (event.locale == AppLanguage.defaultLanguage) {

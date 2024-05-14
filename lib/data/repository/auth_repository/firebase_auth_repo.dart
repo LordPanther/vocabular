@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:vocab_app/constants/image_constant.dart';
 import 'package:vocab_app/data/models/guest_user_model.dart';
 import 'package:vocab_app/data/repository/guest_repository/guest_repo.dart';
 import 'package:vocab_app/data/repository/guest_repository/firebase_guest_repo.dart';
@@ -23,8 +24,12 @@ class FirebaseAuthRepository extends AuthRepository {
 
   String _authException = "Authentication Failure";
 
+  ///User dits
   @override
-  User get loggedFirebaseUser => _firebaseAuth.currentUser!;
+  User get currentUser => _firebaseAuth.currentUser!;
+  String get userId => currentUser.uid;
+  bool get isAnonymous => _firebaseAuth.currentUser!.isAnonymous;
+  String get avatar => currentUser.photoURL!;
 
   @override
   String get authException => _authException;
@@ -48,7 +53,7 @@ class FirebaseAuthRepository extends AuthRepository {
       var updatedUserDetails = user.cloneWith(id: userId.user!.uid);
       // Create new doc in users collection
       await _userRepository.addUserData(updatedUserDetails);
-      await create();
+      await _homeRepository.createDefaultCollection();
     } on FirebaseAuthException catch (e) {
       _authException = e.message.toString();
     }
@@ -64,29 +69,18 @@ class FirebaseAuthRepository extends AuthRepository {
           EmailAuthProvider.credential(email: user.email!, password: password);
       CollectionData data = await _homeRepository.fetchCollections();
 
-      var userCredential =
-          await loggedFirebaseUser.linkWithCredential(credential);
-
-      // Add ID for new user
+      var userCredential = await currentUser.linkWithCredential(credential);
+      await _guestRepository.removeGuestData(currentUser.uid);
 
       if (userCredential.user != null) {
-        var updatedUserDetails = user.cloneWith(id: userCredential.user!.uid);
+        var updatedUserDetails = user.cloneWith(
+            id: userCredential.user!.uid, avatar: IMAGE_CONST.DEFAULT_AVATAR);
         await _userRepository.addUserData(updatedUserDetails);
+        await _homeRepository.migrateGuestCollections(data);
       }
-      // Create new doc in users collection
-      await createAndMigrate(data);
-      await _guestRepository.removeGuestData(loggedFirebaseUser.uid);
     } on FirebaseAuthException catch (e) {
       await _userRepository.removeUserData(user);
       _authException = e.message.toString();
-    }
-  }
-
-  Future<void> createAndMigrate(CollectionData data) async {
-    try {
-      await _homeRepository.migrateGuestCollections(data);
-    } catch (error) {
-      _authException = "Failed to create default collection";
     }
   }
 
@@ -101,17 +95,9 @@ class FirebaseAuthRepository extends AuthRepository {
           id: guestId.user!.uid, username: "guest${guestId.user!.uid}");
 
       await _guestRepository.addGuestData(guestDetails);
-      await create();
+      await _homeRepository.createDefaultCollection();
     } on FirebaseAuthException catch (error) {
       _authException = error.message.toString();
-    }
-  }
-
-  Future<void> create() async {
-    try {
-      await _homeRepository.createDefaultCollection();
-    } catch (error) {
-      _authException = "Failed to create default collection";
     }
   }
 
@@ -196,10 +182,10 @@ class FirebaseAuthRepository extends AuthRepository {
 
   @override
   Future<void> logOut() async {
-    if (loggedFirebaseUser.isAnonymous) {
-      var uid = loggedFirebaseUser.uid;
+    if (currentUser.isAnonymous) {
+      var uid = currentUser.uid;
       await _guestRepository.removeGuestData(uid);
-      await loggedFirebaseUser.delete().catchError((error) {
+      await currentUser.delete().catchError((error) {
         if (kIsWeb) {
           if (kDebugMode) {
             print(error);

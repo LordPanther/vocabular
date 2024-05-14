@@ -29,7 +29,7 @@ class AuthenticationBloc
       await Future.delayed(const Duration(seconds: 5));
 
       if (isLoggedIn) {
-        final loggedFirebaseUser = _authRepository.loggedFirebaseUser;
+        final loggedFirebaseUser = _authRepository.currentUser;
         emit(Authenticated(loggedFirebaseUser));
       } else {
         emit(Unauthenticated());
@@ -40,7 +40,7 @@ class AuthenticationBloc
   }
 
   Future<void> _mapLoggedInToState(Emitter<AuthenticationState> emit) async {
-    emit(Authenticated(_authRepository.loggedFirebaseUser));
+    emit(Authenticated(_authRepository.currentUser));
   }
 
   Future<void> _mapLoggedOutToState(Emitter<AuthenticationState> emit) async {

@@ -77,7 +77,7 @@ class LocalPref {
     return Application.preferences.setString(key, value);
   }
 
-  static Future<bool> setStringList(String key, List<String> value) {
+  static Future<bool> setStringList(String key,List<String> value) {
     return Application.preferences.setStringList(key, value);
   }
 

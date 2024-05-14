@@ -2,11 +2,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/data/local/pref.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/word_model.dart';
+import 'package:vocab_app/data/repository/home_repository/firebase_home_repo.dart';
 import 'package:vocab_app/data/repository/repository.dart';
 import 'package:vocab_app/presentation/screens/home_screen/bloc/bloc.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final HomeRepository _homeRepository = AppRepository.collectionsRepository;
+  final FirebaseHomeRepository _firebaseHomeRepository =
+      AppRepository.collectionsRepository;
 
   HomeBloc() : super(HomeLoading()) {
     on<LoadHome>((event, emit) async {
@@ -33,7 +36,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Future<void> _mapLoadHomeToMap(event, Emitter<HomeState> emit) async {
     var collectionData = await _homeRepository.fetchCollections();
     List<CollectionModel> collections = collectionData.collections;
-    List<List<WordModel>> words = collectionData.words;
+    List<WordModel> words = collectionData.words;
     WordModel? recentWord = await _getRecentWord();
 
     HomeResponse homeResponse = HomeResponse(
@@ -42,9 +45,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<WordModel?> _getRecentWord() async {
-    List<String>? recentWord = LocalPref.getStringList("recentWord");
-    print("Recent word: $recentWord");
-    if (recentWord != null && recentWord.isNotEmpty) {
+    List<List<String>> recentWords = await _firebaseHomeRepository.getList();
+    if (recentWords.isNotEmpty) {
+      List<String> recentWord = recentWords.last;
       var word = WordModel(
         id: recentWord[0],
         definition: recentWord[2],
@@ -53,7 +56,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       );
       return word;
     }
-    return null;
+    return const WordModel();
   }
 
   /// Create collection
@@ -101,7 +104,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
 class HomeResponse {
   final List<CollectionModel> collections;
-  final List<List<WordModel>> words;
+  final List<WordModel> words;
   final WordModel? recentWord;
 
   HomeResponse(

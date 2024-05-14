@@ -32,13 +32,22 @@ class CollectionTile extends StatefulWidget {
 
 class _CollectionTileState extends State<CollectionTile> {
   late CollectionModel _collection;
-  late List<WordModel> _words;
+  final List<WordModel> _words = [];
 
   @override
   void initState() {
     super.initState();
     _collection = widget.collection;
-    _words = widget.words;
+    getWords();
+  }
+
+  void getWords() {
+    var words = widget.words;
+    for (var word in words) {
+      if (word.id == _collection.name) {
+        _words.add(word);
+      }
+    }
   }
 
   @override
@@ -48,8 +57,7 @@ class _CollectionTileState extends State<CollectionTile> {
       child: ExpansionTile(
         key: ValueKey(widget.key),
         shape: RoundedRectangleBorder(
-            side: BorderSide(
-                color: COLOR_CONST.primaryColor.withOpacity(0.3)),
+            side: BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3)),
             borderRadius:
                 BorderRadius.all(Radius.circular(SizeConfig.defaultSize))),
         childrenPadding: EdgeInsets.all(SizeConfig.defaultPadding),

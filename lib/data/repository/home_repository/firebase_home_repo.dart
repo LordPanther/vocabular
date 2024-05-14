@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:vocab_app/data/local/pref.dart';
 import 'package:vocab_app/data/models/add_word_model.dart';
 import 'package:vocab_app/data/models/models.dart';
 import 'package:vocab_app/data/repository/home_repository/home_repo.dart';
@@ -14,6 +16,7 @@ class FirebaseHomeRepository implements HomeRepository {
   String get userType =>
       _firebaseAuth.currentUser!.isAnonymous ? "vocabguests" : "vocabusers";
   User get user => _firebaseAuth.currentUser!;
+  Future<List<List<String>>> get recentWords => getList();
 
   /// [FirebaseAuthRepository]
   /// Called once on registration to create collections:[defaultcollections]
@@ -60,20 +63,13 @@ class FirebaseHomeRepository implements HomeRepository {
 
   @override
   Future<void> migrateGuestCollections(CollectionData data) async {
-    var snapshot = await _userHome
-        .collection(userType)
-        .doc(user.uid)
-        .collection("collections")
-        .get();
+    for (var collection in data.collections) {
+      await addCollection(collection);
 
-    for (var doc in snapshot.docs) {
-      CollectionModel collectionModel =
-          CollectionModel(name: doc.id); //[0] = default, [1] = work
-      addCollection(collectionModel);
-
-      List<WordModel> words = await fetchWords(doc);
-      for (var word in words) {
-        addWord(word);
+      for (var word in data.words) {
+        if (collection.name == word.id) {
+          await addWord(word);
+        }
       }
     }
   }
@@ -87,11 +83,41 @@ class FirebaseHomeRepository implements HomeRepository {
           .collection("collections")
           .doc(word.id)
           .set({word.word!: word.toMap()}, SetOptions(merge: true));
+      if (!user.isAnonymous) {
+        await updateRecentWordCache(word);
+      }
     } catch (error) {
       if (kDebugMode) {
         print(error);
       }
     }
+  }
+
+  Future<void> updateRecentWordCache(WordModel newWord) async {
+    List<List<String>> recentWords = await getList();
+    saveList(newWord, recentWords);
+  }
+
+  Future<List<List<String>>> getList() async {
+    String? jsonString = LocalPref.getString("recentWords");
+    if (jsonString != null) {
+      List<dynamic> jsonResponse = jsonDecode(jsonString);
+      return jsonResponse.map((e) => List<String>.from(e)).toList();
+    }
+    return [];
+  }
+
+  Future<void> saveList(
+      WordModel newWord, List<List<String>> recentWords) async {
+    List<String> word = [
+      newWord.id!.trim(),
+      newWord.word!.trim(),
+      newWord.definition!.trim(),
+      newWord.audioUrl!.trim()
+    ];
+    recentWords.add(word);
+    String newJsonString = jsonEncode(recentWords);
+    await LocalPref.setString("recentWords", newJsonString);
   }
 
   @override
@@ -103,6 +129,12 @@ class FirebaseHomeRepository implements HomeRepository {
           .collection("collections")
           .doc(collection.name)
           .update({word.word!: FieldValue.delete()});
+
+      List<List<String>> recentWords = await getList();
+      recentWords.removeWhere((list) => list.contains(word.word));
+
+      String updatedRecentWords = jsonEncode(recentWords);
+      await LocalPref.setString("recentWords", updatedRecentWords);
     } catch (error) {
       if (kDebugMode) {
         print(error);
@@ -130,7 +162,7 @@ class FirebaseHomeRepository implements HomeRepository {
   @override
   Future<CollectionData> fetchCollections() async {
     List<CollectionModel> userCollections = [];
-    List<List<WordModel>> userWords = [];
+    List<WordModel> userWords = [];
     var snapshot = await _userHome
         .collection(userType)
         .doc(user.uid)
@@ -143,7 +175,9 @@ class FirebaseHomeRepository implements HomeRepository {
       userCollections.add(collectionModel);
 
       List<WordModel> words = await fetchWords(doc);
-      userWords.add(words);
+      for (var word in words) {
+        userWords.add(word);
+      }
     }
     return CollectionData(collections: userCollections, words: userWords);
   }
@@ -199,17 +233,23 @@ class FirebaseHomeRepository implements HomeRepository {
   }
 
   @override
-  Future<void> updateHomeData(
-      WordModel updatedWord, CollectionModel collection) async {
+  Future<void> updateHomeData(AddWordModel newWord, WordModel oldWord) async {
     await _userHome
+        .collection(userType)
+        .doc(user.uid)
         .collection("collections")
-        .doc(collection.name)
+        .doc(newWord.collection.name)
         .get()
         .then((doc) async {
       if (doc.exists) {
         // update
-        await doc.reference.update(updatedWord.toMap());
+        await removeWord(newWord.collection, oldWord);
+        await addWord(newWord.word);
       }
-    }).catchError((error) {});
+    }).catchError((error) {
+      if (kDebugMode) {
+        print(error);
+      }
+    });
   }
 }

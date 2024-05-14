@@ -31,6 +31,7 @@ class WordBody extends StatefulWidget {
 class _WordBodyState extends State<WordBody> {
   late WordBloc wordBloc;
   late WordModel word;
+  late WordModel oldWord;
   late CollectionModel collection;
   final recordButtonState = GlobalKey<RecordButtonState>();
   final AuthRepository _authRepository = AppRepository.authRepository;
@@ -47,7 +48,7 @@ class _WordBodyState extends State<WordBody> {
   // Audio recording global variables
   bool get isWordPopulated => _word.text.isNotEmpty;
   bool get isDefinitionPopulated => _definition.text.isNotEmpty;
-  User? get user => _authRepository.loggedFirebaseUser;
+  User? get user => _authRepository.currentUser;
 
   @override
   void initState() {
@@ -59,6 +60,8 @@ class _WordBodyState extends State<WordBody> {
         word: widget.word!.word,
         audioUrl: widget.word!.audioUrl,
       );
+
+      oldWord = word;
 
       _isEditing = true;
       _collection = widget.word!.id;
@@ -110,9 +113,14 @@ class _WordBodyState extends State<WordBody> {
 
       var newWord = AddWordModel(word: word, collection: collection);
 
-      wordBloc.add(
-        AddWord(word: newWord),
-      );
+      if (_isEditing) {
+        wordBloc.add(UpdateWord(updatedWord: newWord, oldWord: oldWord));
+      } else {
+        wordBloc.add(
+          AddWord(word: newWord, isEditing: _isEditing),
+        );
+      }
+
       final tempFile = File(recordButtonState.currentState!.path!);
       if (tempFile.existsSync()) {
         tempFile.deleteSync();
@@ -144,6 +152,10 @@ class _WordBodyState extends State<WordBody> {
   Widget build(BuildContext context) {
     return BlocListener<WordBloc, WordState>(
       listener: (context, state) {
+        if (state is UpdatingWord) {
+          UtilDialog.showWaiting(context);
+        }
+
         if (state is WordAdded) {
           UtilSnackBar.showSnackBarContent(context,
               content: Translate.of(context).translate("word_added"));
@@ -195,8 +207,8 @@ class _WordBodyState extends State<WordBody> {
               child: Text(Translate.of(context).translate("load_failure")),
             );
           }
-          return Center(
-            child: Text(Translate.of(context).translate("fall_back_error")),
+          return const Center(
+            child: Loading(),
           );
         },
       ),
@@ -340,7 +352,9 @@ class _WordBodyState extends State<WordBody> {
           onPressed: () {
             _onAddWord();
           },
-          buttonName: Translate.of(context).translate('add_word'),
+          buttonName: _isEditing
+              ? Translate.of(context).translate('update_word')
+              : Translate.of(context).translate('add_word'),
           buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
         ),
       ],

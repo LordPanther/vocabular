@@ -124,5 +124,6 @@
   "switch": "You are currently signed in as a Guest user, a lot of the cool features of this app are not available to you. You can change this by signing up for free. Happy Learning.",
   "update_user": "Update Details",
   "update": "Update",
-  "recent_word": "Show Recent Word"
+  "recent_word": "Show Recent Word",
+  "update_word": "Update"
 }

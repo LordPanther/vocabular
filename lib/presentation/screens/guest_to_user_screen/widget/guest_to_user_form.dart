@@ -67,8 +67,8 @@ class _GuestToUserFormState extends State<GuestToUserForm> {
       guestToUserBloc.add(
         SwitchUser(
           user: user,
-          password: _passwordController.text,
-          confirmPassword: _confirmPasswordController.text,
+          password: _passwordController.text.trim(),
+          confirmPassword: _confirmPasswordController.text.trim(),
         ),
       );
     } else {
@@ -204,10 +204,12 @@ class _GuestToUserFormState extends State<GuestToUserForm> {
             });
           },
         ),
-        focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: COLOR_CONST.textColor)),
-        enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: COLOR_CONST.textColor)),
+        focusedBorder: OutlineInputBorder(
+            borderSide:
+                BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
+        enabledBorder: OutlineInputBorder(
+            borderSide:
+                BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
       ),
     );
   }
@@ -249,10 +251,12 @@ class _GuestToUserFormState extends State<GuestToUserForm> {
             });
           },
         ),
-        focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: COLOR_CONST.textColor)),
-        enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: COLOR_CONST.textColor)),
+        focusedBorder: OutlineInputBorder(
+            borderSide:
+                BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
+        enabledBorder: OutlineInputBorder(
+            borderSide:
+                BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
       ),
     );
   }

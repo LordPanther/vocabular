@@ -8,6 +8,5 @@ abstract class GuestRepository {
 
   Future<void> removeGuestData(String uid);
 
-  Future<void> updateGuestData(GuestModel updatedGuest);
 
 }

@@ -31,7 +31,7 @@ class _SettingScreenState extends State<SettingScreen> {
   late LocalPref localPref;
   List<Locale> supportLanguage = AppLanguage.supportLanguage;
   bool show = false;
-  bool get isAnonymous => _authRepository.loggedFirebaseUser.isAnonymous;
+  bool get isAnonymous => _authRepository.currentUser.isAnonymous;
 
   @override
   void initState() {

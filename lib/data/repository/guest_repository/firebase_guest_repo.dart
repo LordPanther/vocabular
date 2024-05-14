@@ -34,15 +34,6 @@ class FirebaseGuestRepository implements GuestRepository {
         .catchError((error) => print(error));
   }
 
-  @override
-  Future<void> updateGuestData(GuestModel updatedGuest) async {
-    await _guestCollection.doc(updatedGuest.id).get().then((doc) async {
-      if (doc.exists) {
-        // update
-        await doc.reference.update(updatedGuest.toMap());
-      }
-    }).catchError((error) {});
-  }
 
   ///Singleton factory
   static final FirebaseGuestRepository _instance =

@@ -1,3 +1,4 @@
+import 'package:vocab_app/data/models/add_word_model.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/utils/collection_data.dart';
@@ -21,8 +22,7 @@ abstract class HomeRepository {
   /// Remove a collection
   Future<void> removeCollection(CollectionModel collection);
 
-  Future<void> updateHomeData(
-      WordModel updatedWord, CollectionModel collection);
+  Future<void> updateHomeData(AddWordModel updatedWord, WordModel oldWord);
 
   Future<void> migrateGuestCollections(CollectionData data);
 }

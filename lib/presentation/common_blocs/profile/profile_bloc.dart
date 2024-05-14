@@ -15,8 +15,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   StreamSubscription? _profileStreamSub;
 
   /// User
-  UserModel? _loggedUser;
-  User get user => _authRepository.loggedFirebaseUser;
+  UserModel? _user;
+  User get user => _authRepository.currentUser;
 
   ProfileBloc() : super(ProfileLoading()) {
     on<LoadProfile>((event, emit) async {
@@ -40,7 +40,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       if (userType == "user") {
         _profileStreamSub?.cancel();
         _profileStreamSub = _userRepository
-            .loggedUserStream(_authRepository.loggedFirebaseUser)
+            .loggedUserStream(user)
             .listen((updatedUser) => add(ProfileUpdated(updatedUser)));
       } else {
         var updatedUser = const UserModel(id: null);
@@ -55,7 +55,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       event, Emitter<ProfileState> emit) async {
     try {
       await _userRepository.updateUserData(event.updatedUserDetails);
-      emit(ProfileLoaded(_loggedUser!));
+      emit(ProfileLoaded(_user!));
     } on Exception catch (exception) {
       emit(ProfileLoadFailure(exception.toString()));
     }
@@ -67,11 +67,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     try {
       // Get image url from firebase storage
       String imageUrl = await _storageRepository.uploadImageFile(
-        "vocabusers/profile/${_loggedUser!.id}",
+        "vocabusers/profile/${_user!.id}",
         event.imageFile,
       );
       // Clone logged user with updated avatar
-      var updatedUser = _loggedUser!.cloneWith(avatar: imageUrl);
+      var updatedUser = _user!.cloneWith(avatar: imageUrl);
       // Update user's avatar
       await _userRepository.updateUserData(updatedUser);
     } on Exception catch (exception) {
@@ -85,7 +85,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   Future<void> _mapProfileUpdatedToState(
       event, Emitter<ProfileState> emit) async {
     try {
-      _loggedUser = event.updatedUser;
+      _user = event.updatedUser;
       emit(ProfileLoaded(event.updatedUser));
     } on Exception catch (exception) {
       emit(ProfileLoadFailure(exception.toString()));
@@ -95,7 +95,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   @override
   Future<void> close() {
     _profileStreamSub?.cancel();
-    _loggedUser = null;
+    _user = null;
     return super.close();
   }
 }

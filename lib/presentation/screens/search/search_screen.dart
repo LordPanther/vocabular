@@ -1,5 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/configs/router.dart';
@@ -7,6 +8,8 @@ import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/word_model.dart';
+import 'package:vocab_app/data/repository/app_repository.dart';
+import 'package:vocab_app/data/repository/auth_repository/auth_repo.dart';
 import 'package:vocab_app/presentation/screens/search/search/search_screen_bloc.dart';
 import 'package:vocab_app/presentation/screens/search/search/search_screen_event.dart';
 import 'package:vocab_app/presentation/screens/search/search/search_screen_state.dart';
@@ -24,6 +27,7 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   TextEditingController searchControler = TextEditingController();
+  final AuthRepository _authRepository = AppRepository.authRepository;
 
   @override
   void dispose() {
@@ -149,7 +153,11 @@ class _SearchScreenState extends State<SearchScreen> {
             title: Text(words[index].word!),
             onTap: () {
               // Implement onTap action if needed
-              UtilDialog.showSeadrchDetail(context, index: index, words: words);
+              // UtilDialog.showSeadrchDetail(context, index: index, words: words);
+              UtilDialog.showWordDetails(context,
+                  tooltip: "Add audio recording",
+                  word: words[index],
+                  user: _authRepository);
             },
           );
         },

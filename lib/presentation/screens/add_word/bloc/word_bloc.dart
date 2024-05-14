@@ -3,44 +3,49 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/data/local/pref.dart';
 import 'package:vocab_app/data/models/add_word_model.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
+import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/data/repository/repository.dart';
 import 'package:vocab_app/presentation/screens/add_word/bloc/bloc.dart';
+import 'package:vocab_app/presentation/screens/add_word/bloc/word_state.dart';
 
 class WordBloc extends Bloc<WordEvent, WordState> {
   final HomeRepository _homeRepository = AppRepository.collectionsRepository;
   final AuthRepository _authRepository = AppRepository.authRepository;
-  User get user => _authRepository.loggedFirebaseUser;
+  User get user => _authRepository.currentUser;
   List<CollectionModel> collections = [];
 
   WordBloc() : super(Initial()) {
     on<AddWord>((event, emit) async {
       await _mapAddWordToMap(event, emit);
     });
+    on<UpdateWord>((event, emit) async {
+      await _mapUpdateWordToMap(event, emit);
+    });
     on<LoadWordScreen>((event, emit) async {
       await _mapGetCollectionsToMap(event, emit);
     });
   }
 
-  List<String> recentWord(AddWordModel word) {
-    return [
-      word.collection.name!,
-      word.word.word!,
-      word.word.definition!,
-      word.word.audioUrl!
-    ];
+  Future<void> _mapUpdateWordToMap(event, Emitter<WordState> emit) async {
+    WordModel oldWord = event.oldWord;
+    AddWordModel updatedWord = event.updatedWord;
+
+    try {
+      emit(UpdatingWord());
+      await _homeRepository.updateHomeData(updatedWord, oldWord);
+      emit(WordAdded(updatedWord));
+    } on Exception catch (error) {
+      emit(WordAddFailure(error.toString()));
+    }
   }
 
-  
-
   Future<void> _mapAddWordToMap(event, Emitter<WordState> emit) async {
-    AddWordModel word = event.word;
+    AddWordModel data = event.word;
 
-    List<String> storedList = recentWord(word);
-    
     try {
-      await LocalPref.setStringList("recentWord", storedList);
-      await _homeRepository.addWord(word.word);
-      emit(WordAdded(word));
+      emit(AddingWord());
+      await _homeRepository.addWord(data.word);
+      emit(WordAdded(data));
     } catch (error) {
       emit(WordAddFailure(error.toString()));
     }

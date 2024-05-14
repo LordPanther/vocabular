@@ -36,7 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   ImagePickerPlatform picker = ImagePickerPlatform.instance;
   File? imageFile;
   late final XFile? file;
-  User? get user => _authRepository.loggedFirebaseUser;
+  User? get user => _authRepository.currentUser;
 
   @override
   void initState() {
@@ -215,13 +215,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           buttonName: Translate.of(context).translate('log_out'),
           buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
         ),
-        CustomTextButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed(AppRouter.SWITCH_USER);
-          },
-          buttonName: Translate.of(context).translate('sign_up'),
-          buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
-        ),
+        if (user!.isAnonymous)
+          CustomTextButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(AppRouter.SWITCH_USER);
+            },
+            buttonName: Translate.of(context).translate('sign_up'),
+            buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
+          ),
       ],
     );
   }
@@ -239,13 +240,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: COLOR_CONST.primaryColor.withOpacity(0.3), width: 2),
           ),
           child: CircleAvatar(
-            backgroundImage: loggedUser.avatar != null
-                ? NetworkImage(loggedUser.avatar!)
-                : const AssetImage(IMAGE_CONST.DEFAULT_AVATAR)
-                    as ImageProvider<Object>,
-          ),
+              backgroundImage: _authRepository.currentUser.isAnonymous
+                  ? const AssetImage(IMAGE_CONST.DEFAULT_AVATAR)
+                      as ImageProvider<Object>
+                  : loggedUser.avatar!.contains("assets")
+                      ? const AssetImage(IMAGE_CONST.DEFAULT_AVATAR)
+                          as ImageProvider<Object>
+                      : NetworkImage(loggedUser.avatar!)),
         ),
-        if (!_authRepository.loggedFirebaseUser.isAnonymous)
+        if (loggedUser.email != null)
           Positioned(
             right: 0,
             bottom: 0,

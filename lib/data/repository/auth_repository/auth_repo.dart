@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vocab_app/data/models/user_model.dart';
 
 abstract class AuthRepository {
-  User get loggedFirebaseUser;
+  User get currentUser;
   String get authException;
 
   Future<void> signUp(UserModel newUser, String password);

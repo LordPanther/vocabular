@@ -67,10 +67,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         // Search for words within collections
         List<WordModel> results = [];
         for (var collection in data.collections) {
-          for (var words in data.words) {
-            results.addAll(words.where((word) =>
-                word.word!.toLowerCase().contains(keyword.toLowerCase())));
-          }
+          results.addAll(data.words.where((word) =>
+              word.word!.toLowerCase().contains(keyword.toLowerCase())));
         }
 
         emit(ResultsLoaded(wordResults: results));
