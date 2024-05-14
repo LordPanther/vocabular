@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:vocab_app/configs/router.dart';
 import 'package:vocab_app/configs/size_config.dart';
@@ -8,6 +7,7 @@ import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/user_model.dart';
 import 'package:vocab_app/data/models/word_model.dart';
+import 'package:vocab_app/data/repository/auth_repository/auth_repo.dart';
 import 'package:vocab_app/presentation/common_blocs/profile/profile_state.dart';
 import 'package:vocab_app/presentation/widgets/buttons/play_button.dart';
 import 'package:vocab_app/presentation/widgets/buttons/volume_icon.dart';
@@ -432,6 +432,7 @@ class UtilDialog {
     BuildContext context, {
     required String? tooltip,
     required WordModel word,
+    required AuthRepository user,
     Function()? onEditWord,
   }) {
     showGeneralDialog(
@@ -452,11 +453,12 @@ class UtilDialog {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    PlayButton(
-                      audioUrl: word.audioUrl!,
-                      playMode: "audio",
-                      onPlayingChanged: (isPlaying) {},
-                    ),
+                    if (!user.loggedFirebaseUser.isAnonymous)
+                      PlayButton(
+                        audioUrl: word.audioUrl!,
+                        playMode: "audio",
+                        onPlayingChanged: (isPlaying) {},
+                      ),
                     SizedBox(height: SizeConfig.defaultSize * 2),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

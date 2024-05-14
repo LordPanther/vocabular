@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vocab_app/presentation/common_blocs/app_settings/app_settings_bloc.dart';
 import 'package:vocab_app/presentation/common_blocs/profile/profile_bloc.dart';
 
 import '../screens/verify_user/verify/verify_bloc.dart';
@@ -13,6 +14,7 @@ class CommonBloc {
   static final verificationBloc = VerificationBloc();
   static final languageBloc = LanguageBloc();
   static final profileBloc = ProfileBloc();
+  static final appSettingsBloc = AppSettingsBloc();
 
   static final List<BlocProvider> blocProviders = [
     BlocProvider<ApplicationBloc>(
@@ -29,6 +31,9 @@ class CommonBloc {
     ),
     BlocProvider<ProfileBloc>(
       create: (context) => profileBloc,
+    ),
+    BlocProvider<AppSettingsBloc>(
+      create: (context) => appSettingsBloc,
     ),
   ];
 

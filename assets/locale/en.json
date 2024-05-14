@@ -61,6 +61,7 @@
   "add": "Add",
   "add_definition": "Definition",
   "add_word": "Add Word",
+  "word": "Word",
   "collection_name": "Add Collection",
   "something_wrong": "Something went wrong.",
   "load_failure": "Failed to load data.",
@@ -117,10 +118,11 @@
   "yes": "Yes",
   "recent_search": "Recent search",
   "hot_keywords": "Hot keywords",
-  "no_word": "No word matches your search",
+  "no_word": "No word(s) matches your search",
   "cancel": "Cancel",
   "back": "Go back",
-  "switch": "You are currently signed in as a guest, full features of this application will only be available when you sign up for free.",
+  "switch": "You are currently signed in as a Guest user, a lot of the cool features of this app are not available to you. You can change this by signing up for free. Happy Learning.",
   "update_user": "Update Details",
-  "update": "Update"
+  "update": "Update",
+  "recent_word": "Show Recent Word"
 }

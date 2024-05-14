@@ -7,6 +7,7 @@ import 'package:vocab_app/data/repository/guest_repository/guest_repo.dart';
 import 'package:vocab_app/data/repository/guest_repository/firebase_guest_repo.dart';
 import 'package:vocab_app/data/repository/home_repository/home_repo.dart';
 import 'package:vocab_app/data/repository/home_repository/firebase_home_repo.dart';
+import 'package:vocab_app/utils/collection_data.dart';
 
 import '../../models/user_model.dart';
 import '../user_repository/firebase_user_repo.dart';
@@ -61,6 +62,8 @@ class FirebaseAuthRepository extends AuthRepository {
     try {
       var credential =
           EmailAuthProvider.credential(email: user.email!, password: password);
+      CollectionData data = await _homeRepository.fetchCollections();
+
       var userCredential =
           await loggedFirebaseUser.linkWithCredential(credential);
 
@@ -71,12 +74,19 @@ class FirebaseAuthRepository extends AuthRepository {
         await _userRepository.addUserData(updatedUserDetails);
       }
       // Create new doc in users collection
-      await create();
+      await createAndMigrate(data);
       await _guestRepository.removeGuestData(loggedFirebaseUser.uid);
     } on FirebaseAuthException catch (e) {
-      // await loggedFirebaseUser.delete();
       await _userRepository.removeUserData(user);
       _authException = e.message.toString();
+    }
+  }
+
+  Future<void> createAndMigrate(CollectionData data) async {
+    try {
+      await _homeRepository.migrateGuestCollections(data);
+    } catch (error) {
+      _authException = "Failed to create default collection";
     }
   }
 

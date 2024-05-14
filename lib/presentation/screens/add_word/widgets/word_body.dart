@@ -224,7 +224,7 @@ class _WordBodyState extends State<WordBody> {
       autovalidateMode: AutovalidateMode.always,
       keyboardType: TextInputType.text,
       decoration: InputDecoration(
-        labelText: Translate.of(context).translate('add_word'),
+        labelText: Translate.of(context).translate('word'),
         labelStyle: const TextStyle(color: COLOR_CONST.textColor),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(

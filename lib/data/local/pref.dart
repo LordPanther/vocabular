@@ -1,6 +1,22 @@
+import 'dart:async';
+
 import 'package:vocab_app/configs/application.dart';
 
 class LocalPref {
+  
+  final StreamController<bool> _controller = StreamController<bool>.broadcast();
+
+  Stream<bool> get showRecentWord => _controller.stream;
+
+  void setShowRecentWord(bool value) async {
+    Application.preferences.setBool('showRecentWord', value);
+    _controller.add(value); // update value here.
+  }
+
+  Future<bool> getShowRecentWord() async {
+    return Application.preferences.getBool('showRecentWord') ?? false;
+  }
+
   static Future<bool> clear() {
     return Application.preferences.clear();
   }
@@ -64,6 +80,8 @@ class LocalPref {
   static Future<bool> setStringList(String key, List<String> value) {
     return Application.preferences.setStringList(key, value);
   }
+
+  void dispose() => _controller.close();
 
   ///Singleton factory
   static final LocalPref _instance = LocalPref._internal();

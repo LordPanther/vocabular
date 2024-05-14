@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/word_model.dart';
+import 'package:vocab_app/data/repository/app_repository.dart';
+import 'package:vocab_app/data/repository/auth_repository/auth_repo.dart';
 import 'package:vocab_app/utils/utils.dart';
 
 class WordTile extends StatefulWidget {
@@ -17,6 +19,7 @@ class WordTile extends StatefulWidget {
 
 class _WordTileState extends State<WordTile> {
   String _audioUrl = "";
+  final AuthRepository _authRepository = AppRepository.authRepository;
 
   @override
   void initState() {
@@ -35,6 +38,7 @@ class _WordTileState extends State<WordTile> {
   void onViewWord() async {
     UtilDialog.showWordDetails(
       context,
+      user: _authRepository,
       word: widget.word,
       tooltip: "Add audio definition",
       onEditWord: onAddRecording,

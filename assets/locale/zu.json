@@ -61,6 +61,7 @@
   "add": "Faka",
   "add_definition": "Incazelo",
   "add_word": "Faka Igama",
+  "word": "Igama",
   "collection_name": "Iqoqo",
   "something_wrong": "Kunenkinga ekhona",
   "load_failure": "Inkinga yoku load-a.",
@@ -120,7 +121,8 @@
   "no_word": "Awunalo leligama",
   "cancel": "Hlehla",
   "back": "Hlehla",
-  "switch": "Okwamanje usebenzisa le-application njengesivakashi, ama-feature aphelele uzowathola uma usubhalise ngokuphelelisiwe mahhala.",
+  "switch": "Okwamanje usebenzisa le-application njengesivakashi, ama-feature aphelele uzowathola uma usubhalise ngokuphelelisiwe mahhala. Ukufunda okuhle.",
   "update_user": "Imininingwane",
-  "update": "Vuselela"
+  "update": "Vuselela",
+  "recent_word": "Veza igama lamanje"
 }

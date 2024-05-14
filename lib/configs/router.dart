@@ -64,7 +64,7 @@ class AppRouter {
           builder: (_) => const GuestToUserScreen(),
         );
       case WORD:
-        var word = settings.arguments as WordModel;
+        var word = settings.arguments as WordModel?;
         return MaterialPageRoute(
           builder: (_) => WordScreen(
             word: word,

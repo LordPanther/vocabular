@@ -59,6 +59,26 @@ class FirebaseHomeRepository implements HomeRepository {
   }
 
   @override
+  Future<void> migrateGuestCollections(CollectionData data) async {
+    var snapshot = await _userHome
+        .collection(userType)
+        .doc(user.uid)
+        .collection("collections")
+        .get();
+
+    for (var doc in snapshot.docs) {
+      CollectionModel collectionModel =
+          CollectionModel(name: doc.id); //[0] = default, [1] = work
+      addCollection(collectionModel);
+
+      List<WordModel> words = await fetchWords(doc);
+      for (var word in words) {
+        addWord(word);
+      }
+    }
+  }
+
+  @override
   Future<void> addWord(WordModel word) async {
     try {
       await _userHome

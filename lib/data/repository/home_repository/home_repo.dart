@@ -23,4 +23,6 @@ abstract class HomeRepository {
 
   Future<void> updateHomeData(
       WordModel updatedWord, CollectionModel collection);
+
+  Future<void> migrateGuestCollections(CollectionData data);
 }

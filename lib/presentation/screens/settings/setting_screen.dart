@@ -1,9 +1,14 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
-import 'package:vocab_app/presentation/common_blocs/language/bloc.dart';
+import 'package:vocab_app/data/local/pref.dart';
+import 'package:vocab_app/data/repository/app_repository.dart';
+import 'package:vocab_app/data/repository/auth_repository/auth_repo.dart';
+import 'package:vocab_app/presentation/common_blocs/app_settings/app_settings_bloc.dart';
+import 'package:vocab_app/presentation/common_blocs/app_settings/app_settings_event.dart';
 import 'package:vocab_app/configs/config.dart';
 import 'package:vocab_app/presentation/screens/settings/settings_header.dart';
 import 'package:vocab_app/presentation/widgets/buttons/settings_button.dart';
@@ -21,17 +26,28 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+  final AuthRepository _authRepository = AppRepository.authRepository;
   late Locale selectedLanguage;
+  late LocalPref localPref;
   List<Locale> supportLanguage = AppLanguage.supportLanguage;
-  String theme = "Light";
+  bool show = false;
+  bool get isAnonymous => _authRepository.loggedFirebaseUser.isAnonymous;
 
-  void onThemeChange() {
-    var data = MediaQuery.of(context).platformBrightness.name;
-    print(data);
-    setState(() {
-      data == "light" ? ThemeData.dark() : ThemeData.light();
-      print(data);
-    });
+  @override
+  void initState() {
+    super.initState();
+    localPref = LocalPref();
+  }
+
+  // void onThemeChange() {
+  //   var data = MediaQuery.of(context).platformBrightness.name;
+  //   setState(() {
+  //     data == "light" ? ThemeData.dark() : ThemeData.light();
+  //   });
+  // }
+
+  void _showRecentWord() {
+    localPref.setShowRecentWord(show);
   }
 
   @override
@@ -46,17 +62,49 @@ class _SettingScreenState extends State<SettingScreen> {
                 const SettingsHeader(),
                 _buildHeaderText(),
                 SizedBox(height: SizeConfig.defaultSize * 5),
-                _buildCollectionsText(),
+                _buildCollectionsSettings(),
                 SizedBox(height: SizeConfig.defaultSize * 3),
-                _buildLanguageText(),
+                _buildLanguageSettings(),
                 SizedBox(height: SizeConfig.defaultSize * 3),
-                _buildThemeText(),
+                !isAnonymous
+                    ? _buildRecentWordSettings()
+                    : const SizedBox.shrink(),
+                SizedBox(height: SizeConfig.defaultSize * 3),
+                // _buildThemeSettings(),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildRecentWordSettings() {
+    return StreamBuilder(
+        stream: localPref.showRecentWord,
+        builder: (context, snapshot) {
+          return SettingsButton(
+            icon: CupertinoIcons.app_badge,
+            title: Translate.of(context).translate("recent_word"),
+            leader: Transform.scale(
+              scale: 0.7,
+              child: Switch.adaptive(
+                value: show,
+                onChanged: (onOff) {
+                  setState(() {
+                    show = onOff;
+                  });
+                },
+              ),
+            ),
+            onPressed: () {
+              setState(() {
+                show = !show;
+              });
+              _showRecentWord();
+            },
+          );
+        });
   }
 
   Widget _buildHeaderText() {
@@ -68,39 +116,39 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-  Widget _buildCollectionsText() {
+  Widget _buildCollectionsSettings() {
     return SettingsButton(
       icon: CupertinoIcons.list_dash,
       title: Translate.of(context).translate("collections"),
-      leader: "",
+      leader: const Text(""),
       onPressed: () => _showCollectionPage(),
     );
   }
 
-  Widget _buildLanguageText() {
+  Widget _buildLanguageSettings() {
     return SettingsButton(
       icon: CupertinoIcons.globe,
       title: Translate.of(context).translate("language"),
-      leader: Translate.of(context).translate(
+      leader: Text(Translate.of(context).translate(
         UtilLanguage.getLanguageName(AppLanguage.defaultLanguage.languageCode),
-      ),
+      )),
       onPressed: () => _showLanguageSetting(),
     );
   }
 
-  Widget _buildThemeText() {
-    return SettingsButton(
-      icon: CupertinoIcons.color_filter,
-      title: Translate.of(context).translate("theme"),
-      leader: MediaQuery.of(context)
-              .platformBrightness
-              .name
-              .substring(0, 1)
-              .toUpperCase() +
-          MediaQuery.of(context).platformBrightness.name.substring(1),
-      onPressed: onThemeChange,
-    );
-  }
+  // Widget _buildThemeSettings() {
+  //   return SettingsButton(
+  //     icon: CupertinoIcons.color_filter,
+  //     title: Translate.of(context).translate("theme"),
+  //     leader: MediaQuery.of(context)
+  //             .platformBrightness
+  //             .name
+  //             .substring(0, 1)
+  //             .toUpperCase() +
+  //         MediaQuery.of(context).platformBrightness.name.substring(1),
+  //     onPressed: onThemeChange,
+  //   );
+  // }
 
   void _showCollectionPage() {
     Navigator.pushNamed(context, AppRouter.COLLECTION);
@@ -139,8 +187,8 @@ class _SettingScreenState extends State<SettingScreen> {
 
     if (response) {
       // ignore: use_build_context_synchronously
-      BlocProvider.of<LanguageBloc>(context)
-          .add(LanguageChanged(selectedLanguage));
+      BlocProvider.of<AppSettingsBloc>(context)
+          .add(ChangeLanguage(selectedLanguage));
     }
   }
 }

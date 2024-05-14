@@ -113,7 +113,7 @@ class _PlayButtonState extends State<PlayButton> {
                           BorderRadius.circular(SizeConfig.defaultSize * 2),
                       color: COLOR_CONST.activeColor,
                     ),
-                    child: const Icon(CupertinoIcons.play),
+                    child: const Icon(CupertinoIcons.stop),
                   ),
                   SizedBox(width: SizeConfig.defaultSize * 1.5),
                   Expanded(child: _slider())
@@ -127,7 +127,7 @@ class _PlayButtonState extends State<PlayButton> {
                       BorderRadius.circular(SizeConfig.defaultSize * 2),
                   color: COLOR_CONST.primaryColor.withOpacity(0.3),
                 ),
-                child: const Icon(CupertinoIcons.play),
+                child: const Icon(CupertinoIcons.volume_up),
               ));
   }
 

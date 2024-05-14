@@ -34,40 +34,27 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     var collectionData = await _homeRepository.fetchCollections();
     List<CollectionModel> collections = collectionData.collections;
     List<List<WordModel>> words = collectionData.words;
-    // WordModel? recentWord = await _getRecentWord();
+    WordModel? recentWord = await _getRecentWord();
 
-    HomeResponse homeResponse =
-        HomeResponse(collections: collections, words: words);
+    HomeResponse homeResponse = HomeResponse(
+        collections: collections, words: words, recentWord: recentWord);
     emit(HomeLoaded(homeResponse: homeResponse));
   }
 
   Future<WordModel?> _getRecentWord() async {
     List<String>? recentWord = LocalPref.getStringList("recentWord");
+    print("Recent word: $recentWord");
     if (recentWord != null && recentWord.isNotEmpty) {
       var word = WordModel(
         id: recentWord[0],
         definition: recentWord[2],
         word: recentWord[1],
         audioUrl: recentWord[3],
-        timeStamp: recentWord[4],
       );
       return word;
     }
     return null;
   }
-
-  /// Create word
-  // Future<void> _mapCreateWordToMap(event, Emitter<HomeState> emit) async {
-  //   WordModel word = event.word;
-  //   CollectionModel collection = event.collection;
-  //   bool shareWord = event.shareWord;
-  //   try {
-  //     await _homeRepository.addWord(collection, word, shareWord);
-  //     await _mapLoadHomeToMap(event, emit);
-  //   } catch (error) {
-  //     emit(HomeLoadFailure(error.toString()));
-  //   }
-  // }
 
   /// Create collection
   Future<void> _mapCreateCollectionToMap(event, Emitter<HomeState> emit) async {

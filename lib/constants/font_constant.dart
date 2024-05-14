@@ -102,8 +102,7 @@ class FONT_CONST {
   static final BOLD_DEFAULT_26 =
       BOLD_DEFAULT.copyWith(fontSize: SizeConfig.defaultSize * 2.6);
 
-  static final BOLD_PRIMARY =
-      BOLD.copyWith(color: COLOR_CONST.primaryColor.withOpacity(0.3));
+  static final BOLD_PRIMARY = BOLD.copyWith(color: COLOR_CONST.primaryColor);
   static final BOLD_PRIMARY_16 =
       BOLD_PRIMARY.copyWith(fontSize: SizeConfig.defaultSize * 1.6);
   static final BOLD_PRIMARY_18 =

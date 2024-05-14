@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,8 @@ import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/constants/icon_constant.dart';
 import 'package:vocab_app/constants/image_constant.dart';
 import 'package:vocab_app/data/models/user_model.dart';
+import 'package:vocab_app/data/repository/app_repository.dart';
+import 'package:vocab_app/data/repository/auth_repository/auth_repo.dart';
 import 'package:vocab_app/presentation/common_blocs/auth/auth_bloc.dart';
 import 'package:vocab_app/presentation/common_blocs/auth/auth_event.dart';
 import 'package:vocab_app/presentation/common_blocs/profile/profile_bloc.dart';
@@ -29,9 +32,11 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final AuthRepository _authRepository = AppRepository.authRepository;
   ImagePickerPlatform picker = ImagePickerPlatform.instance;
   File? imageFile;
   late final XFile? file;
+  User? get user => _authRepository.loggedFirebaseUser;
 
   @override
   void initState() {
@@ -74,6 +79,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     }
   }
+
+  void onSignUp() {}
 
   void onEditUserDetails(ProfileLoaded state) async {
     var updatedDetails =
@@ -153,48 +160,66 @@ class _ProfileScreenState extends State<ProfileScreen> {
       padding: EdgeInsets.symmetric(
         horizontal: SizeConfig.defaultSize * 3,
       ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                onPressed: () => onEditUserDetails(state),
-                icon: const Icon(CupertinoIcons.pen),
-              ),
-            ],
-          ),
-          SizedBox(height: SizeConfig.defaultSize * 3),
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: userDetails.length,
-            itemBuilder: (context, index) {
-              final detail = userDetails[index];
-              return detail != null
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(detail),
-                        SizedBox(height: SizeConfig.defaultSize * 2),
-                      ],
-                    )
-                  : const SizedBox.shrink(); // Skips null values
-            },
-          ),
-          SizedBox(height: SizeConfig.defaultSize * 5),
-          _buildLogoutButton(),
-        ],
-      ),
+      child: user.email != null
+          ? Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      onPressed: () => onEditUserDetails(state),
+                      icon: const Icon(CupertinoIcons.pen),
+                    ),
+                  ],
+                ),
+                SizedBox(height: SizeConfig.defaultSize * 3),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: userDetails.length,
+                  itemBuilder: (context, index) {
+                    final detail = userDetails[index];
+                    return detail != null
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(detail),
+                              SizedBox(height: SizeConfig.defaultSize * 2),
+                            ],
+                          )
+                        : const SizedBox.shrink(); // Skips null values
+                  },
+                ),
+                SizedBox(height: SizeConfig.defaultSize * 5),
+                _buildLogoutButton(),
+              ],
+            )
+          : Column(
+              children: [
+                Text(Translate.of(context).translate('guest'),
+                    style: FONT_CONST.MEDIUM_DEFAULT_18),
+                SizedBox(height: SizeConfig.defaultSize * 2),
+                Text(Translate.of(context).translate("switch")),
+                SizedBox(height: SizeConfig.defaultSize * 5),
+                _buildLogoutButton(),
+              ],
+            ),
     );
   }
 
   _buildLogoutButton() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         CustomTextButton(
           onPressed: onLogout,
           buttonName: Translate.of(context).translate('log_out'),
+          buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
+        ),
+        CustomTextButton(
+          onPressed: () {
+            Navigator.of(context).pushNamed(AppRouter.SWITCH_USER);
+          },
+          buttonName: Translate.of(context).translate('sign_up'),
           buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
         ),
       ],
@@ -220,16 +245,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     as ImageProvider<Object>,
           ),
         ),
-        Positioned(
-          right: 0,
-          bottom: 0,
-          child: CircleIconButton(
-            onPressed: () => onUploadAvatar(context, loggedUser),
-            svgIcon: ICON_CONST.CAMERA,
-            color: COLOR_CONST.cardShadowColor,
-            size: SizeConfig.defaultSize * 2,
-          ),
-        )
+        if (!_authRepository.loggedFirebaseUser.isAnonymous)
+          Positioned(
+            right: 0,
+            bottom: 0,
+            child: CircleIconButton(
+              onPressed: () => onUploadAvatar(context, loggedUser),
+              svgIcon: ICON_CONST.CAMERA,
+              color: COLOR_CONST.cardShadowColor,
+              size: SizeConfig.defaultSize * 2,
+            ),
+          )
       ],
     );
   }

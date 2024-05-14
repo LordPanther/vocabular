@@ -28,11 +28,14 @@ class RecordButton extends StatefulWidget {
 }
 
 class RecordButtonState extends State<RecordButton> {
-  final _recorder = FlutterSoundRecorder();
+  final FlutterSoundRecorder _recorder = FlutterSoundRecorder();
   bool _isRecorderReady = false;
   bool _isRecording = false;
   String? _path = "";
   Uint8List? _bytes;
+  bool _isAnonymous = false;
+
+  //Getters
   Uint8List? get fileData => _bytes;
   String? get path => _path;
 
@@ -40,12 +43,20 @@ class RecordButtonState extends State<RecordButton> {
   void initState() {
     super.initState();
 
-    initRecorder();
+    _isAnonymous = localizeUser();
+    if (!_isAnonymous) {
+      initRecorder();
+    }
+  }
+
+  bool localizeUser() {
+    User? user = widget.user;
+    _isAnonymous = user.isAnonymous;
+    return _isAnonymous;
   }
 
   Future initRecorder() async {
     final status = await Permission.microphone.request();
-
     if (status != PermissionStatus.granted) {
       bool openSettings = await UtilDialog.showPermissionDialog(
         context: context,
@@ -54,39 +65,16 @@ class RecordButtonState extends State<RecordButton> {
       );
       if (openSettings) openAppSettings();
     }
-
     await _recorder.openRecorder();
-
     _isRecorderReady = true;
-
     _recorder.setSubscriptionDuration(const Duration(milliseconds: 500));
-  }
-
-  void onRecord() async {
-    if (!widget.user.isAnonymous) {
-      if (_isRecording) {
-        await stop();
-      } else {
-        await record();
-      }
-      setState(() {});
-    } else {
-      bool signUp = await UtilDialog.showGuestDialog(
-          context: context, content: Translate.of(context).translate('switch'));
-
-      if (signUp) {
-        Navigator.of(context).pushNamed(AppRouter.SWITCH_USER);
-      }
-    }
   }
 
   Future<String> getRecordingPath() async {
     final Directory appDocumentsDir = await getApplicationDocumentsDirectory();
     final String recordingPath = '${appDocumentsDir.path}/tempRecording';
-    // Check if the file already exists
     final existingFile = File(recordingPath);
     if (existingFile.existsSync()) {
-      // If the file exists, delete it
       existingFile.deleteSync();
     }
     return recordingPath;
@@ -107,7 +95,7 @@ class RecordButtonState extends State<RecordButton> {
     }
   }
 
-  Future record() async {
+  Future<void> startRecording() async {
     final String customPath = await getRecordingPath();
     try {
       await _recorder.startRecorder(toFile: customPath);
@@ -118,11 +106,10 @@ class RecordButtonState extends State<RecordButton> {
       if (kDebugMode) {
         print(exception.toString());
       }
-      return;
     }
   }
 
-  Future stop() async {
+  Future stopRecording() async {
     if (!_isRecorderReady) return;
     final path = await _recorder.stopRecorder();
     _path = path;
@@ -131,13 +118,10 @@ class RecordButtonState extends State<RecordButton> {
     Uint8List? bytes = await getUint8ListFromLocalPath(path);
     _bytes = bytes;
 
-    // Show the dialog to keep or discard the recording
     bool keepRecording = await showKeepDiscardDialog();
     if (keepRecording) {
-      //Logic to keep the recording
       UtilSnackBar.showSnackBarContent(context, content: "Recording saved");
     } else {
-      // Logic to delete the recording or handle as discarded
       final tempFile = File(path!);
       if (tempFile.existsSync()) {
         tempFile.deleteSync();
@@ -150,6 +134,24 @@ class RecordButtonState extends State<RecordButton> {
   void dispose() {
     _recorder.closeRecorder();
     super.dispose();
+  }
+
+  void onRecord() async {
+    if (!widget.user.isAnonymous) {
+      if (_isRecording) {
+        await stopRecording();
+      } else {
+        await startRecording();
+      }
+      setState(() {});
+    } else {
+      bool signUp = await UtilDialog.showGuestDialog(
+          context: context, content: Translate.of(context).translate('switch'));
+
+      if (signUp) {
+        Navigator.of(context).pushNamed(AppRouter.SWITCH_USER);
+      }
+    }
   }
 
   @override
@@ -178,7 +180,7 @@ class RecordButtonState extends State<RecordButton> {
                 ),
                 child: Icon(
                   _isRecording ? CupertinoIcons.stop : CupertinoIcons.mic,
-                  size: 25,
+                  size: SizeConfig.defaultSize * 2.5,
                 ),
               ),
               SizedBox(width: SizeConfig.defaultSize * 1.5),

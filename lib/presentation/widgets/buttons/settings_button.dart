@@ -7,7 +7,7 @@ class SettingsButton extends StatelessWidget {
   final Function() onPressed;
   final IconData icon;
   final String title;
-  final String? leader;
+  final Widget? leader;
 
   const SettingsButton({
     super.key,
@@ -30,7 +30,7 @@ class SettingsButton extends StatelessWidget {
               Text(title, style: FONT_CONST.MEDIUM_DEFAULT_20),
             ],
           ),
-          Text(leader!, style: FONT_CONST.MEDIUM_DEFAULT_16),
+          leader!,
         ],
       ),
     );

@@ -35,7 +35,6 @@ class _AddCollectionBodyState extends State<AddCollectionBody> {
     if (isCollectionPopulated) {
       var newCollection = CollectionModel(name: collection.text);
       collectionBloc.add(AddCollection(collection: newCollection));
-      BlocProvider.of<HomeBloc>(context).add(LoadHome());
     } else {
       UtilSnackBar.showSnackBarContent(context,
           content: Translate.of(context).translate("enter_collection"));

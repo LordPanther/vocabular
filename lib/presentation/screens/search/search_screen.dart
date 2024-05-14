@@ -36,7 +36,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return BlocProvider(
       create: (context) => SearchBloc()..add(OpenScreen()),
       child: Scaffold(
-        backgroundColor: Colors.white,
+        // backgroundColor: Colors.white,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(10),
@@ -161,7 +161,7 @@ class _SearchScreenState extends State<SearchScreen> {
         children: [
           Text(
             Translate.of(context).translate("no_word"),
-            style: FONT_CONST.MEDIUM_PRIMARY_18,
+            style: FONT_CONST.MEDIUM_DEFAULT_18,
           ),
           SizedBox(height: SizeConfig.defaultSize * 10),
           CustomTextButton(
