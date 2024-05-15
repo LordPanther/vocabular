@@ -12,13 +12,14 @@ class ChangeLanguage extends AppSettingsEvent {
   List<Object> get props => [locale];
 }
 
-class ChangeWordOption extends AppSettingsEvent {
-  final bool showRecentWord;
 
-  ChangeWordOption(this.showRecentWord);
+class ShowHideRecentWord extends AppSettingsEvent {
+  final bool setting;
+
+  ShowHideRecentWord(this.setting);
 
   @override
-  List<Object> get props => [showRecentWord];
+  List<Object> get props => [setting];
 }
 
 class ChangeTheme extends AppSettingsEvent {

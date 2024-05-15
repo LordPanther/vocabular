@@ -2,7 +2,6 @@
 
 import 'dart:ui';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/configs/size_config.dart';
@@ -11,6 +10,7 @@ import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/local/pref.dart';
 import 'package:vocab_app/data/repository/app_repository.dart';
 import 'package:vocab_app/data/repository/auth_repository/auth_repo.dart';
+import 'package:vocab_app/presentation/common_blocs/app_settings/bloc.dart';
 import 'package:vocab_app/presentation/screens/home_screen/bloc/bloc.dart';
 import 'package:vocab_app/presentation/widgets/buttons/play_button.dart';
 import 'package:vocab_app/presentation/widgets/others/collection_tile.dart';
@@ -28,64 +28,61 @@ class HomeBody extends StatefulWidget {
 
 class _HomeBodyState extends State<HomeBody> {
   late HomeBloc homeBloc;
-  late LocalPref localPref;
-  bool _showRecentWord = false;
+  bool? _showRecentWord = false;
   final AuthRepository _authRepository = AppRepository.authRepository;
 
   @override
   void initState() {
     super.initState();
     homeBloc = BlocProvider.of<HomeBloc>(context);
-    localPref = LocalPref();
+    showRecentWord();
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    localPref.dispose();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    showRecentWord();
+  }
+
+  void showRecentWord() {
+    _showRecentWord = LocalPref.getBool("showRecentWord");
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeBloc, HomeState>(
-      builder: (context, state) {
-        if (state is HomeLoading) {
-          return const Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Loading(),
-                ],
-              ),
-            ),
-          );
-        }
-        if (state is HomeLoaded) {
-          var collections = state.homeResponse.collections;
-          var words = state.homeResponse.words;
-          var recentWord = state.homeResponse.recentWord;
-          return Expanded(
-            child: Padding(
-              padding: EdgeInsets.all(SizeConfig.defaultPadding),
-              child: Column(
-                children: [
-                  if (!_authRepository.currentUser.isAnonymous)
-                    StreamBuilder(
-                      stream: localPref.showRecentWord,
-                      initialData: _showRecentWord,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          // Check if the stream has data
-                          // Extract the data from the snapshot
-                          bool showRecentWord = snapshot.data as bool;
-                          print("ShowWord: $showRecentWord $_showRecentWord");
-                          return showRecentWord
+    return BlocBuilder<AppSettingsBloc, AppSettingsState>(
+      builder: (context, settingState) {
+        return BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, state) {
+            if (state is HomeLoading) {
+              return const Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Loading(),
+                    ],
+                  ),
+                ),
+              );
+            }
+            if (state is HomeLoaded) {
+              var collections = state.homeResponse.collections;
+              var words = state.homeResponse.words;
+              var recentWord = state.homeResponse.recentWord;
+              print("RECENT WORD: ${LocalPref.getBool("showRecentWord")!}");
+              return Expanded(
+                child: Padding(
+                  padding: EdgeInsets.all(SizeConfig.defaultPadding),
+                  child: Column(
+                    children: [
+                      _authRepository.currentUser.isAnonymous
+                          ? const SizedBox.shrink()
+                          : LocalPref.getBool("showRecentWord")!
                               ? Padding(
                                   padding: EdgeInsets.all(
                                       SizeConfig.defaultSize * 2),
                                   child: Container(
-                                    height: SizeConfig.defaultSize * 18,
                                     width: double.maxFinite,
                                     decoration: BoxDecoration(
                                       border: Border.all(
@@ -101,7 +98,8 @@ class _HomeBodyState extends State<HomeBody> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            if (recentWord!.audioUrl != null)
+                                            if (recentWord!
+                                                .audioUrl!.isNotEmpty)
                                               PlayButton(
                                                   audioUrl:
                                                       recentWord.audioUrl!,
@@ -130,86 +128,82 @@ class _HomeBodyState extends State<HomeBody> {
                                     ),
                                   ),
                                 )
-                              : const SizedBox
-                                  .shrink(); // Return a SizedBox if showRecentWord is false
-                        } else {
-                          // Handle the case when the stream has no data
-                          return const SizedBox.shrink();
-                        }
-                      },
-                    ),
-                  Expanded(
-                    child: ReorderableListView.builder(
-                      onReorder: ((oldIndex, newIndex) {
-                        setState(() {
-                          final index =
-                              newIndex > oldIndex ? newIndex - 1 : newIndex;
+                              : const SizedBox.shrink(),
+                      Expanded(
+                        child: ReorderableListView.builder(
+                          onReorder: ((oldIndex, newIndex) {
+                            setState(() {
+                              final index =
+                                  newIndex > oldIndex ? newIndex - 1 : newIndex;
 
-                          final collection = collections.removeAt(oldIndex);
-                          collections.insert(index, collection);
-                        });
-                      }),
-                      itemCount: collections.length,
-                      itemBuilder: (context, index) {
-                        var collection = collections[index];
-                        return Dismissible(
-                          key: ValueKey(collection.name),
-                          direction: DismissDirection.endToStart,
-                          background: Container(
-                            color: Colors.red,
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Icon(Icons.delete, color: Colors.white),
-                                SizedBox(width: 20),
-                              ],
-                            ),
-                          ),
-                          confirmDismiss: (direction) async {
-                            if (direction == DismissDirection.endToStart) {
-                              final bool dismiss =
-                                  await showCollectionRemoveDialog();
+                              final collection = collections.removeAt(oldIndex);
+                              collections.insert(index, collection);
+                            });
+                          }),
+                          itemCount: collections.length,
+                          itemBuilder: (context, index) {
+                            var collection = collections[index];
+                            return Dismissible(
+                              key: ValueKey(collection.name),
+                              direction: DismissDirection.endToStart,
+                              background: Container(
+                                color: Colors.red,
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Icon(Icons.delete, color: Colors.white),
+                                    SizedBox(width: 20),
+                                  ],
+                                ),
+                              ),
+                              confirmDismiss: (direction) async {
+                                if (direction == DismissDirection.endToStart) {
+                                  final bool dismiss =
+                                      await showCollectionRemoveDialog();
 
-                              if (dismiss && collection.name != "default") {
-                                if (collection.name != "default") {
-                                  BlocProvider.of<HomeBloc>(context).add(
-                                      RemoveCollection(collection: collection));
-                                  return dismiss;
-                                } else {
-                                  UtilSnackBar.showSnackBarContent(context,
-                                      content: Translate.of(context)
-                                          .translate("default_collection"));
+                                  if (dismiss && collection.name != "default") {
+                                    if (collection.name != "default") {
+                                      BlocProvider.of<HomeBloc>(context).add(
+                                          RemoveCollection(
+                                              collection: collection));
+                                      return dismiss;
+                                    } else {
+                                      UtilSnackBar.showSnackBarContent(context,
+                                          content: Translate.of(context)
+                                              .translate("default_collection"));
+                                    }
+                                  }
+                                  return false;
                                 }
-                              }
-                              return false;
-                            }
-                            return null;
+                                return null;
+                              },
+                              child: CollectionTile(
+                                key: ValueKey(collection.name),
+                                collection: collection,
+                                words: words,
+                                index: index,
+                              ),
+                            );
                           },
-                          child: CollectionTile(
-                            key: ValueKey(collection.name),
-                            collection: collection,
-                            words: words,
-                            index: index,
-                          ),
-                        );
-                      },
-                    ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+            return Expanded(
+              child: Center(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    Translate.of(context).translate("load_failure"),
                   ),
                 ],
-              ),
-            ),
-          );
-        }
-        return Expanded(
-          child: Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                Translate.of(context).translate("load_failure"),
-              ),
-            ],
-          )),
+              )),
+            );
+          },
         );
       },
     );

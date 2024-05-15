@@ -6,6 +6,7 @@ export 'auth_repository/auth_repo.dart';
 export 'auth_repository/firebase_auth_repo.dart';
 export 'feedback_repository/feedback_repo.dart';
 export 'feedback_repository/firebase_feedback_repo.dart';
+export 'home_repository/firebase_home_repo.dart';
+export 'home_repository/home_repo.dart';
 export 'storage_repository/storage_repo.dart';
 export 'app_repository.dart';
-export 'home_repository/home_repo.dart';

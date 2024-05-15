@@ -11,9 +11,9 @@ class LanguageUpdating extends AppSettingsState {}
 
 class LanguageUpdated extends AppSettingsState {}
 
-class ShowRecentWordUpdating extends AppSettingsState {}
+class WordSettingUpdating extends AppSettingsState {}
 
-class ShowRecentWordUpdated extends AppSettingsState {}
+class WordSettingUpdated extends AppSettingsState {}
 
 class ThemeUpdating extends AppSettingsState {}
 

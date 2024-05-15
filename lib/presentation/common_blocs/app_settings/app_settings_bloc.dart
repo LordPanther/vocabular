@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:vocab_app/configs/language.dart';
+import 'package:vocab_app/configs/settings.dart';
 import 'package:vocab_app/data/local/pref.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'bloc.dart';
 
 class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
@@ -12,12 +14,26 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
     on<ChangeTheme>((event, emit) async {
       await _mapThemeChangedState(event, emit);
     });
-    on<ChangeWordOption>((event, emit) async {
-      await _mapWordOptionChangedState(event, emit);
+    on<ShowHideRecentWord>((event, emit) async {
+      await _mapShowHideToState(event, emit);
     });
   }
 
-  
+  /// Word
+
+  Future<void> _mapShowHideToState(
+      event, Emitter<AppSettingsState> emit) async {
+    if (event.setting == RecentWordSetting.defaultWordSetting) {
+      emit(WordSettingUpdated());
+    } else {
+      emit(WordSettingUpdating());
+      RecentWordSetting.defaultWordSetting = event.setting;
+      await LocalPref.setBool("showRecentWord", event.setting);
+      emit(WordSettingUpdated());
+    }
+  }
+
+  /// Language
 
   Future<void> _mapLanguageChangedState(
       event, Emitter<AppSettingsState> emit) async {
@@ -41,13 +57,5 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
       await LocalPref.setString("language", event.locale.languageCode);
       emit(LanguageUpdated());
     }
-  }
-
-  Future<void> _mapWordOptionChangedState(
-      event, Emitter<AppSettingsState> emit) async {
-    emit(ShowRecentWordUpdating());
-    var show = event.showRecentWord ? "Yes" : "No";
-    await LocalPref.setString("showRecentWord", show);
-    emit(ShowRecentWordUpdated());
   }
 }

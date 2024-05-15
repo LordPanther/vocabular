@@ -1,14 +1,14 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:vocab_app/presentation/common_blocs/app_settings/app_settings_bloc.dart';
+import 'package:vocab_app/presentation/common_blocs/app_settings/app_settings_state.dart';
 import 'package:vocab_app/presentation/common_blocs/application/application_bloc.dart';
 import 'package:vocab_app/presentation/common_blocs/application/application_event.dart';
 import 'package:vocab_app/presentation/common_blocs/application/application_state.dart';
 import 'package:vocab_app/presentation/common_blocs/auth/auth_bloc.dart';
 import 'package:vocab_app/presentation/common_blocs/auth/auth_state.dart';
 import 'package:vocab_app/presentation/common_blocs/common_bloc.dart';
-import 'package:vocab_app/presentation/common_blocs/language/language_bloc.dart';
-import 'package:vocab_app/presentation/common_blocs/language/language_state.dart';
 import 'package:vocab_app/presentation/common_blocs/profile/profile_bloc.dart';
 import 'package:vocab_app/presentation/common_blocs/profile/profile_event.dart';
 import 'package:vocab_app/utils/translate.dart';
@@ -58,8 +58,8 @@ class _AppViewState extends State<AppView> {
   Widget build(BuildContext context) {
     return BlocBuilder<ApplicationBloc, ApplicationState>(
       builder: (context, applicationState) {
-        return BlocBuilder<LanguageBloc, LanguageState>(
-          builder: (context, state) {
+        return BlocBuilder<AppSettingsBloc, AppSettingsState>(
+          builder: (context, appSettingsState) {
             return MaterialApp(
               navigatorKey: _navigatorKey,
               debugShowCheckedModeBanner: Application.debug,

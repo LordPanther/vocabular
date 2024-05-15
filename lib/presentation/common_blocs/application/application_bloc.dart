@@ -3,9 +3,9 @@ import 'package:vocab_app/configs/application.dart';
 import 'package:vocab_app/data/local/pref.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vocab_app/presentation/common_blocs/app_settings/bloc.dart';
 import '../auth/auth_event.dart';
 import '../common_bloc.dart';
-import '../language/language_event.dart';
 import 'application_event.dart';
 import 'application_state.dart';
 
@@ -25,8 +25,14 @@ class ApplicationBloc extends Bloc<ApplicationEvent, ApplicationState> {
     /// Get old settings
     final oldLanguage = LocalPref.getString("language");
 
+    final recentWordSetting = LocalPref.getBool("showRecentWord");
+
     if (oldLanguage != null) {
-      CommonBloc.languageBloc.add(LanguageChanged(Locale(oldLanguage)));
+      CommonBloc.appSettingsBloc.add(ChangeLanguage(Locale(oldLanguage)));
+    }
+
+    if (recentWordSetting != null) {
+      CommonBloc.appSettingsBloc.add(ShowHideRecentWord(recentWordSetting));
     }
 
     /// Authentication begin check
