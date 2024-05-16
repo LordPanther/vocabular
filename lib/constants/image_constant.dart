@@ -18,4 +18,5 @@ class IMAGE_CONST {
   static const REGISTER_HEADER = "assets/images/market_place_4.jpg";
   static const LOGIN_BANNER = "assets/images/vocabular-logo.png";
   static const SPLASH_LOGO = "assets/images/vocabular-logo.png";
+  static const AI_LOGO = "assets/images/ai.png";
 }

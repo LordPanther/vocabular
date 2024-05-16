@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:vocab_app/configs/config.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
@@ -8,13 +9,16 @@ import 'package:vocab_app/constants/font_constant.dart';
 class PlayButton extends StatefulWidget {
   final String playMode;
   final String audioUrl;
+  final Duration? duration;
   final Function(bool isPlaying)? onPlayingChanged;
 
-  const PlayButton(
-      {super.key,
-      required this.audioUrl,
-      this.onPlayingChanged,
-      required this.playMode});
+  const PlayButton({
+    super.key,
+    required this.audioUrl,
+    this.onPlayingChanged,
+    required this.playMode,
+    this.duration,
+  });
 
   @override
   State<PlayButton> createState() => _PlayButtonState();
@@ -35,6 +39,10 @@ class _PlayButtonState extends State<PlayButton> {
     _isMounted = true;
     _playMode = widget.playMode;
     _audioUrl = widget.audioUrl;
+
+    if (widget.duration != null) {
+      _duration = widget.duration!;
+    }
 
     _setAudio();
 
@@ -82,6 +90,7 @@ class _PlayButtonState extends State<PlayButton> {
   }
 
   Future _playAudio() async {
+    await _audioPlayer.seek(Duration.zero);
     await _audioPlayer.resume();
     if (_playMode != "recording") {}
   }
@@ -147,13 +156,16 @@ class _PlayButtonState extends State<PlayButton> {
               });
             }),
         Padding(
-          padding: const EdgeInsets.only(left: 25, right: 25),
+          padding: EdgeInsets.only(
+            left: SizeConfig.defaultSize * 2.5,
+            right: SizeConfig.defaultSize * 2.5,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("${formatTime(_position)}s",
                   style: FONT_CONST.REGULAR_DEFAULT_16),
-              const SizedBox(width: 70),
+              SizedBox(width: SizeConfig.defaultSize * 7),
               Text("${formatTime(_duration - _position)}s",
                   style: FONT_CONST.REGULAR_DEFAULT_16),
             ],

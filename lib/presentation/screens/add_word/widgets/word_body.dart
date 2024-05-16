@@ -1,17 +1,20 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
+import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/configs/config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
+import 'package:vocab_app/data/ai/ai_service.dart';
 import 'package:vocab_app/data/models/add_word_model.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/data/repository/repository.dart';
 import 'package:vocab_app/presentation/screens/add_word/bloc/bloc.dart';
+import 'package:vocab_app/presentation/widgets/buttons/ai_button.dart';
 import 'package:vocab_app/presentation/widgets/buttons/record_button.dart';
 import 'package:vocab_app/presentation/widgets/buttons/text_button.dart';
 import 'package:vocab_app/presentation/widgets/others/dropdown_list.dart';
@@ -30,6 +33,7 @@ class WordBody extends StatefulWidget {
 
 class _WordBodyState extends State<WordBody> {
   final recordButtonState = GlobalKey<RecordButtonState>();
+  final AIService _aiService = AIService();
   late WordBloc wordBloc;
   late WordModel word;
   late WordModel oldWord;
@@ -42,17 +46,22 @@ class _WordBodyState extends State<WordBody> {
   late TextEditingController _definition;
   String? _collection;
   bool _isShared = false;
-  String? _audioUrl = "";
+  String _audioUrl = "";
   bool _isEditing = false;
+  bool _isGenerating = false;
+  bool _isRecording = false;
 
   // Audio recording global variables
   bool get isWordPopulated => _word.text.isNotEmpty;
   bool get isDefinitionPopulated => _definition.text.isNotEmpty;
+  bool get isCollectionPopulated => _collection != null;
+  bool get isAudioRecorded => _audioUrl.isNotEmpty;
   User? get user => _authRepository.currentUser;
 
   @override
   void initState() {
     super.initState();
+
     if (widget.word != null) {
       word = WordModel(
         id: widget.word!.id,
@@ -98,8 +107,8 @@ class _WordBodyState extends State<WordBody> {
   void _onAddWord() async {
     String? timeStamp = "${DateTime.now().millisecondsSinceEpoch}";
 
-    if (isWordPopulated && _collection != null) {
-      if (!user!.isAnonymous) {
+    if (isWordPopulated && isCollectionPopulated) {
+      if (_audioUrl.isNotEmpty) {
         var storagePath = await storageData(timeStamp);
         if (recordButtonState.currentState!.fileData != null) {
           _audioUrl = await _storageRepository.uploadAudioData(
@@ -137,6 +146,52 @@ class _WordBodyState extends State<WordBody> {
       if (_collection == null) {
         UtilSnackBar.showSnackBarContent(context,
             content: Translate.of(context).translate("collection_checker"));
+      }
+    }
+  }
+
+  void fetchAiResponse() async {
+    String response = "";
+    if (!isWordPopulated) {
+      UtilSnackBar.showSnackBarContent(context,
+          content: "Please enter a word first...");
+      return;
+    }
+
+    if (!_isGenerating) {
+      setState(() {
+        _isGenerating = true;
+      });
+
+      // Introduce a delay of 1 second
+      await Future.delayed(const Duration(seconds: 1));
+
+      // Fetch the AI response asynchronously
+      response = await _aiService.getAiResponse(_word);
+
+      // Update the state with the received response
+      if (response == "error") {
+        setState(() {
+          _definition =
+              TextEditingController(text: "Gemini could not generate response");
+          _isGenerating = false;
+        });
+      } else {
+        setState(() {
+          _definition = TextEditingController(text: response);
+        });
+      }
+    } else {
+      bool keepRecording = await showKeepDiscardDialog();
+      if (!keepRecording) {
+        _definition.clear();
+        setState(() {
+          _isGenerating = false;
+        });
+      } else {
+        setState(() {
+          _isGenerating = false;
+        });
       }
     }
   }
@@ -185,7 +240,7 @@ class _WordBodyState extends State<WordBody> {
                   SizedBox(height: SizeConfig.defaultSize * 5),
                   _buildWordTextField(),
                   SizedBox(height: SizeConfig.defaultSize * 3),
-                  _buildTextFieldWithRecordButton(state.user),
+                  _builDefinitionTextField(),
                   SizedBox(height: SizeConfig.defaultSize * 1),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -251,19 +306,50 @@ class _WordBodyState extends State<WordBody> {
     );
   }
 
-  Widget _buildTextFieldWithRecordButton(User user) {
+  Widget _builDefinitionTextField() {
     return Padding(
       padding: EdgeInsets.only(bottom: SizeConfig.defaultSize * 4),
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          _buildTextField(),
+          _buildDefinitionWidget(),
           Positioned(
-            bottom: SizeConfig.defaultSize * -2.5,
-            right: SizeConfig.defaultSize * 10.5,
-            child: RecordButton(
-              key: recordButtonState,
-              user: user,
+            bottom: SizeConfig.defaultSize * -3,
+            right: SizeConfig.defaultSize * 14.5,
+            child: Container(
+              width: 110,
+              height: 55,
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              decoration: BoxDecoration(
+                color: COLOR_CONST.backgroundColor,
+                borderRadius: BorderRadius.circular(SizeConfig.defaultSize * 3),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _isGenerating
+                      ? Container(
+                          width: 40,
+                          height: 40,
+                          padding: const EdgeInsets.all(10),
+                          child: const CircularProgressIndicator(),
+                        )
+                      : RecordButton(
+                          key: recordButtonState,
+                          user: user!,
+                          isRecording: (bool value) {
+                            setState(() {
+                              _isRecording = value;
+                            });
+                          },
+                        ),
+                  _isRecording
+                      ? const SizedBox.shrink()
+                      : AIButton(
+                          onGenerate: fetchAiResponse,
+                        )
+                ],
+              ),
             ),
           ),
         ],
@@ -271,13 +357,14 @@ class _WordBodyState extends State<WordBody> {
     );
   }
 
-  Widget _buildTextField() {
+  Widget _buildDefinitionWidget() {
     return TextFormField(
       style: TextStyle(
         color: COLOR_CONST.textColor,
         fontSize: SizeConfig.defaultSize * 1.6,
       ),
-      maxLines: 4,
+      minLines: 4,
+      maxLines: 10,
       cursorColor: COLOR_CONST.textColor,
       textInputAction: TextInputAction.next,
       controller: _definition,
@@ -359,5 +446,60 @@ class _WordBodyState extends State<WordBody> {
         ),
       ],
     );
+  }
+
+  Future<bool> showKeepDiscardDialog() async {
+    return await showGeneralDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          barrierLabel:
+              MaterialLocalizations.of(context).modalBarrierDismissLabel,
+          barrierColor: Colors.black.withOpacity(0.5),
+          transitionDuration: const Duration(milliseconds: 500),
+          pageBuilder: (BuildContext context, Animation<double> animation,
+              Animation<double> secondaryAnimation) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.all(Radius.circular(SizeConfig.defaultSize)),
+              ),
+              content: const Text(
+                  "Do you want to keep or discard this AI result/definition?"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Text(
+                    'Keep',
+                    style: FONT_CONST.MEDIUM_DEFAULT_18,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Text(
+                    'Discard',
+                    style: FONT_CONST.MEDIUM_DEFAULT_18,
+                  ),
+                ),
+              ],
+            );
+          },
+          transitionBuilder: (context, animation, secondaryAnimation, child) {
+            return BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 4 * animation.value,
+                sigmaY: 4 * animation.value,
+              ),
+              child: FadeTransition(
+                opacity: animation,
+                child: child,
+              ),
+            );
+          },
+        ) ??
+        false;
   }
 }

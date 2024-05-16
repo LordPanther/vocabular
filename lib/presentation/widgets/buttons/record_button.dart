@@ -15,13 +15,16 @@ import 'package:vocab_app/configs/router.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
+import 'package:vocab_app/constants/image_constant.dart';
 import 'package:vocab_app/presentation/widgets/buttons/play_button.dart';
 import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/utils.dart';
 
 class RecordButton extends StatefulWidget {
   final User user;
-  const RecordButton({super.key, required this.user});
+  final ValueChanged<bool>? isRecording;
+  const RecordButton(
+      {super.key, required this.user, required this.isRecording});
 
   @override
   State<RecordButton> createState() => RecordButtonState();
@@ -34,6 +37,7 @@ class RecordButtonState extends State<RecordButton> {
   String? _path = "";
   Uint8List? _bytes;
   bool _isAnonymous = false;
+  late Duration _duration;
 
   //Getters
   Uint8List? get fileData => _bytes;
@@ -45,16 +49,10 @@ class RecordButtonState extends State<RecordButton> {
 
     _recorder = FlutterSoundRecorder();
 
-    _isAnonymous = localizeUser();
+    _isAnonymous = widget.user.isAnonymous;
     if (!_isAnonymous) {
       initRecorder();
     }
-  }
-
-  bool localizeUser() {
-    User? user = widget.user;
-    _isAnonymous = user.isAnonymous;
-    return _isAnonymous;
   }
 
   Future initRecorder() async {
@@ -69,7 +67,7 @@ class RecordButtonState extends State<RecordButton> {
     }
     await _recorder.openRecorder();
     _isRecorderReady = true;
-    _recorder.setSubscriptionDuration(const Duration(milliseconds: 500));
+    _recorder.setSubscriptionDuration(const Duration(milliseconds: 10));
   }
 
   Future<String> getRecordingPath() async {
@@ -99,10 +97,12 @@ class RecordButtonState extends State<RecordButton> {
 
   Future<void> startRecording() async {
     final String customPath = await getRecordingPath();
+    _duration = Duration.zero;
     try {
       await _recorder.startRecorder(toFile: customPath);
       setState(() {
         _isRecording = true;
+        widget.isRecording!(_isRecording);
       });
     } on Exception catch (exception) {
       if (kDebugMode) {
@@ -114,8 +114,12 @@ class RecordButtonState extends State<RecordButton> {
   Future stopRecording() async {
     if (!_isRecorderReady) return;
     final path = await _recorder.stopRecorder();
+
     _path = path;
-    _isRecording = false;
+    setState(() {
+      _isRecording = false;
+      widget.isRecording!(false);
+    });
 
     Uint8List? bytes = await getUint8ListFromLocalPath(path);
     _bytes = bytes;
@@ -159,56 +163,64 @@ class RecordButtonState extends State<RecordButton> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: ElevatedButton(
-          style: const ButtonStyle(
-            elevation: MaterialStatePropertyAll(0),
-            backgroundColor:
-                MaterialStatePropertyAll(COLOR_CONST.backgroundColor),
-          ),
-          onPressed: onRecord,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                width: SizeConfig.defaultSize * 4,
-                height: SizeConfig.defaultSize * 4,
-                decoration: BoxDecoration(
-                  color: _isRecording
-                      ? COLOR_CONST.activeColor
-                      : COLOR_CONST
-                          .primaryColor, // Background color of the Container
-                  borderRadius: BorderRadius.circular(
-                      SizeConfig.defaultSize * 3), // Rounded corners
-                ),
-                child: Icon(
-                  _isRecording ? CupertinoIcons.stop : CupertinoIcons.mic,
-                  size: SizeConfig.defaultSize * 2.5,
-                ),
+      child: GestureDetector(
+        onTap: onRecord,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              width: SizeConfig.defaultSize * 4,
+              height: SizeConfig.defaultSize * 4,
+              decoration: BoxDecoration(
+                color: _isRecording
+                    ? COLOR_CONST.activeColor
+                    : COLOR_CONST
+                        .primaryColor, // Background color of the Container
+                borderRadius: BorderRadius.circular(
+                    SizeConfig.defaultSize * 3), // Rounded corners
               ),
-              SizedBox(width: SizeConfig.defaultSize * 1.5),
-              StreamBuilder(
-                stream: _recorder.onProgress,
-                builder: (context, snapshot) {
-                  final duration = snapshot.hasData
-                      ? snapshot.data!.duration
-                      : Duration.zero;
-
-                  String twoDigits(int n) => n.toString().padLeft(2, '0');
-                  final twoDigitsMinutes =
-                      twoDigits(duration.inMinutes.remainder(60));
-                  final twoDigitSeconds =
-                      twoDigits(duration.inSeconds.remainder(60));
-
-                  return _isRecording
-                      ? Text(
-                          "$twoDigitsMinutes:$twoDigitSeconds",
-                          style: FONT_CONST.BOLD_DEFAULT_16,
-                        )
-                      : const Text("00:00");
-                },
+              child: Icon(
+                _isRecording ? CupertinoIcons.stop : CupertinoIcons.mic,
+                size: SizeConfig.defaultSize * 2.5,
               ),
-            ],
-          )),
+            ),
+            SizedBox(width: SizeConfig.defaultSize),
+            _isRecording
+                ? StreamBuilder(
+                    stream: _recorder.onProgress,
+                    builder: (context, snapshot) {
+                      _duration = snapshot.hasData
+                          ? snapshot.data!.duration
+                          : Duration.zero;
+
+                      String twoDigits(int n) => n.toString().padLeft(2, '0');
+                      final twoDigitsMinutes =
+                          twoDigits(_duration.inMinutes.remainder(60));
+                      final twoDigitSeconds =
+                          twoDigits(_duration.inSeconds.remainder(60));
+
+                      return _isRecording
+                          ? Text(
+                              "$twoDigitsMinutes:$twoDigitSeconds",
+                              style: FONT_CONST.BOLD_DEFAULT_16,
+                            )
+                          : Container(
+                              width: SizeConfig.defaultSize * 4.5,
+                              height: SizeConfig.defaultSize * 4.5,
+                              decoration: BoxDecoration(
+                                image: const DecorationImage(
+                                    image: AssetImage(IMAGE_CONST.AI_LOGO)),
+                                borderRadius: BorderRadius.circular(
+                                    SizeConfig.defaultSize *
+                                        3), // Rounded corners
+                              ),
+                            );
+                    },
+                  )
+                : const SizedBox.shrink(),
+          ],
+        ),
+      ),
     );
   }
 
@@ -231,8 +243,6 @@ class RecordButtonState extends State<RecordButton> {
                 audioUrl: _path!,
                 playMode: "recording",
               ),
-              // content:
-              //     const Text('Do you want to keep or discard the recording?'),
               actions: [
                 TextButton(
                   onPressed: () {
