@@ -29,11 +29,11 @@ class WordBody extends StatefulWidget {
 }
 
 class _WordBodyState extends State<WordBody> {
+  final recordButtonState = GlobalKey<RecordButtonState>();
   late WordBloc wordBloc;
   late WordModel word;
   late WordModel oldWord;
   late CollectionModel collection;
-  final recordButtonState = GlobalKey<RecordButtonState>();
   final AuthRepository _authRepository = AppRepository.authRepository;
   final StorageRepository _storageRepository = AppRepository.storageRepository;
 

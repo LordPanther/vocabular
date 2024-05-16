@@ -38,14 +38,8 @@ class _HomeBodyState extends State<HomeBody> {
     showRecentWord();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    showRecentWord();
-  }
-
   void showRecentWord() {
-    _showRecentWord = LocalPref.getBool("showRecentWord");
+    _showRecentWord = LocalPref.getBool("showRecentWord") ?? false;
   }
 
   @override
@@ -70,7 +64,7 @@ class _HomeBodyState extends State<HomeBody> {
               var collections = state.homeResponse.collections;
               var words = state.homeResponse.words;
               var recentWord = state.homeResponse.recentWord;
-              print("RECENT WORD: ${LocalPref.getBool("showRecentWord")!}");
+              _showRecentWord = LocalPref.getBool("showRecentWord") ?? false;
               return Expanded(
                 child: Padding(
                   padding: EdgeInsets.all(SizeConfig.defaultPadding),
@@ -78,7 +72,7 @@ class _HomeBodyState extends State<HomeBody> {
                     children: [
                       _authRepository.currentUser.isAnonymous
                           ? const SizedBox.shrink()
-                          : LocalPref.getBool("showRecentWord")!
+                          : _showRecentWord!
                               ? Padding(
                                   padding: EdgeInsets.all(
                                       SizeConfig.defaultSize * 2),

@@ -28,7 +28,7 @@ class RecordButton extends StatefulWidget {
 }
 
 class RecordButtonState extends State<RecordButton> {
-  final FlutterSoundRecorder _recorder = FlutterSoundRecorder();
+  late FlutterSoundRecorder _recorder;
   bool _isRecorderReady = false;
   bool _isRecording = false;
   String? _path = "";
@@ -42,6 +42,8 @@ class RecordButtonState extends State<RecordButton> {
   @override
   void initState() {
     super.initState();
+
+    _recorder = FlutterSoundRecorder();
 
     _isAnonymous = localizeUser();
     if (!_isAnonymous) {
@@ -132,8 +134,8 @@ class RecordButtonState extends State<RecordButton> {
 
   @override
   void dispose() {
-    _recorder.closeRecorder();
     super.dispose();
+    _recorder.closeRecorder();
   }
 
   void onRecord() async {

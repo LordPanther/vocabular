@@ -113,7 +113,7 @@ class FirebaseHomeRepository implements HomeRepository {
       newWord.id!.trim(),
       newWord.word!.trim(),
       newWord.definition!.trim(),
-      newWord.audioUrl!.trim()
+      newWord.audioUrl?.trim() ?? ""
     ];
     recentWords.add(word);
     String newJsonString = jsonEncode(recentWords);

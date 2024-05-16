@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/configs/router.dart';
@@ -9,8 +8,6 @@ import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/presentation/screens/add_collection/bloc/collection_bloc.dart';
 import 'package:vocab_app/presentation/screens/add_collection/bloc/collection_event.dart';
 import 'package:vocab_app/presentation/screens/add_collection/bloc/collection_state.dart';
-import 'package:vocab_app/presentation/screens/home_screen/bloc/home_bloc.dart';
-import 'package:vocab_app/presentation/screens/home_screen/bloc/home_event.dart';
 import 'package:vocab_app/presentation/widgets/buttons/text_button.dart';
 import 'package:vocab_app/presentation/widgets/others/dropdown_list.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';

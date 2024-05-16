@@ -33,6 +33,8 @@ class ApplicationBloc extends Bloc<ApplicationEvent, ApplicationState> {
 
     if (recentWordSetting != null) {
       CommonBloc.appSettingsBloc.add(ShowHideRecentWord(recentWordSetting));
+    } else {
+      CommonBloc.appSettingsBloc.add(ShowHideRecentWord(false));
     }
 
     /// Authentication begin check

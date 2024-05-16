@@ -65,16 +65,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             imageQuality: 50,
           ));
 
-      if (file != null) {
+      if (file != null && context.mounted) {
         imageFile = File(file.path);
-        // ignore: use_build_context_synchronously
         BlocProvider.of<ProfileBloc>(context).add(UploadAvatar(imageFile));
       }
     } else {
       bool signUp = await UtilDialog.showGuestDialog(
           context: context, content: Translate.of(context).translate('switch'));
 
-      if (signUp) {
+      if (signUp && context.mounted) {
         Navigator.of(context).pushNamed(AppRouter.SWITCH_USER);
       }
     }
