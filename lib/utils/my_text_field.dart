@@ -1,60 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:vocab_app/configs/size_config.dart';
+import 'package:vocab_app/constants/color_constant.dart';
+import 'package:vocab_app/utils/translate.dart';
 
 class MyTextField extends StatelessWidget {
   final TextEditingController controller;
-  final String hintText;
-  final bool obscureText;
-  final TextInputType keyboardType;
-  final Widget? suffixIcon;
-  final VoidCallback? onTap;
-  final Widget? prefixIcon;
-  final String? Function(String?)? validator;
-  final FocusNode? focusNode;
-  final String? errorMsg;
-  final String? Function(String?)? onChanged;
 
   const MyTextField({
     super.key,
     required this.controller,
-    required this.hintText,
-    required this.obscureText,
-    required this.keyboardType,
-    this.suffixIcon,
-    this.onTap,
-    this.prefixIcon,
-    this.validator,
-    this.focusNode,
-    this.errorMsg,
-    this.onChanged
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      validator: validator,
-      controller: controller,
-      obscureText: obscureText,
-      keyboardType: keyboardType,
-      focusNode: focusNode,
-      onTap: onTap,
+      style: TextStyle(
+        color: COLOR_CONST.textColor,
+        fontSize: SizeConfig.defaultSize * 1.6,
+      ),
+      minLines: 4,
+      maxLines: 10,
+      cursorColor: COLOR_CONST.textColor,
       textInputAction: TextInputAction.next,
-      onChanged: onChanged,
+      controller: controller,
+      autovalidateMode: AutovalidateMode.always,
+      keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
-        suffixIcon: suffixIcon,
-        prefixIcon: prefixIcon,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Colors.transparent),
+        contentPadding: EdgeInsets.symmetric(
+          vertical: SizeConfig.defaultSize,
+          horizontal: SizeConfig.defaultSize * 1.5,
         ),
+        labelText: Translate.of(context).translate('add_definition'),
+        labelStyle: const TextStyle(color: COLOR_CONST.textColor),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
-          borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
+          borderSide:
+              BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3)),
         ),
-        fillColor: Colors.grey.shade200,
-        filled: true,
-        hintText: hintText,
-        hintStyle: TextStyle(color: Colors.grey[500]),
-        errorText: errorMsg,
+        enabledBorder: OutlineInputBorder(
+          borderSide:
+              BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3)),
+        ),
       ),
     );
   }

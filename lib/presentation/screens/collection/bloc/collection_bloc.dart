@@ -2,8 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/repository/app_repository.dart';
 import 'package:vocab_app/data/repository/home_repository/home_repo.dart';
-import 'package:vocab_app/presentation/screens/add_collection/bloc/collection_event.dart';
-import 'package:vocab_app/presentation/screens/add_collection/bloc/collection_state.dart';
+import 'package:vocab_app/presentation/screens/collection/bloc/collection_event.dart';
+import 'package:vocab_app/presentation/screens/collection/bloc/collection_state.dart';
 
 class CollectionBloc extends Bloc<CollectionEvent, CollectionState> {
   final HomeRepository _homeRepository = AppRepository.collectionsRepository;

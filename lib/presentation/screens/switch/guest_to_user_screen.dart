@@ -1,9 +1,9 @@
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/presentation/common_blocs/auth/bloc.dart';
-import 'package:vocab_app/presentation/screens/guest_to_user_screen/bloc/guest_to_user_bloc.dart';
-import 'package:vocab_app/presentation/screens/guest_to_user_screen/widget/guest_to_user_form.dart';
-import 'package:vocab_app/presentation/screens/guest_to_user_screen/widget/guest_to_user_header.dart';
+import 'package:vocab_app/presentation/screens/switch/bloc/guest_to_user_bloc.dart';
+import 'package:vocab_app/presentation/screens/switch/widget/guest_to_user_form.dart';
+import 'package:vocab_app/presentation/screens/switch/widget/guest_to_user_header.dart';
 import 'package:vocab_app/utils/translate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

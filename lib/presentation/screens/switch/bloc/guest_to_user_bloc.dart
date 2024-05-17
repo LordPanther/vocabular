@@ -1,8 +1,8 @@
 import 'package:vocab_app/data/models/user_model.dart';
 import 'package:vocab_app/data/repository/app_repository.dart';
 import 'package:vocab_app/data/repository/auth_repository/auth_repo.dart';
-import 'package:vocab_app/presentation/screens/guest_to_user_screen/bloc/guest_to_user_event.dart';
-import 'package:vocab_app/presentation/screens/guest_to_user_screen/bloc/guest_to_user_state.dart';
+import 'package:vocab_app/presentation/screens/switch/bloc/guest_to_user_event.dart';
+import 'package:vocab_app/presentation/screens/switch/bloc/guest_to_user_state.dart';
 import 'package:vocab_app/utils/validator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';

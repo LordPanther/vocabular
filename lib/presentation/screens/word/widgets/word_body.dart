@@ -9,17 +9,19 @@ import 'package:vocab_app/configs/config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/ai/ai_service.dart';
-import 'package:vocab_app/data/models/add_word_model.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/data/repository/repository.dart';
-import 'package:vocab_app/presentation/screens/add_word/bloc/bloc.dart';
+import 'package:vocab_app/presentation/screens/word/bloc/bloc.dart';
 import 'package:vocab_app/presentation/widgets/buttons/ai_button.dart';
 import 'package:vocab_app/presentation/widgets/buttons/record_button.dart';
 import 'package:vocab_app/presentation/widgets/buttons/text_button.dart';
 import 'package:vocab_app/presentation/widgets/others/dropdown_list.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
+import 'package:vocab_app/utils/audio_manager.dart';
 import 'package:vocab_app/utils/dialog.dart';
+import 'package:vocab_app/utils/initializer.dart';
+import 'package:vocab_app/utils/my_text_field.dart';
 import 'package:vocab_app/utils/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
 
@@ -33,7 +35,9 @@ class WordBody extends StatefulWidget {
 
 class _WordBodyState extends State<WordBody> {
   final recordButtonState = GlobalKey<RecordButtonState>();
-  final AIService _aiService = AIService();
+  final AIService aiService = AIService();
+  final AudioManager audioManager = AudioManager();
+  Initializer initializer = Initializer();
   late WordBloc wordBloc;
   late WordModel word;
   late WordModel oldWord;
@@ -85,31 +89,14 @@ class _WordBodyState extends State<WordBody> {
     wordBloc = BlocProvider.of<WordBloc>(context);
   }
 
-  Future<String> storageData(String? timeStamp) async {
-    final fileName = "$timeStamp.m4a";
-    String directoryPath = "/vocabusers/${user!.uid}";
-    final storagePath = "$directoryPath/$fileName";
-    return storagePath;
-  }
-
-  Future assignDataToModels(String? timeStamp) async {
-    word = WordModel(
-      id: _collection,
-      word: _word.text,
-      definition: _definition.text,
-      audioUrl: _audioUrl,
-      timeStamp: timeStamp!,
-      isShared: _isShared,
-    );
-    collection = CollectionModel(name: _collection);
-  }
+  
 
   void _onAddWord() async {
     String? timeStamp = "${DateTime.now().millisecondsSinceEpoch}";
 
     if (isWordPopulated && isCollectionPopulated) {
       if (_audioUrl.isNotEmpty) {
-        var storagePath = await storageData(timeStamp);
+        var storagePath = await audioManager.storageData(user!, timeStamp);
         if (recordButtonState.currentState!.fileData != null) {
           _audioUrl = await _storageRepository.uploadAudioData(
             storagePath,
@@ -118,9 +105,14 @@ class _WordBodyState extends State<WordBody> {
         }
       }
 
-      await assignDataToModels(timeStamp);
-
-      var newWord = AddWordModel(word: word, collection: collection);
+      var newWord = await initializer.instantiateModels(
+        _collection,
+        _word.text,
+        _definition.text,
+        _audioUrl,
+        timeStamp,
+        _isShared,
+      );
 
       if (_isEditing) {
         wordBloc.add(UpdateWord(updatedWord: newWord, oldWord: oldWord));
@@ -163,11 +155,8 @@ class _WordBodyState extends State<WordBody> {
         _isGenerating = true;
       });
 
-      // Introduce a delay of 1 second
-      await Future.delayed(const Duration(seconds: 1));
-
       // Fetch the AI response asynchronously
-      response = await _aiService.getAiResponse(_word);
+      response = await aiService.getAiResponse(_word);
 
       // Update the state with the received response
       if (response == "error") {
@@ -182,7 +171,8 @@ class _WordBodyState extends State<WordBody> {
         });
       }
     } else {
-      bool keepRecording = await showKeepDiscardDialog();
+      bool keepRecording =
+          await UtilDialog.showKeepDiscardDialog(context: context);
       if (!keepRecording) {
         _definition.clear();
         setState(() {
@@ -312,7 +302,7 @@ class _WordBodyState extends State<WordBody> {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          _buildDefinitionWidget(),
+          MyTextField(controller: _definition),
           Positioned(
             bottom: SizeConfig.defaultSize * -3,
             right: SizeConfig.defaultSize * 14.5,
@@ -353,38 +343,6 @@ class _WordBodyState extends State<WordBody> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildDefinitionWidget() {
-    return TextFormField(
-      style: TextStyle(
-        color: COLOR_CONST.textColor,
-        fontSize: SizeConfig.defaultSize * 1.6,
-      ),
-      minLines: 4,
-      maxLines: 10,
-      cursorColor: COLOR_CONST.textColor,
-      textInputAction: TextInputAction.next,
-      controller: _definition,
-      autovalidateMode: AutovalidateMode.always,
-      keyboardType: TextInputType.multiline,
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.symmetric(
-          vertical: SizeConfig.defaultSize,
-          horizontal: SizeConfig.defaultSize * 1.5,
-        ),
-        labelText: Translate.of(context).translate('add_definition'),
-        labelStyle: const TextStyle(color: COLOR_CONST.textColor),
-        focusedBorder: OutlineInputBorder(
-          borderSide:
-              BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3)),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide:
-              BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3)),
-        ),
       ),
     );
   }
@@ -446,60 +404,5 @@ class _WordBodyState extends State<WordBody> {
         ),
       ],
     );
-  }
-
-  Future<bool> showKeepDiscardDialog() async {
-    return await showGeneralDialog<bool>(
-          context: context,
-          barrierDismissible: false,
-          barrierLabel:
-              MaterialLocalizations.of(context).modalBarrierDismissLabel,
-          barrierColor: Colors.black.withOpacity(0.5),
-          transitionDuration: const Duration(milliseconds: 500),
-          pageBuilder: (BuildContext context, Animation<double> animation,
-              Animation<double> secondaryAnimation) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.all(Radius.circular(SizeConfig.defaultSize)),
-              ),
-              content: const Text(
-                  "Do you want to keep or discard this AI result/definition?"),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                  },
-                  child: Text(
-                    'Keep',
-                    style: FONT_CONST.MEDIUM_DEFAULT_18,
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                  child: Text(
-                    'Discard',
-                    style: FONT_CONST.MEDIUM_DEFAULT_18,
-                  ),
-                ),
-              ],
-            );
-          },
-          transitionBuilder: (context, animation, secondaryAnimation, child) {
-            return BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: 4 * animation.value,
-                sigmaY: 4 * animation.value,
-              ),
-              child: FadeTransition(
-                opacity: animation,
-                child: child,
-              ),
-            );
-          },
-        ) ??
-        false;
   }
 }

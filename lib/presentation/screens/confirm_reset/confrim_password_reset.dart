@@ -1,6 +1,6 @@
 import 'package:vocab_app/constants/color_constant.dart';
-import 'package:vocab_app/presentation/screens/confirm_password_reset/widgets/confirmation_form.dart';
-import 'package:vocab_app/presentation/screens/confirm_password_reset/widgets/confirmation_header.dart';
+import 'package:vocab_app/presentation/screens/confirm_reset/widgets/confirmation_form.dart';
+import 'package:vocab_app/presentation/screens/confirm_reset/widgets/confirmation_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

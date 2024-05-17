@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
 class AIService {
-  late GenerativeModel _aiModel;
   String model = "gemini-pro";
   String apiKey = "AIzaSyAKOloyTWbkHgSRIlQHKKynKRyOKw6PxCU";
 
   Future<String> getAiResponse(TextEditingController word) async {
-    _aiModel = GenerativeModel(model: model, apiKey: apiKey);
+    GenerativeModel _aiModel = GenerativeModel(model: model, apiKey: apiKey);
 
+    await Future.delayed(const Duration(seconds: 1));
+    
     final content = [
       Content.text("Define ${word.text} in 100 characters or less")
     ];
@@ -29,7 +30,7 @@ class AIService {
     );
 
     if (response.text != null) {
-      return response.text!;
+      return "${response.text!}\n";
     }
     return "error";
   }

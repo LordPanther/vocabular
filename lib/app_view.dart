@@ -1,8 +1,8 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:vocab_app/presentation/common_blocs/app_settings/app_settings_bloc.dart';
-import 'package:vocab_app/presentation/common_blocs/app_settings/app_settings_state.dart';
+import 'package:vocab_app/presentation/common_blocs/settings/app_settings_bloc.dart';
+import 'package:vocab_app/presentation/common_blocs/settings/app_settings_state.dart';
 import 'package:vocab_app/presentation/common_blocs/application/application_bloc.dart';
 import 'package:vocab_app/presentation/common_blocs/application/application_event.dart';
 import 'package:vocab_app/presentation/common_blocs/application/application_state.dart';

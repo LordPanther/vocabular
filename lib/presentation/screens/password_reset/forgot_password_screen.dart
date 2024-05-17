@@ -1,7 +1,7 @@
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
-import 'package:vocab_app/presentation/screens/forgot_password/widgets/forgot_pass_form.dart';
-import 'package:vocab_app/presentation/screens/forgot_password/widgets/forgot_password_header.dart';
+import 'package:vocab_app/presentation/screens/password_reset/widgets/forgot_pass_form.dart';
+import 'package:vocab_app/presentation/screens/password_reset/widgets/forgot_password_header.dart';
 import 'package:vocab_app/utils/translate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

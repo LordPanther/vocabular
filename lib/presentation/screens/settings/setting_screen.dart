@@ -7,8 +7,8 @@ import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/repository/app_repository.dart';
 import 'package:vocab_app/data/repository/auth_repository/auth_repo.dart';
 import 'package:vocab_app/configs/config.dart';
-import 'package:vocab_app/presentation/common_blocs/app_settings/app_settings_bloc.dart';
-import 'package:vocab_app/presentation/common_blocs/app_settings/app_settings_event.dart';
+import 'package:vocab_app/presentation/common_blocs/settings/app_settings_bloc.dart';
+import 'package:vocab_app/presentation/common_blocs/settings/app_settings_event.dart';
 import 'package:vocab_app/presentation/screens/settings/settings_header.dart';
 import 'package:vocab_app/presentation/widgets/buttons/settings_button.dart';
 import 'package:vocab_app/utils/language.dart';
@@ -78,7 +78,7 @@ class _SettingScreenState extends State<SettingScreen> {
               show = !show!;
             });
             BlocProvider.of<AppSettingsBloc>(context)
-                .add(ShowHideRecentWord(show!));
+                .add(ChangeRecentWordSetting(show!));
           },
         ),
       ),

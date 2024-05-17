@@ -14,7 +14,7 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
     on<ChangeTheme>((event, emit) async {
       await _mapThemeChangedState(event, emit);
     });
-    on<ShowHideRecentWord>((event, emit) async {
+    on<ChangeRecentWordSetting>((event, emit) async {
       await _mapShowHideToState(event, emit);
     });
   }

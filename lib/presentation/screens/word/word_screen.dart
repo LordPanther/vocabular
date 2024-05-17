@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/data/models/word_model.dart';
-import 'package:vocab_app/presentation/screens/add_word/bloc/bloc.dart';
-import 'package:vocab_app/presentation/screens/add_word/widgets/word_body.dart';
-import 'package:vocab_app/presentation/screens/add_word/widgets/word_header.dart';
+import 'package:vocab_app/presentation/screens/word/bloc/bloc.dart';
+import 'package:vocab_app/presentation/screens/word/widgets/word_body.dart';
+import 'package:vocab_app/presentation/screens/word/widgets/word_header.dart';
 
 class WordScreen extends StatefulWidget {
   final WordModel? word;

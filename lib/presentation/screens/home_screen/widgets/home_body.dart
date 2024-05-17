@@ -10,7 +10,7 @@ import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/local/pref.dart';
 import 'package:vocab_app/data/repository/app_repository.dart';
 import 'package:vocab_app/data/repository/auth_repository/auth_repo.dart';
-import 'package:vocab_app/presentation/common_blocs/app_settings/bloc.dart';
+import 'package:vocab_app/presentation/common_blocs/settings/bloc.dart';
 import 'package:vocab_app/presentation/screens/home_screen/bloc/bloc.dart';
 import 'package:vocab_app/presentation/widgets/buttons/play_button.dart';
 import 'package:vocab_app/presentation/widgets/others/collection_tile.dart';

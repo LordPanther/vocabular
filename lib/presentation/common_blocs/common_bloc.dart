@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vocab_app/presentation/common_blocs/app_settings/app_settings_bloc.dart';
+import 'package:vocab_app/presentation/common_blocs/settings/app_settings_bloc.dart';
 import 'package:vocab_app/presentation/common_blocs/profile/profile_bloc.dart';
 
 import '../screens/verify_user/verify/verify_bloc.dart';
