@@ -15,6 +15,12 @@ class COLOR_CONST {
   static const activeColor = Color(0xFFF05959);
   static const dividerColor = Color(0x1F000000);
 
+  static const grey = Color(0xFFC0C0C0);
+  static const turquoise = Color(0xFF40E0D0);
+  static const mediumTurquoise = Color(0xFF48D1CC);
+  static const darkTurquoise = Color(0xFF00CED1);
+  static const lightSeaGreen = Color(0xFF20B2AA);
+
   ///Singleton factory
   static final COLOR_CONST _instance = COLOR_CONST._internal();
 

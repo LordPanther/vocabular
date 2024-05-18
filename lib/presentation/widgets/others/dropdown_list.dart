@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vocab_app/configs/config.dart';
+import 'package:vocab_app/configs/size_config.dart';
+import 'package:vocab_app/constants/color_constant.dart';
 
 class DropdownSelectionList extends StatefulWidget {
   final List<String?> items;
@@ -24,12 +26,16 @@ class _DropdownSelectionListState extends State<DropdownSelectionList> {
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
+      dropdownColor: COLOR_CONST.grey,
+      elevation: 6,
+      borderRadius: BorderRadius.circular(5),
+      alignment: Alignment.center,
       underline: Container(),
-      hint: Padding(
-        padding: EdgeInsets.only(right: SizeConfig.defaultSize * 3),
-        child: Text(widget.action),
+      hint: Text(widget.action),
+      icon: Padding(
+        padding: EdgeInsets.only(left: SizeConfig.defaultPadding),
+        child: const Icon(CupertinoIcons.chevron_down),
       ),
-      icon: const Icon(CupertinoIcons.chevron_down),
       value: selectedItem,
       onChanged: (String? newValue) {
         setState(() {

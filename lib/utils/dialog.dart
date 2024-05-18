@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:vocab_app/configs/router.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
@@ -171,6 +172,66 @@ class UtilDialog {
         );
       },
     );
+  }
+
+  static Future<bool> showCollectionRemoveDialog({
+    required BuildContext context,
+  }) async {
+    return await showGeneralDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          barrierLabel:
+              MaterialLocalizations.of(context).modalBarrierDismissLabel,
+          barrierColor: Colors.black.withOpacity(0.5),
+          transitionDuration: const Duration(milliseconds: 500),
+          pageBuilder: (BuildContext context, Animation<double> animation,
+              Animation<double> secondaryAnimation) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.all(Radius.circular(SizeConfig.defaultSize)),
+              ),
+              title: Text(
+                Translate.of(context).translate('confirm_remove_word'),
+                style: FONT_CONST.BOLD_DEFAULT_18,
+              ),
+              content: Text(Translate.of(context).translate('remove_word')),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Text(
+                    Translate.of(context).translate('no'),
+                    style: FONT_CONST.MEDIUM_DEFAULT_18,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Text(
+                    Translate.of(context).translate('yes'),
+                    style: FONT_CONST.MEDIUM_DEFAULT_18,
+                  ),
+                ),
+              ],
+            );
+          },
+          transitionBuilder: (context, animation, secondaryAnimation, child) {
+            return BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 4 * animation.value,
+                sigmaY: 4 * animation.value,
+              ),
+              child: FadeTransition(
+                opacity: animation,
+                child: child,
+              ),
+            );
+          },
+        ) ??
+        false;
   }
 
   static Future<bool> showRemoveDialog({

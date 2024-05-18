@@ -146,7 +146,7 @@ class _AddCollectionBodyState extends State<AddCollectionBody> {
 
   Widget _buildCollectionDropdown(List<String?> collections) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         DropdownSelectionList(
           action: Translate.of(context).translate("view_collections"),
@@ -170,7 +170,7 @@ class _AddCollectionBodyState extends State<AddCollectionBody> {
         ),
         CustomTextButton(
           onPressed: onAddCollection,
-          buttonName: Translate.of(context).translate('add_collection'),
+          buttonName: Translate.of(context).translate('collection'),
           buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
         ),
       ],
