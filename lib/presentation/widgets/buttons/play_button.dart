@@ -134,7 +134,7 @@ class _PlayButtonState extends State<PlayButton> {
                 decoration: BoxDecoration(
                   borderRadius:
                       BorderRadius.circular(SizeConfig.defaultSize * 2),
-                  color: COLOR_CONST.primaryColor.withOpacity(0.3),
+                  color: COLOR_CONST.primaryColor,
                 ),
                 child: const Icon(CupertinoIcons.volume_up),
               ));
@@ -144,7 +144,7 @@ class _PlayButtonState extends State<PlayButton> {
     return Column(
       children: [
         Slider(
-            activeColor: COLOR_CONST.primaryColor.withOpacity(0.3),
+            activeColor: COLOR_CONST.primaryColor,
             min: 0,
             max: _duration.inSeconds.toDouble(),
             value: _position.inSeconds.toDouble(),

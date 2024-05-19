@@ -66,6 +66,7 @@ class _CollectionTileState extends State<CollectionTile> {
         ),
         child: ExpansionTile(
           expansionAnimationStyle: AnimationStyle.noAnimation,
+          shape: const Border(),
           key: ValueKey(widget.key),
           childrenPadding: EdgeInsets.all(SizeConfig.defaultPadding),
           trailing: Text(

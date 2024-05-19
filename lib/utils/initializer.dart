@@ -1,16 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vocab_app/data/models/add_word_model.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/word_model.dart';
-import 'package:vocab_app/data/repository/app_repository.dart';
-import 'package:vocab_app/data/repository/auth_repository/auth_repo.dart';
 
-class Initializer {
-  final AuthRepository _authRepository = AppRepository.authRepository;
-
-  User? get user => _authRepository.currentUser;
-
-  Future<AddWordModel> instantiateModels(
+class WordsManager {
+  static Future<AddWordModel> instantiateModels(
     String? collection,
     String word,
     String definition,
@@ -32,7 +25,7 @@ class Initializer {
     return addWordModel;
   }
 
-  Future<WordModel> instantiateWordModel(
+  static Future<WordModel> instantiateWordModel(
     String collection,
     String word,
     String definition,
@@ -51,16 +44,17 @@ class Initializer {
     return wordModel;
   }
 
-  Future<CollectionModel> instantiateCollModel(String? collection) async {
+  static Future<CollectionModel> instantiateCollModel(
+      String? collection) async {
     var collectionModel = CollectionModel(name: collection);
     return collectionModel;
   }
 
   ///Singleton factory
-  static final Initializer _instance = Initializer._internal();
+  static final WordsManager _instance = WordsManager._internal();
 
-  factory Initializer() {
+  factory WordsManager() {
     return _instance;
   }
-  Initializer._internal();
+  WordsManager._internal();
 }

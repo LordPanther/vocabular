@@ -198,7 +198,7 @@ class _SearchScreenState extends State<SearchScreen> {
           right: SizeConfig.defaultSize,
         ),
         decoration: BoxDecoration(
-          color: COLOR_CONST.primaryColor.withOpacity(0.3).withOpacity(0.3),
+          color: COLOR_CONST.primaryColor.withOpacity(0.3),
           borderRadius: BorderRadius.circular(5),
         ),
         child: Text(

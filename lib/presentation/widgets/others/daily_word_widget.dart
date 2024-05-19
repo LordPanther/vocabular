@@ -55,7 +55,7 @@ class _DailyWordWidgetState extends State<DailyWordWidget> {
         width: 40,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: COLOR_CONST.primaryColor.withOpacity(0.3)),
+            color: COLOR_CONST.primaryColor),
         child: const Icon(
           CupertinoIcons.speaker_3_fill,
           color: COLOR_CONST.backgroundColor,

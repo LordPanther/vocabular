@@ -122,11 +122,9 @@ class _InitializeInfoFormState extends State<InitializeInfoForm> {
           labelStyle: const TextStyle(color: COLOR_CONST.textColor),
           // suffixIcon: const Icon(Icons.person_outline),
           focusedBorder: OutlineInputBorder(
-              borderSide:
-                  BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
+              borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
           enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: COLOR_CONST.primaryColor.withOpacity(0.3)))),
+              borderSide: BorderSide(color: COLOR_CONST.primaryColor))),
     );
   }
 
@@ -154,11 +152,9 @@ class _InitializeInfoFormState extends State<InitializeInfoForm> {
           labelStyle: const TextStyle(color: COLOR_CONST.textColor),
           // suffixIcon: const Icon(Icons.person_outline),
           focusedBorder: OutlineInputBorder(
-              borderSide:
-                  BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
+              borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
           enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: COLOR_CONST.primaryColor.withOpacity(0.3)))),
+              borderSide: BorderSide(color: COLOR_CONST.primaryColor))),
     );
   }
 

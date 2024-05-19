@@ -17,7 +17,7 @@ class CircularVolumeIcon extends StatelessWidget {
       height: SizeConfig.defaultSize * 4,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: COLOR_CONST.primaryColor.withOpacity(0.3),
+        color: COLOR_CONST.primaryColor,
       ),
       child: Center(
         child: Icon(

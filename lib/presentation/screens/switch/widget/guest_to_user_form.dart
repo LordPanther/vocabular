@@ -160,11 +160,9 @@ class _GuestToUserFormState extends State<GuestToUserForm> {
         labelStyle: const TextStyle(color: COLOR_CONST.textColor),
         labelText: Translate.of(context).translate('email'),
         focusedBorder: OutlineInputBorder(
-            borderSide:
-                BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
+            borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
         enabledBorder: OutlineInputBorder(
-            borderSide:
-                BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
+            borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
         // suffixIcon: Icon(Icons.email_outlined),
       ),
     );
@@ -205,11 +203,9 @@ class _GuestToUserFormState extends State<GuestToUserForm> {
           },
         ),
         focusedBorder: OutlineInputBorder(
-            borderSide:
-                BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
+            borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
         enabledBorder: OutlineInputBorder(
-            borderSide:
-                BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
+            borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
       ),
     );
   }
@@ -252,11 +248,9 @@ class _GuestToUserFormState extends State<GuestToUserForm> {
           },
         ),
         focusedBorder: OutlineInputBorder(
-            borderSide:
-                BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
+            borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
         enabledBorder: OutlineInputBorder(
-            borderSide:
-                BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
+            borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
       ),
     );
   }

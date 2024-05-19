@@ -59,7 +59,7 @@ class AppTheme {
     appBarTheme: _appBarTheme,
     textTheme: _textTheme,
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: COLOR_CONST.primaryColor.withOpacity(0.3),
+      backgroundColor: COLOR_CONST.primaryColor,
     ),
     visualDensity: VisualDensity.adaptivePlatformDensity,
     inputDecorationTheme: _inputDecorationThem,

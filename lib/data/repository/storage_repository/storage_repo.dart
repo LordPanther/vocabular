@@ -25,6 +25,13 @@ class StorageRepository {
     return downloadURL;
   }
 
+  Future<String> uploadAudioFile(String storagePath, File file) async {
+    var taskSnapshot = await storage.ref(storagePath).putFile(file);
+
+    String downloadURL = await taskSnapshot.ref.getDownloadURL();
+    return downloadURL;
+  }
+
   ///Singleton factory
   static final StorageRepository _instance = StorageRepository._internal();
 

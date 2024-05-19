@@ -6,14 +6,14 @@ class AIService {
   String apiKey = "AIzaSyAKOloyTWbkHgSRIlQHKKynKRyOKw6PxCU";
 
   Future<String> getAiResponse(TextEditingController word) async {
-    GenerativeModel _aiModel = GenerativeModel(model: model, apiKey: apiKey);
+    GenerativeModel aiModel = GenerativeModel(model: model, apiKey: apiKey);
 
     await Future.delayed(const Duration(seconds: 1));
 
     final content = [
       Content.text("Define ${word.text} in 100 characters or less")
     ];
-    var response = await _aiModel.generateContent(
+    var response = await aiModel.generateContent(
       content,
       generationConfig: GenerationConfig(
         candidateCount: 1,

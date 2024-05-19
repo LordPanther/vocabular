@@ -204,7 +204,7 @@ class _NewPasswordFormState extends State<NewPasswordForm> {
     return DefaultButton(
       onPressed: onResetPassword,
       backgroundColor: isResetPasswordButtonEnabled()
-          ? COLOR_CONST.primaryColor.withOpacity(0.3)
+          ? COLOR_CONST.primaryColor
           : COLOR_CONST.cardShadowColor,
       child: Text(
         Translate.of(context).translate('reset_password').toUpperCase(),

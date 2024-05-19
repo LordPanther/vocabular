@@ -4,40 +4,43 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:vocab_app/constants/audio_const.dart';
 import 'package:vocab_app/data/local/pref.dart';
 import 'package:vocab_app/data/models/add_word_model.dart';
 import 'package:vocab_app/data/models/models.dart';
+import 'package:vocab_app/data/repository/app_repository.dart';
 import 'package:vocab_app/data/repository/home_repository/home_repo.dart';
-import 'package:vocab_app/utils/collection_data.dart';
+import 'package:vocab_app/data/repository/storage_repository/storage_repo.dart';
+import 'package:vocab_app/utils/utils.dart';
 
 class FirebaseHomeRepository implements HomeRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final StorageRepository _storageRepository = AppRepository.storageRepository;
   final _userHome = FirebaseFirestore.instance;
-  String get userType =>
-      _firebaseAuth.currentUser!.isAnonymous ? "vocabguests" : "vocabusers";
   User get user => _firebaseAuth.currentUser!;
   Future<List<List<String>>> get recentWords => getList();
+  final AudioManager _audioManager = AudioManager();
+  String get userType =>
+      _firebaseAuth.currentUser!.isAnonymous ? "vocabguests" : "vocabusers";
 
   /// [FirebaseAuthRepository]
   /// Called once on registration to create collections:[defaultcollections]
   @override
   Future<void> createDefaultCollection() async {
-    var word = const AddWordModel(
-      word: WordModel(
-        id: "default",
-        word: "Vocabular",
-        definition:
-            "The worlds best app for all those words you use everyday, everywhere.",
-        audioUrl: "",
-        timeStamp: "0000",
-        isShared: true,
-      ),
-      collection: CollectionModel(name: "default"),
+    var audioUrl =
+        await _audioManager.uploadDefaultAudio(user, AUDIO_CONST.defaultAudio);
+    var vocabular = await WordsManager.instantiateModels(
+      "default",
+      "Vocabular",
+      "The worlds best app for all those words you use everyday, everywhere.",
+      audioUrl,
+      "0000",
+      true,
     );
 
     try {
       // Create default collection
-      await addWord(word.word);
+      await addWord(vocabular.word);
     } catch (error) {
       if (kDebugMode) {
         print(error);
@@ -87,7 +90,7 @@ class FirebaseHomeRepository implements HomeRepository {
       if (!user.isAnonymous) {
         await updateRecentWordCache(word);
       }
-    } catch (error) {
+    } on Exception catch (error) {
       if (kDebugMode) {
         print(error);
       }

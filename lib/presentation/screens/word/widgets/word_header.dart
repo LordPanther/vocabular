@@ -15,7 +15,7 @@ class WordHeader extends StatelessWidget {
         right: SizeConfig.defaultSize * 1.5,
         left: SizeConfig.defaultSize * 1.5,
       ),
-      // color: COLOR_CONST.primaryColor.withOpacity(0.3),
+      // color: COLOR_CONST.primaryColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

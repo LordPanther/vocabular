@@ -62,12 +62,11 @@ class UtilDialog {
                     labelStyle: const TextStyle(color: COLOR_CONST.textColor),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: COLOR_CONST.primaryColor.withOpacity(0.3),
+                        color: COLOR_CONST.primaryColor,
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: COLOR_CONST.primaryColor.withOpacity(0.3)),
+                      borderSide: BorderSide(color: COLOR_CONST.primaryColor),
                     ),
                   ),
                 ),
@@ -79,12 +78,11 @@ class UtilDialog {
                     labelStyle: const TextStyle(color: COLOR_CONST.textColor),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: COLOR_CONST.primaryColor.withOpacity(0.3),
+                        color: COLOR_CONST.primaryColor,
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: COLOR_CONST.primaryColor.withOpacity(0.3)),
+                      borderSide: BorderSide(color: COLOR_CONST.primaryColor),
                     ),
                   ),
                 ),
@@ -96,12 +94,11 @@ class UtilDialog {
                     labelStyle: const TextStyle(color: COLOR_CONST.textColor),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: COLOR_CONST.primaryColor.withOpacity(0.3),
+                        color: COLOR_CONST.primaryColor,
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: COLOR_CONST.primaryColor.withOpacity(0.3)),
+                      borderSide: BorderSide(color: COLOR_CONST.primaryColor),
                     ),
                   ),
                 ),
@@ -113,12 +110,11 @@ class UtilDialog {
                     labelStyle: const TextStyle(color: COLOR_CONST.textColor),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                        color: COLOR_CONST.primaryColor.withOpacity(0.3),
+                        color: COLOR_CONST.primaryColor,
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: COLOR_CONST.primaryColor.withOpacity(0.3)),
+                      borderSide: BorderSide(color: COLOR_CONST.primaryColor),
                     ),
                   ),
                 ),
@@ -570,8 +566,8 @@ class UtilDialog {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (isAnonymous)
-                if (word.audioUrl!.isNotEmpty || word.audioUrl != null)
+              if (!isAnonymous)
+                if (word.audioUrl!.isNotEmpty)
                   PlayButton(
                     audioUrl: word.audioUrl!,
                     playMode: "audio",

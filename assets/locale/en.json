@@ -83,7 +83,7 @@
   "add_new_collection": "Add New Collection...",
   "word_added": "Word added...",
   "word_checker": "Please add a word first...",
-  "definition_checker": "Please add a definition first...",
+  "definition_checker": "Please add text/audio definition first...",
   "collection_checker": "Please select collection first...",
   "view_collections": "View your collections",
   "enter_collection": "Please enter collection first...",
@@ -125,5 +125,6 @@
   "update_user": "Update Details",
   "update": "Update",
   "recent_word": "Show Recent Word",
-  "update_word": "Update"
+  "update_word": "Update",
+  "ai_checker": "Please close AI then continue"
 }

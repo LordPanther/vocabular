@@ -22,6 +22,7 @@ import 'package:vocab_app/utils/dialog.dart';
 import 'package:vocab_app/utils/initializer.dart';
 import 'package:vocab_app/presentation/widgets/others/my_text_field.dart';
 import 'package:vocab_app/presentation/widgets/others/snackbar.dart';
+import 'package:vocab_app/utils/snack_content.dart';
 import 'package:vocab_app/utils/translate.dart';
 
 class WordBody extends StatefulWidget {
@@ -38,11 +39,9 @@ class _WordBodyState extends State<WordBody> {
   late WordModel oldWord;
   late CollectionModel collection;
   final AIService aiService = AIService();
-  Initializer initializer = Initializer();
   final AudioManager audioManager = AudioManager();
   final recordButtonState = GlobalKey<RecordButtonState>();
   final AuthRepository _authRepository = AppRepository.authRepository;
-  final StorageRepository _storageRepository = AppRepository.storageRepository;
 
   // Controllers/word
   late TextEditingController _word;
@@ -89,20 +88,31 @@ class _WordBodyState extends State<WordBody> {
   }
 
   void _onAddWord() async {
-    String? timeStamp = "${DateTime.now().millisecondsSinceEpoch}";
+    if (_isGenerating) {
+      SnackContent.getGeneratorError(context);
+      return;
+    }
+    if (!isWordPopulated) {
+      SnackContent.getWordError(context);
+      return;
+    }
+    if (!isDefinitionPopulated && !isAudioRecorded) {
+      SnackContent.getDefinitionError(context);
+      return;
+    }
+    if (!isCollectionPopulated) {
+      SnackContent.getCollectionError(context);
+      return;
+    }
 
-    if (isWordPopulated && isCollectionPopulated) {
-      if (_audioUrl.isNotEmpty) {
-        var storagePath = await audioManager.storageData(user!, timeStamp);
-        if (recordButtonState.currentState!.fileData != null) {
-          _audioUrl = await _storageRepository.uploadAudioData(
-            storagePath,
-            recordButtonState.currentState!.fileData!,
-          );
-        }
+    String timeStamp = "${DateTime.now().millisecondsSinceEpoch}";
+    try {
+      if (isAudioRecorded) {
+        _audioUrl =
+            await audioManager.uploadAudioData(user, timeStamp, _audioUrl);
       }
 
-      var newWord = await initializer.instantiateModels(
+      var newWord = await WordsManager.instantiateModels(
         _collection,
         _word.text,
         _definition.text,
@@ -114,33 +124,23 @@ class _WordBodyState extends State<WordBody> {
       if (_isEditing) {
         wordBloc.add(UpdateWord(updatedWord: newWord, oldWord: oldWord));
       } else {
-        wordBloc.add(
-          AddWord(word: newWord, isEditing: _isEditing),
-        );
+        wordBloc.add(AddWord(word: newWord, isEditing: _isEditing));
       }
 
-      final tempFile = File(recordButtonState.currentState!.path!);
-      if (tempFile.existsSync()) {
-        tempFile.deleteSync();
-      }
-    } else {
-      if (!isWordPopulated) {
-        UtilSnackBar.showSnackBarContent(context,
-            content: Translate.of(context).translate("word_checker"));
-      }
-      if (!isDefinitionPopulated) {
-        UtilSnackBar.showSnackBarContent(context,
-            content: Translate.of(context).translate("definition_checker"));
-      }
-      if (_collection == null) {
-        UtilSnackBar.showSnackBarContent(context,
-            content: Translate.of(context).translate("collection_checker"));
-      }
+      _cleanupRecordingFile();
+    } catch (e) {
+      UtilDialog.showInformation(context, content: e.toString());
+    }
+  }
+
+  void _cleanupRecordingFile() {
+    final tempFile = File(recordButtonState.currentState?.path ?? '');
+    if (tempFile.existsSync()) {
+      tempFile.deleteSync();
     }
   }
 
   void fetchAiResponse() async {
-    String response = "";
     if (!isWordPopulated) {
       UtilSnackBar.showSnackBarContent(context,
           content: "Please enter a word first...");
@@ -152,42 +152,34 @@ class _WordBodyState extends State<WordBody> {
         _isGenerating = true;
       });
 
-      // Fetch the AI response asynchronously
-      response = await aiService.getAiResponse(_word);
+      String response = await aiService.getAiResponse(_word);
 
-      // Update the state with the received response
       if (response == "error") {
-        setState(() {
-          _definition =
-              TextEditingController(text: "Gemini could not generate response");
-          _isGenerating = false;
-        });
+        _definition.text = "Gemini could not generate response";
       } else {
-        setState(() {
-          _definition = TextEditingController(text: response);
-        });
+        _definition.text = response;
       }
+
+      setState(() {
+        _isGenerating = false;
+      });
     } else {
       bool keepRecording =
           await UtilDialog.showKeepDiscardDialog(context: context);
       if (!keepRecording) {
         _definition.clear();
-        setState(() {
-          _isGenerating = false;
-        });
-      } else {
-        setState(() {
-          _isGenerating = false;
-        });
       }
+      setState(() {
+        _isGenerating = false;
+      });
     }
   }
 
   @override
   void dispose() {
-    super.dispose();
     _word.dispose();
     _definition.dispose();
+    super.dispose();
   }
 
   @override
@@ -282,12 +274,11 @@ class _WordBodyState extends State<WordBody> {
         labelStyle: const TextStyle(color: COLOR_CONST.textColor),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: COLOR_CONST.primaryColor.withOpacity(0.3),
+            color: COLOR_CONST.primaryColor,
           ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide:
-              BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3)),
+          borderSide: BorderSide(color: COLOR_CONST.primaryColor),
         ),
       ),
     );
@@ -391,9 +382,7 @@ class _WordBodyState extends State<WordBody> {
           buttonStyle: FONT_CONST.MEDIUM_DEFAULT_18,
         ),
         CustomTextButton(
-          onPressed: () {
-            _onAddWord();
-          },
+          onPressed: _onAddWord,
           buttonName: _isEditing
               ? Translate.of(context).translate('update_word')
               : Translate.of(context).translate('add_word'),

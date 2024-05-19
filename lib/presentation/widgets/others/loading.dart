@@ -13,8 +13,8 @@ class Loading extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           child: Center(
             child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                  COLOR_CONST.primaryColor.withOpacity(0.3)),
+              valueColor:
+                  AlwaysStoppedAnimation<Color>(COLOR_CONST.primaryColor),
             ),
           ),
         ),

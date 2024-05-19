@@ -189,11 +189,9 @@ class _LoginFormState extends State<LoginForm> {
           labelStyle: const TextStyle(color: COLOR_CONST.textColor),
           // prefixIcon: const Icon(Icons.email_outlined, color: Colors.white),
           focusedBorder: OutlineInputBorder(
-              borderSide:
-                  BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
+              borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
           enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: COLOR_CONST.primaryColor.withOpacity(0.3)))),
+              borderSide: BorderSide(color: COLOR_CONST.primaryColor))),
     );
   }
 
@@ -222,7 +220,7 @@ class _LoginFormState extends State<LoginForm> {
           suffixIcon: IconButton(
             icon: _isShowPassword
                 ? Icon(Icons.visibility_outlined,
-                    color: COLOR_CONST.primaryColor.withOpacity(0.3),
+                    color: COLOR_CONST.primaryColor,
                     size: SizeConfig.defaultSize * 2)
                 : Icon(Icons.visibility_off_outlined,
                     color: COLOR_CONST.textColor,
@@ -232,11 +230,9 @@ class _LoginFormState extends State<LoginForm> {
             },
           ),
           focusedBorder: OutlineInputBorder(
-              borderSide:
-                  BorderSide(color: COLOR_CONST.primaryColor.withOpacity(0.3))),
+              borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
           enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: COLOR_CONST.primaryColor.withOpacity(0.3)))),
+              borderSide: BorderSide(color: COLOR_CONST.primaryColor))),
     );
   }
 

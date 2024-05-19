@@ -139,7 +139,7 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
     return DefaultButton(
       onPressed: onSendResetEmail,
       backgroundColor: isSendResetEmailButtonEnabled()
-          ? COLOR_CONST.primaryColor.withOpacity(0.3)
+          ? COLOR_CONST.primaryColor
           : COLOR_CONST.cardShadowColor,
       child: Text(
         Translate.of(context).translate('confirm_email').toUpperCase(),

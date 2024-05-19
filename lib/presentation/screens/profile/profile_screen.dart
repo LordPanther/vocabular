@@ -235,17 +235,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
           width: SizeConfig.defaultSize * 15,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(
-                color: COLOR_CONST.primaryColor.withOpacity(0.3), width: 2),
+            border: Border.all(color: COLOR_CONST.primaryColor, width: 2),
           ),
           child: CircleAvatar(
-              backgroundImage: _authRepository.currentUser.isAnonymous
-                  ? const AssetImage(IMAGE_CONST.DEFAULT_AVATAR)
-                      as ImageProvider<Object>
-                  : loggedUser.avatar!.contains("assets")
-                      ? const AssetImage(IMAGE_CONST.DEFAULT_AVATAR)
-                          as ImageProvider<Object>
-                      : NetworkImage(loggedUser.avatar!)),
+            backgroundImage: user!.isAnonymous
+                ? const AssetImage(IMAGE_CONST.DEFAULT_AVATAR)
+                    as ImageProvider<Object>
+                : loggedUser.avatar!.isNotEmpty
+                    ? NetworkImage(loggedUser.avatar!)
+                    : const AssetImage(IMAGE_CONST.DEFAULT_AVATAR)
+                        as ImageProvider<Object>,
+          ),
         ),
         if (loggedUser.email != null)
           Positioned(
