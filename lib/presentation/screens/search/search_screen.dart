@@ -156,7 +156,7 @@ class _SearchScreenState extends State<SearchScreen> {
               UtilDialog.showWordDetails(context,
                   tooltip: "Add audio recording",
                   word: words[index],
-                  user: _authRepository);
+                  isAnonymous: _authRepository.isAnonymous);
             },
           );
         },

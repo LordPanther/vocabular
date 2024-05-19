@@ -3,7 +3,9 @@ import 'package:vocab_app/data/models/user_model.dart';
 
 abstract class AuthRepository {
   User get currentUser;
+  bool get isAnonymous;
   String get authException;
+  String get userId;
 
   Future<void> signUp(UserModel newUser, String password);
 

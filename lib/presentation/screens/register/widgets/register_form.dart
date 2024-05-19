@@ -5,7 +5,7 @@ import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/user_model.dart';
 import 'package:vocab_app/presentation/widgets/buttons/text_button.dart';
 import 'package:vocab_app/utils/dialog.dart';
-import 'package:vocab_app/utils/snackbar.dart';
+import 'package:vocab_app/presentation/widgets/others/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';

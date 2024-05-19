@@ -1,4 +1,10 @@
-export 'validator.dart';
+export 'audio_manager.dart';
+export 'collection_data.dart';
 export 'dialog.dart';
+export 'formatter.dart';
+export 'home_data.dart';
+export 'initializer.dart';
+export 'validator.dart';
 export 'translate.dart';
 export 'language.dart';
+export 'logger.dart';

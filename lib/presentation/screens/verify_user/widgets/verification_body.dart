@@ -7,7 +7,7 @@ import 'package:vocab_app/presentation/screens/verify_user/verify/verify_event.d
 import 'package:vocab_app/presentation/screens/verify_user/verify/verify_state.dart';
 import 'package:vocab_app/presentation/widgets/buttons/text_button.dart';
 import 'package:vocab_app/utils/dialog.dart';
-import 'package:vocab_app/utils/snackbar.dart';
+import 'package:vocab_app/presentation/widgets/others/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -27,9 +27,13 @@ class FirebaseAuthRepository extends AuthRepository {
   ///User dits
   @override
   User get currentUser => _firebaseAuth.currentUser!;
+
+  @override
   String get userId => currentUser.uid;
+
+  @override
   bool get isAnonymous => _firebaseAuth.currentUser!.isAnonymous;
-  String get avatar => currentUser.photoURL!;
+  // String get avatar => currentUser.photoURL!;
 
   @override
   String get authException => _authException;

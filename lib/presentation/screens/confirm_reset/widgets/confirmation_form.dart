@@ -2,7 +2,7 @@ import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/presentation/widgets/buttons/default_button.dart';
 import 'package:vocab_app/utils/dialog.dart';
-import 'package:vocab_app/utils/snackbar.dart';
+import 'package:vocab_app/presentation/widgets/others/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

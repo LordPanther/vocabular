@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
-import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,8 +20,8 @@ import 'package:vocab_app/presentation/widgets/others/loading.dart';
 import 'package:vocab_app/utils/audio_manager.dart';
 import 'package:vocab_app/utils/dialog.dart';
 import 'package:vocab_app/utils/initializer.dart';
-import 'package:vocab_app/utils/my_text_field.dart';
-import 'package:vocab_app/utils/snackbar.dart';
+import 'package:vocab_app/presentation/widgets/others/my_text_field.dart';
+import 'package:vocab_app/presentation/widgets/others/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
 
 class WordBody extends StatefulWidget {
@@ -34,14 +33,14 @@ class WordBody extends StatefulWidget {
 }
 
 class _WordBodyState extends State<WordBody> {
-  final recordButtonState = GlobalKey<RecordButtonState>();
-  final AIService aiService = AIService();
-  final AudioManager audioManager = AudioManager();
-  Initializer initializer = Initializer();
   late WordBloc wordBloc;
   late WordModel word;
   late WordModel oldWord;
   late CollectionModel collection;
+  final AIService aiService = AIService();
+  Initializer initializer = Initializer();
+  final AudioManager audioManager = AudioManager();
+  final recordButtonState = GlobalKey<RecordButtonState>();
   final AuthRepository _authRepository = AppRepository.authRepository;
   final StorageRepository _storageRepository = AppRepository.storageRepository;
 
@@ -71,7 +70,7 @@ class _WordBodyState extends State<WordBody> {
         id: widget.word!.id,
         definition: widget.word!.definition,
         word: widget.word!.word,
-        audioUrl: widget.word!.audioUrl,
+        audioUrl: widget.word!.audioUrl ?? "",
       );
 
       oldWord = word;
@@ -88,8 +87,6 @@ class _WordBodyState extends State<WordBody> {
 
     wordBloc = BlocProvider.of<WordBloc>(context);
   }
-
-  
 
   void _onAddWord() async {
     String? timeStamp = "${DateTime.now().millisecondsSinceEpoch}";

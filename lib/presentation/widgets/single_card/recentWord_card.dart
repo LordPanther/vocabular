@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:vocab_app/configs/config.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/constants.dart';
-import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/presentation/widgets/buttons/play_button.dart';
 import 'package:vocab_app/utils/formatter.dart';

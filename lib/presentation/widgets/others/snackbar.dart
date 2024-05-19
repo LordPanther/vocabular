@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../configs/config.dart';
+import '../../../configs/config.dart';
 
 class UtilSnackBar {
   static showSnackBarContent(BuildContext context, {String? content}) {

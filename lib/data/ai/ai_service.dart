@@ -9,7 +9,7 @@ class AIService {
     GenerativeModel _aiModel = GenerativeModel(model: model, apiKey: apiKey);
 
     await Future.delayed(const Duration(seconds: 1));
-    
+
     final content = [
       Content.text("Define ${word.text} in 100 characters or less")
     ];
@@ -34,4 +34,11 @@ class AIService {
     }
     return "error";
   }
+
+  static final AIService _instance = AIService._internal();
+
+  factory AIService() {
+    return _instance;
+  }
+  AIService._internal();
 }

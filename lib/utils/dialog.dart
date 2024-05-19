@@ -13,7 +13,7 @@ import 'package:vocab_app/presentation/common_blocs/profile/profile_state.dart';
 import 'package:vocab_app/presentation/widgets/buttons/play_button.dart';
 import 'package:vocab_app/presentation/widgets/buttons/volume_icon.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
-import 'package:vocab_app/utils/snackbar.dart';
+import 'package:vocab_app/presentation/widgets/others/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
 import 'package:flutter/material.dart';
 
@@ -550,7 +550,7 @@ class UtilDialog {
     BuildContext context, {
     required String? tooltip,
     required WordModel word,
-    required AuthRepository user,
+    required bool isAnonymous,
     Function()? onEditWord,
   }) {
     showGeneralDialog(
@@ -570,7 +570,7 @@ class UtilDialog {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (!user.currentUser.isAnonymous)
+              if (isAnonymous)
                 if (word.audioUrl!.isNotEmpty || word.audioUrl != null)
                   PlayButton(
                     audioUrl: word.audioUrl!,

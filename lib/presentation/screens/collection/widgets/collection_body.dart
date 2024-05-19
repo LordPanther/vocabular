@@ -12,7 +12,7 @@ import 'package:vocab_app/presentation/widgets/buttons/text_button.dart';
 import 'package:vocab_app/presentation/widgets/others/dropdown_list.dart';
 import 'package:vocab_app/presentation/widgets/others/loading.dart';
 import 'package:vocab_app/utils/dialog.dart';
-import 'package:vocab_app/utils/snackbar.dart';
+import 'package:vocab_app/presentation/widgets/others/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
 
 class AddCollectionBody extends StatefulWidget {

@@ -17,7 +17,7 @@ import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/constants/image_constant.dart';
 import 'package:vocab_app/presentation/widgets/buttons/play_button.dart';
-import 'package:vocab_app/utils/snackbar.dart';
+import 'package:vocab_app/presentation/widgets/others/snackbar.dart';
 import 'package:vocab_app/utils/utils.dart';
 
 class RecordButton extends StatefulWidget {

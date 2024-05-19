@@ -29,7 +29,9 @@ class _WordTileState extends State<WordTile> {
     }
 
     try {
-      _audioUrl = widget.word.audioUrl!;
+      if (widget.word.audioUrl != null || widget.word.audioUrl!.isNotEmpty) {
+        _audioUrl = widget.word.audioUrl!;
+      }
     } catch (e) {
       _audioUrl;
     }
@@ -38,7 +40,7 @@ class _WordTileState extends State<WordTile> {
   void onViewWord() async {
     UtilDialog.showWordDetails(
       context,
-      user: _authRepository,
+      isAnonymous: _authRepository.isAnonymous,
       word: widget.word,
       tooltip: "Add audio definition",
       onEditWord: onAddRecording,

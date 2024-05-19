@@ -25,9 +25,10 @@ class FirebaseHomeRepository implements HomeRepository {
     var word = const AddWordModel(
       word: WordModel(
         id: "default",
-        word: "vocabular",
+        word: "Vocabular",
         definition:
             "The worlds best app for all those words you use everyday, everywhere.",
+        audioUrl: "",
         timeStamp: "0000",
         isShared: true,
       ),

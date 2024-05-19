@@ -10,7 +10,7 @@ import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/presentation/screens/home_screen/bloc/bloc.dart';
 import 'package:vocab_app/presentation/widgets/others/word_tile.dart';
 import 'package:vocab_app/utils/dialog.dart';
-import 'package:vocab_app/utils/snackbar.dart';
+import 'package:vocab_app/presentation/widgets/others/snackbar.dart';
 import 'package:vocab_app/utils/translate.dart';
 
 class CollectionTile extends StatefulWidget {
