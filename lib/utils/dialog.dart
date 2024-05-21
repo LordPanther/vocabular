@@ -595,7 +595,9 @@ class UtilDialog {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
-                  child: Text(word.definition!, softWrap: true),
+                  child: word.definition!.isNotEmpty
+                      ? Text(word.definition!, softWrap: true)
+                      : const SizedBox.shrink(),
                 ),
                 SizedBox(height: SizeConfig.defaultSize * 5),
                 GestureDetector(

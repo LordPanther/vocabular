@@ -89,25 +89,25 @@ class _WordBodyState extends State<WordBody> {
 
   void _onAddWord() async {
     if (_isGenerating) {
-      SnackContent.getGeneratorError(context);
+      SnackContent.showCheckFlag(context, "ai_checker");
       return;
     }
     if (!isWordPopulated) {
-      SnackContent.getWordError(context);
+      SnackContent.showCheckFlag(context, "word_checker");
       return;
     }
     if (!isDefinitionPopulated && !isAudioRecorded) {
-      SnackContent.getDefinitionError(context);
+      SnackContent.showCheckFlag(context, "definition_checker");
       return;
     }
     if (!isCollectionPopulated) {
-      SnackContent.getCollectionError(context);
+      SnackContent.showCheckFlag(context, "collection_checker");
       return;
     }
 
     String timeStamp = "${DateTime.now().millisecondsSinceEpoch}";
     try {
-      if (isAudioRecorded) {
+      if (recordButtonState.currentState!.path != null) {
         _audioUrl =
             await audioManager.uploadAudioData(user, timeStamp, _audioUrl);
       }
@@ -128,8 +128,8 @@ class _WordBodyState extends State<WordBody> {
       }
 
       _cleanupRecordingFile();
-    } catch (e) {
-      UtilDialog.showInformation(context, content: e.toString());
+    } on Exception catch (error) {
+      UtilDialog.showInformation(context, content: error.toString());
     }
   }
 
@@ -142,8 +142,7 @@ class _WordBodyState extends State<WordBody> {
 
   void fetchAiResponse() async {
     if (!isWordPopulated) {
-      UtilSnackBar.showSnackBarContent(context,
-          content: "Please enter a word first...");
+      SnackContent.showCheckFlag(context, "word_checker");
       return;
     }
 
@@ -159,10 +158,6 @@ class _WordBodyState extends State<WordBody> {
       } else {
         _definition.text = response;
       }
-
-      setState(() {
-        _isGenerating = false;
-      });
     } else {
       bool keepRecording =
           await UtilDialog.showKeepDiscardDialog(context: context);
@@ -272,12 +267,12 @@ class _WordBodyState extends State<WordBody> {
       decoration: InputDecoration(
         labelText: Translate.of(context).translate('word'),
         labelStyle: const TextStyle(color: COLOR_CONST.textColor),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(
             color: COLOR_CONST.primaryColor,
           ),
         ),
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: COLOR_CONST.primaryColor),
         ),
       ),
@@ -318,6 +313,8 @@ class _WordBodyState extends State<WordBody> {
                           isRecording: (bool value) {
                             setState(() {
                               _isRecording = value;
+                              _audioUrl =
+                                  recordButtonState.currentState!.path ?? "";
                             });
                           },
                         ),

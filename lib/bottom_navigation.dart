@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
-import 'package:vocab_app/presentation/screens/word/word_screen.dart';
-import 'package:vocab_app/presentation/screens/home_screen/home_screen.dart';
+import 'package:vocab_app/presentation/screens/activity/activity_screen.dart';
+import 'package:vocab_app/presentation/screens/home/home_screen.dart';
 import 'package:vocab_app/presentation/screens/settings/setting_screen.dart';
 import 'package:vocab_app/utils/translate.dart';
 
@@ -44,12 +44,13 @@ class _BottomNavigationState extends State<BottomNavigation>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: IndexedStack(
         index: selectedIndex,
         children: const [
           SettingScreen(),
           HomeScreen(),
-          WordScreen(),
+          ActivityScreen(),
         ],
       ),
       bottomNavigationBar: Padding(
@@ -72,17 +73,16 @@ class _BottomNavigationState extends State<BottomNavigation>
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.add,
+                Icons.local_activity_outlined,
                 size: SizeConfig.defaultIconSize,
               ),
-              label: Translate.of(context).translate('add'),
+              label: Translate.of(context).translate('Activity'),
             ),
           ],
+          backgroundColor: Colors.transparent,
           selectedLabelStyle: FONT_CONST.BOLD_DEFAULT,
           selectedItemColor: COLOR_CONST.primaryColor,
-          backgroundColor: COLOR_CONST.backgroundColor,
           elevation: 0,
-          // unselectedFontSize: SizeConfig.defaultSize * 1.2,
           currentIndex: selectedIndex,
           onTap: onItemTapped,
         ),

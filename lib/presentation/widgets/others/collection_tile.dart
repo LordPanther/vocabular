@@ -7,7 +7,7 @@ import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/word_model.dart';
-import 'package:vocab_app/presentation/screens/home_screen/bloc/bloc.dart';
+import 'package:vocab_app/presentation/screens/home/bloc/bloc.dart';
 import 'package:vocab_app/presentation/widgets/others/word_tile.dart';
 import 'package:vocab_app/utils/dialog.dart';
 import 'package:vocab_app/presentation/widgets/others/snackbar.dart';
@@ -32,6 +32,7 @@ class CollectionTile extends StatefulWidget {
 class _CollectionTileState extends State<CollectionTile> {
   late CollectionModel _collection;
   final List<WordModel> _words = [];
+  bool _isSelected = false;
 
   @override
   void initState() {
@@ -58,7 +59,7 @@ class _CollectionTileState extends State<CollectionTile> {
         bottom: SizeConfig.defaultSize * 1.5,
       ),
       child: Card(
-        color: COLOR_CONST.primaryColor,
+        color: COLOR_CONST.grey,
         elevation: SizeConfig.defaultSize * .5,
         shape: RoundedRectangleBorder(
           // Set rounded borders
@@ -69,6 +70,10 @@ class _CollectionTileState extends State<CollectionTile> {
           shape: const Border(),
           key: ValueKey(widget.key),
           childrenPadding: EdgeInsets.all(SizeConfig.defaultPadding),
+          title: Text(
+            _collection.name![0].toUpperCase() + _collection.name!.substring(1),
+            style: FONT_CONST.MEDIUM_DEFAULT_18,
+          ),
           trailing: Text(
               _words.length > 1
                   ? '${_words.length} words'
@@ -76,10 +81,6 @@ class _CollectionTileState extends State<CollectionTile> {
                       ? '1 word'
                       : '',
               style: FONT_CONST.REGULAR_DEFAULT_16),
-          title: Text(
-              _collection.name![0].toUpperCase() +
-                  _collection.name!.substring(1),
-              style: FONT_CONST.MEDIUM_DEFAULT_18),
           children: _buildWordsList(_words, _collection),
         ),
       ),

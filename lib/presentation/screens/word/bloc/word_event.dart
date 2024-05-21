@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:vocab_app/data/models/add_word_model.dart';
+import 'package:vocab_app/data/models/addword_model.dart';
 import 'package:vocab_app/data/models/word_model.dart';
 
 class WordEvent extends Equatable {

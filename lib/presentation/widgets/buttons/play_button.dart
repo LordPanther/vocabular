@@ -134,7 +134,7 @@ class _PlayButtonState extends State<PlayButton> {
                 decoration: BoxDecoration(
                   borderRadius:
                       BorderRadius.circular(SizeConfig.defaultSize * 2),
-                  color: COLOR_CONST.primaryColor,
+                  color: Colors.blue,
                 ),
                 child: const Icon(CupertinoIcons.volume_up),
               ));

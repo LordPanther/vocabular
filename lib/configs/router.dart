@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:vocab_app/bottom_navigation.dart';
 import 'package:vocab_app/data/models/word_model.dart';
+import 'package:vocab_app/presentation/screens/activity/activity_screen.dart';
 import 'package:vocab_app/presentation/screens/collection/collection_screen.dart';
 import 'package:vocab_app/presentation/screens/word/word_screen.dart';
 import 'package:vocab_app/presentation/screens/switch/guest_to_user_screen.dart';
@@ -35,9 +36,14 @@ class AppRouter {
   static const String WORD = '/word';
   static const String COLLECTION = '/collection';
   static const String SWITCH_USER = '/switch_user';
+  static const String ACTIVITIES = 'activity_screen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case ACTIVITIES:
+        return MaterialPageRoute(
+          builder: (_) => const ActivityScreen(),
+        );
       case SPLASH:
         return MaterialPageRoute(
           builder: (_) => const SplashScreen(),

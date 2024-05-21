@@ -1,5 +1,9 @@
-export 'user_model.dart';
-export 'feedback_model.dart';
-export 'error_model.dart';
-export 'word_model.dart';
+export 'addword_model.dart';
 export 'collections_model.dart';
+export 'error_model.dart';
+export 'feedback_model.dart';
+export 'flashcard_model.dart';
+export 'guestuser_model.dart';
+export 'user_model.dart';
+export 'word_model.dart';
+export 'wordapi_model.dart';

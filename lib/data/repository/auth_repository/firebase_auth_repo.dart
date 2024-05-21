@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:vocab_app/constants/image_constant.dart';
-import 'package:vocab_app/data/models/guest_user_model.dart';
+import 'package:vocab_app/data/models/guestuser_model.dart';
 import 'package:vocab_app/data/repository/guest_repository/guest_repo.dart';
 import 'package:vocab_app/data/repository/guest_repository/firebase_guest_repo.dart';
 import 'package:vocab_app/data/repository/home_repository/home_repo.dart';

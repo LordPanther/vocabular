@@ -18,24 +18,7 @@ class WordTile extends StatefulWidget {
 }
 
 class _WordTileState extends State<WordTile> {
-  String _audioUrl = "";
   final AuthRepository _authRepository = AppRepository.authRepository;
-
-  @override
-  void initState() {
-    super.initState();
-    if (kDebugMode) {
-      print("Audio url ${widget.word.audioUrl}");
-    }
-
-    try {
-      if (widget.word.audioUrl != null || widget.word.audioUrl!.isNotEmpty) {
-        _audioUrl = widget.word.audioUrl!;
-      }
-    } catch (e) {
-      _audioUrl;
-    }
-  }
 
   void onViewWord() async {
     UtilDialog.showWordDetails(
@@ -47,9 +30,7 @@ class _WordTileState extends State<WordTile> {
     );
   }
 
-  void onAddRecording() async {
-    // UtilDialog.
-  }
+  void onAddRecording() async {}
 
   @override
   Widget build(BuildContext context) {

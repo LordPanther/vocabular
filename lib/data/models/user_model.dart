@@ -20,6 +20,8 @@ class UserModel extends Equatable {
   /// The user's phone number
   final String? username;
 
+  final Map<String, dynamic>? activities;
+
   /// Constructor
   const UserModel(
       {this.email,
@@ -27,7 +29,8 @@ class UserModel extends Equatable {
       this.firstname,
       this.lastname,
       this.avatar,
-      this.username});
+      this.username,
+      this.activities});
 
   /// Json data from server turns into model data
   static UserModel fromMap(Map<String, dynamic> data) {
@@ -38,6 +41,7 @@ class UserModel extends Equatable {
       email: data["email"] ?? "",
       avatar: data["avatar"] ?? "",
       username: data["username"] ?? "",
+      activities: data["activities"] ?? {},
     );
   }
 
@@ -50,6 +54,7 @@ class UserModel extends Equatable {
       "lastName": lastname,
       "avatar": avatar,
       "username": username,
+      "activities": activities,
     };
   }
 
@@ -61,6 +66,7 @@ class UserModel extends Equatable {
     firstname,
     lastname,
     avatar,
+    activities,
   }) {
     return UserModel(
       email: email ?? this.email,
@@ -69,12 +75,13 @@ class UserModel extends Equatable {
       lastname: lastname ?? this.lastname,
       avatar: avatar ?? this.avatar,
       username: username ?? this.username,
+      activities: activities ?? this.activities,
     );
   }
 
   @override
   String toString() {
-    return "UserModel:{email:$email, firstName:$firstname,lastName:$lastname, username:$username, avatar:$avatar}";
+    return "UserModel:{email:$email, firstName:$firstname,lastName:$lastname, username:$username, avatar:$avatar, activities:$activities}";
   }
 
   /// Compare two users
@@ -86,5 +93,6 @@ class UserModel extends Equatable {
         firstname,
         lastname,
         avatar,
+        activities,
       ];
 }

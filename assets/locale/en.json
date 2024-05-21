@@ -126,5 +126,6 @@
   "update": "Update",
   "recent_word": "Show Recent Word",
   "update_word": "Update",
-  "ai_checker": "Please close AI then continue"
+  "ai_checker": "Please close AI then continue",
+  "activity": "Challenge"
 }

@@ -6,20 +6,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:vocab_app/constants/audio_const.dart';
 import 'package:vocab_app/data/local/pref.dart';
-import 'package:vocab_app/data/models/add_word_model.dart';
 import 'package:vocab_app/data/models/models.dart';
-import 'package:vocab_app/data/repository/app_repository.dart';
 import 'package:vocab_app/data/repository/home_repository/home_repo.dart';
-import 'package:vocab_app/data/repository/storage_repository/storage_repo.dart';
 import 'package:vocab_app/utils/utils.dart';
 
 class FirebaseHomeRepository implements HomeRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final StorageRepository _storageRepository = AppRepository.storageRepository;
   final _userHome = FirebaseFirestore.instance;
+  final AudioManager _audioManager = AudioManager();
+
   User get user => _firebaseAuth.currentUser!;
   Future<List<List<String>>> get recentWords => getList();
-  final AudioManager _audioManager = AudioManager();
   String get userType =>
       _firebaseAuth.currentUser!.isAnonymous ? "vocabguests" : "vocabusers";
 
@@ -102,6 +99,7 @@ class FirebaseHomeRepository implements HomeRepository {
     saveList(newWord, recentWords);
   }
 
+  @override
   Future<List<List<String>>> getList() async {
     String? jsonString = LocalPref.getString("recentWords");
     if (jsonString != null) {
@@ -117,7 +115,7 @@ class FirebaseHomeRepository implements HomeRepository {
       newWord.id!.trim(),
       newWord.word!.trim(),
       newWord.definition!.trim(),
-      newWord.audioUrl?.trim() ?? ""
+      newWord.audioUrl!.trim()
     ];
     recentWords.add(word);
     String newJsonString = jsonEncode(recentWords);

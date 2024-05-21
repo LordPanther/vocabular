@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:vocab_app/data/models/guest_user_model.dart';
+import 'package:vocab_app/data/models/guestuser_model.dart';
 import 'package:vocab_app/data/repository/guest_repository/guest_repo.dart';
 
 class FirebaseGuestRepository implements GuestRepository {
