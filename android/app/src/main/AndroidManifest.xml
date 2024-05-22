@@ -5,7 +5,7 @@
     <application
         android:label="Vocabula®"
         android:name="${applicationName}"
-        android:icon="@mipmap/flutter_launcher_icon"
+        android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true"
         android:enableOnBackInvokedCallback="true">
         <activity
