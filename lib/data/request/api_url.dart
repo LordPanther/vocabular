@@ -5,15 +5,16 @@ class DevEnvironment {
   final connectTimeout = 2 * 60 * 1000;
 }
 
-// class LocationApi {
-//   // ignore: non_constant_identifier_names
-//   static String BASE_URL =
-//       "https://www.googleapis.com/geolocation/v1/geolocate?key=";
-// }
+class OpenAiApi {
+  static String BASE_URL = "https://api.openai.com/v1";
+  static String API_KEY =
+      "sk-proj-dEshB6kmCLKJwOuxu5rsT3BlbkFJbuiOu7B2rOViB4fiOIST";
+}
 
-class WordApi {
-  // ignore: non_constant_identifier_names
-  static String BASE_URL = "https://api.dictionaryapi.dev/api/v2/entries/en/<word>";
+class Propmts {
+  static String activityWords = "https://api.openai.com/v1";
+  static String word =
+      "";
 }
 
 final environment = DevEnvironment();

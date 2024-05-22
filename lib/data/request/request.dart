@@ -1,42 +1,48 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:vocab_app/constants/key_constant.dart';
+import 'package:vocab_app/data/models/error_model.dart';
+import 'package:vocab_app/utils/logger.dart';
 
-import '../../constants/key_constant.dart';
-import '../../utils/logger.dart';
-import '../models/error_model.dart';
 import 'api_url.dart';
-
-Map<MethodType, String> methods = {
-  MethodType.GET: "GET",
-};
 
 class Request {
   Dio _dio = Dio();
 
-  Request({required String baseUrl}) {
+  Request({required String baseUrl, required String apiKey}) {
     _dio = Dio(BaseOptions(
       baseUrl: baseUrl,
       receiveTimeout: environment.receiveTimeout as Duration,
       connectTimeout: environment.connectTimeout as Duration,
-      contentType: "application/json",
+      headers: {
+        "Authorization": "Bearer $apiKey",
+        "Content-Type": "application/json",
+      },
     ));
   }
 
-  Future<Object> requestApi(
-      {required MethodType method,
-      required String url,
-      Map<String, dynamic>? data,
-      Map<String, dynamic>? header}) async {
-    Logger.info("URL: $url\nbody: $data");
+  Future<Object> requestApi({
+    required String url,
+    required String prompt,
+  }) async {
+    Logger.info("URL: $url");
     try {
-      var response = await _dio.request(
+      var response = await _dio.post(
         url,
-        data: data,
-        options: Options(method: methods[method], headers: header),
+        data: json.encode({
+          'model': 'text-davinci-003',
+          'prompt': prompt,
+          'max_tokens': 100,
+        }),
       );
 
-      return response.data;
-    } catch (e) {
+      if (response.statusCode == 200) {
+        return response.data['choices'][0]['text'];
+      } else {
+        throw Exception('Failed to generate text');
+      }
+    } on DioException catch (e) {
       Logger.error(e.toString());
       return handleError(e);
     }
@@ -61,6 +67,9 @@ class Request {
           break;
         case DioExceptionType.receiveTimeout:
           errorModel.description = KEY_CONST.request_receive_timeout;
+          break;
+        case DioExceptionType.badCertificate:
+          errorModel.description = KEY_CONST.request_bad_certificate;
           break;
         case DioExceptionType.badResponse:
           Logger.error(error.response!.toString());

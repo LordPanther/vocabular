@@ -1,7 +1,6 @@
 // ignore_for_file: camel_case_types, constant_identifier_names
 
 abstract class KEY_CONST {
-  //error description
   static const request_send_timeout = "request_send_timeout";
   static const request_cancelled = "request_cancelled";
   static const request_connect_timeout = "request_connect_timeout";
@@ -10,11 +9,5 @@ abstract class KEY_CONST {
   static const not_found = "Not found.";
   static const error = "Error";
   static const unknown_error = "Unknown_error";
-}
-
-class MovieListType {
-  static String popular = "popular";
-  static String nowPlaying = "now_playing";
-  static String topRated = "top_rated";
-  static String upcoming = "upcoming";
+  static const request_bad_certificate = "Request certificate has expired";
 }

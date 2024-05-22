@@ -2,23 +2,24 @@
 
 import 'package:flutter/material.dart';
 import 'package:vocab_app/bottom_navigation.dart';
+import 'package:vocab_app/data/models/user_model.dart';
 import 'package:vocab_app/data/models/word_model.dart';
-import 'package:vocab_app/presentation/screens/activity/activity_screen.dart';
+// import 'package:vocab_app/presentation/screens/activity/activity_screen.dart';
 import 'package:vocab_app/presentation/screens/collection/collection_screen.dart';
+import 'package:vocab_app/presentation/screens/confirm_reset/confrim_password_reset.dart';
+import 'package:vocab_app/presentation/screens/initialize_info/initialize_info_screen.dart';
+import 'package:vocab_app/presentation/screens/login/login_screen.dart';
+import 'package:vocab_app/presentation/screens/new_password/new_password_screen.dart';
+import 'package:vocab_app/presentation/screens/password_reset/forgot_password_screen.dart';
+import 'package:vocab_app/presentation/screens/register/register_screen.dart';
+import 'package:vocab_app/presentation/screens/splash/splash_screen.dart';
+import 'package:vocab_app/presentation/screens/verify_user/verification_screen.dart';
 import 'package:vocab_app/presentation/screens/word/word_screen.dart';
 import 'package:vocab_app/presentation/screens/switch/guest_to_user_screen.dart';
 import 'package:vocab_app/presentation/screens/profile/profile_screen.dart';
 import 'package:vocab_app/presentation/screens/search/search_screen.dart';
 import 'package:vocab_app/presentation/screens/settings/setting_screen.dart';
-import '../data/models/user_model.dart';
-import '../presentation/screens/confirm_reset/confrim_password_reset.dart';
-import '../presentation/screens/password_reset/forgot_password_screen.dart';
-import '../presentation/screens/initialize_info/initialize_info_screen.dart';
-import '../presentation/screens/login/login_screen.dart';
-import '../presentation/screens/new_password/new_password_screen.dart';
-import '../presentation/screens/register/register_screen.dart';
-import '../presentation/screens/splash/splash_screen.dart';
-import '../presentation/screens/verify_user/verification_screen.dart';
+
 
 class AppRouter {
   static const String SPLASH = '/splash';
@@ -36,14 +37,14 @@ class AppRouter {
   static const String WORD = '/word';
   static const String COLLECTION = '/collection';
   static const String SWITCH_USER = '/switch_user';
-  static const String ACTIVITIES = 'activity_screen';
+  static const String ACTIVITY = 'activity_screen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case ACTIVITIES:
-        return MaterialPageRoute(
-          builder: (_) => const ActivityScreen(),
-        );
+      // case ACTIVITY:
+      //   return MaterialPageRoute(
+      //     builder: (_) => const ActivityScreen(),
+      //   );
       case SPLASH:
         return MaterialPageRoute(
           builder: (_) => const SplashScreen(),

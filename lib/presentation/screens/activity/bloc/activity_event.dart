@@ -1,19 +1,10 @@
-import 'package:equatable/equatable.dart';
-import 'package:vocab_app/data/models/activity_model.dart';
+// import 'package:equatable/equatable.dart';
 
-class ActivitiesEvent extends Equatable {
-  const ActivitiesEvent();
+// class ActivitiesEvent extends Equatable {
+//   const ActivitiesEvent();
 
-  @override
-  List<Object> get props => [];
-}
+//   @override
+//   List<Object> get props => [];
+// }
 
-class LoadActivities extends ActivitiesEvent {}
-
-class LoadActivity extends ActivitiesEvent {
-  final ActivityModel activity;
-  const LoadActivity({required this.activity});
-
-  @override
-  List<Object> get props => [activity];
-}
+// class LoadActivity extends ActivitiesEvent {}

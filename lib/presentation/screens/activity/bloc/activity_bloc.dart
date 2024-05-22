@@ -1,54 +1,39 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vocab_app/data/ai/ai_service.dart';
-import 'package:vocab_app/data/models/activity_model.dart';
-import 'package:vocab_app/data/models/word_model.dart';
-import 'package:vocab_app/data/repository/activities_repository/firebase_activities_repo.dart';
-import 'package:vocab_app/data/repository/repository.dart';
-import 'package:vocab_app/presentation/screens/activity/bloc/bloc.dart';
+// import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:vocab_app/data/models/activity_model.dart';
+// import 'package:vocab_app/data/repository/api_repository/api_repository.dart';
+// import 'package:vocab_app/data/repository/activities_repository/firebase_activity_repo.dart';
+// import 'package:vocab_app/data/repository/repository.dart';
+// import 'package:vocab_app/presentation/screens/activity/bloc/bloc.dart';
 
-class ActivitiesBloc extends Bloc<ActivitiesEvent, ActivitiesState> {
-  final FirebaseActivitiesRepository _activityRepository =
-      AppRepository.activitiesRepository;
-  final AIService _aiService = AIService();
+// class ActivitiesBloc extends Bloc<ActivitiesEvent, ActivitiesState> {
+//   APIRepository _apiRepository = AppRepository.apiRepository;
+//   final FirebaseActivitiesRepository _activityRepository =
+//       AppRepository.activitiesRepository;
 
-  ActivitiesBloc() : super(ActivitiesInitial()) {
-    on<LoadActivities>((event, emit) async {
-      await _mapLoadActivitiesToMap(event, emit);
-    });
-    on<LoadActivity>((event, emit) async {
-      await _mapLoadActivityToMap(event, emit);
-    });
-  }
+//   ActivitiesBloc() : super(ActivitiesInitial()) {
+//     on<LoadActivity>((event, emit) async {
+//       await _mapLoadActivityToMap(event, emit);
+//     });
+//     // on<StartActivity>((event, emit) async {
+//     //   await _mapStartActivityToMap(event, emit);
+//     // });
+//   }
 
-  Future<void> _mapLoadActivitiesToMap(
-      event, Emitter<ActivitiesState> emit) async {
-    var activityData = await _activityRepository.getActivityData();
+//   Future<void> _mapLoadActivityToMap(
+//       event, Emitter<ActivitiesState> emit) async {
+//     emit(ActivityLoading());
+//     try {
+//       var activityData = await _activityRepository.getActivityData();
+//       var activityResponse = ActivityResponse(activity: activityData);
+//       emit(ActivityLoaded(activityResponse: activityResponse));
+//     } on Exception catch (error) {
+//       ActivityLoadFailure(error: error.toString());
+//     }
+//   }
+// }
 
-    ActivityResponse homeResponse = ActivityResponse(activities: activityData);
-    emit(ActivitiesLoading(activityResponse: homeResponse));
-  }
+// class ActivityResponse {
+//   final ActivityModel? activity;
 
-  Future<void> _mapLoadActivityToMap(
-      event, Emitter<ActivitiesState> emit) async {
-    var activity = event.activity;
-    List<WordModel> wordData = [];
-    if (activity.id == "swipecards") {
-      wordData = await _aiService.getWordSwipeWords();
-    } else {
-      emit(const ActivitiesLoading(
-          error: "This Activity is not available yet. Sorry!"));
-    }
-
-    ActivityResponse homeResponse =
-        ActivityResponse(words: wordData, activity: activity);
-    emit(ActivitiesLoaded(activityResponse: homeResponse));
-  }
-}
-
-class ActivityResponse {
-  final List<ActivityModel>? activities;
-  final List<WordModel>? words;
-  final ActivityModel? activity;
-
-  ActivityResponse({this.activities, this.words, this.activity});
-}
+//   ActivityResponse({this.activity});
+// }

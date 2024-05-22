@@ -38,13 +38,14 @@ class AIService {
 
   Future<List<WordModel>> getWordSwipeWords() async {
     GenerativeModel aiModel = GenerativeModel(model: model, apiKey: apiKey);
-    List<WordModel> words = [];
+    List<WordModel> activityWords = [];
 
     await Future.delayed(const Duration(seconds: 1));
 
     final content = [
       Content.text(
-          "Generate 5 randoms words and their short definitions, separated by a semicolon")
+        "Generate 5 basic english random words and their short definitions. Separate the word from its definition using a semicolon. Each word should be in a new line",
+      )
     ];
     var response = await aiModel.generateContent(
       content,
@@ -52,7 +53,7 @@ class AIService {
         candidateCount: 1,
         stopSequences: ["END"],
         maxOutputTokens: 500,
-        temperature: 1.0,
+        temperature: 0.0,
         topK: 16,
         topP: 0.5,
       ),
@@ -63,13 +64,13 @@ class AIService {
     );
 
     if (response.text != null) {
-      var aa = response.text!.trim().split("\n");
-      for (var bb in aa) {
-        var cc = bb.split(":");
-        var word = WordModel(word: cc[0], definition: cc[1]);
-        words.add(word);
+      var words = response.text!.trim().split("\n");
+      for (var word in words) {
+        var sorted = word.split(";");
+        var cleanWord = WordModel(word: sorted[0], definition: sorted[1]);
+        activityWords.add(cleanWord);
       }
-      return words;
+      return activityWords;
     }
     return [];
   }

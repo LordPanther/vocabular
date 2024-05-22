@@ -7,6 +7,7 @@ import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/presentation/screens/activity/activity_screen.dart';
 import 'package:vocab_app/presentation/screens/home/home_screen.dart';
 import 'package:vocab_app/presentation/screens/settings/setting_screen.dart';
+import 'package:vocab_app/presentation/screens/word/word_screen.dart';
 import 'package:vocab_app/utils/translate.dart';
 
 class BottomNavigation extends StatefulWidget {
@@ -50,7 +51,7 @@ class _BottomNavigationState extends State<BottomNavigation>
         children: const [
           SettingScreen(),
           HomeScreen(),
-          ActivityScreen(),
+          WordScreen(),
         ],
       ),
       bottomNavigationBar: Padding(
@@ -73,10 +74,10 @@ class _BottomNavigationState extends State<BottomNavigation>
             ),
             BottomNavigationBarItem(
               icon: Icon(
-                Icons.local_activity_outlined,
+                Icons.add,
                 size: SizeConfig.defaultIconSize,
               ),
-              label: Translate.of(context).translate('Activity'),
+              label: Translate.of(context).translate('word'),
             ),
           ],
           backgroundColor: Colors.transparent,

@@ -1,86 +1,101 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vocab_app/configs/config.dart';
-import 'package:vocab_app/data/models/activity_model.dart';
-import 'package:vocab_app/data/models/word_model.dart';
-import 'package:vocab_app/presentation/screens/activity/bloc/bloc.dart';
-import 'package:vocab_app/presentation/widgets/others/loading.dart';
-import 'package:vocab_app/presentation/widgets/single_card/activity_card.dart';
-import 'package:vocab_app/utils/utils.dart';
+// import 'package:card_swiper/card_swiper.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:vocab_app/configs/config.dart';
+// import 'package:vocab_app/constants/color_constant.dart';
+// import 'package:vocab_app/data/models/word_model.dart';
+// import 'package:vocab_app/data/repository/api_repository/api_repository.dart';
+// import 'package:vocab_app/data/repository/app_repository.dart';
+// import 'package:vocab_app/presentation/screens/activity/bloc/bloc.dart';
+// import 'package:vocab_app/presentation/widgets/others/loading.dart';
+// import 'package:vocab_app/presentation/widgets/single_card/challenge_card.dart';
 
-class ActivityBody extends StatefulWidget {
-  const ActivityBody({super.key});
+// class ActivityBody extends StatefulWidget {
+//   const ActivityBody({super.key});
 
-  @override
-  State<ActivityBody> createState() => _ActivityBodyState();
-}
+//   @override
+//   State<ActivityBody> createState() => _ActivityBodyState();
+// }
 
-class _ActivityBodyState extends State<ActivityBody> {
-  late ActivitiesBloc _activitiesBloc;
-  late List<WordModel> _words;
+// class _ActivityBodyState extends State<ActivityBody> {
+//   late APIRepository _apiRepository;
+//   late ActivitiesBloc _activitiesBloc;
+//   late List<WordModel> _words = [];
 
-  @override
-  void initState() {
-    super.initState();
-    _activitiesBloc = BlocProvider.of<ActivitiesBloc>(context);
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     _activitiesBloc = BlocProvider.of<ActivitiesBloc>(context);
+//     _apiRepository = AppRepository.apiRepository;
 
-  void selectActivity(ActivityModel activity) {
-    _activitiesBloc.add(LoadActivity(activity: activity));
-  }
+//     getWords();
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocListener<ActivitiesBloc, ActivitiesState>(
-      listener: (context, state) {
-        if (state is ActivitiesLoading) {
-          if (state.error!.isNotEmpty) {
-            UtilDialog.showCustomContent(context,
-                content: "This activity is not available yet, sorry.");
-          }
-        }
-      },
-      child: BlocBuilder<ActivitiesBloc, ActivitiesState>(
-        builder: (context, state) {
-          if (state is ActivitiesLoading) {
-            var activities = state.activityResponse!.activities;
-            return Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.defaultPadding * 4),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: activities!.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.defaultPadding * 2),
-                              child: GestureDetector(
-                                  onTap: () {
-                                    var activity = activities[index];
-                                    selectActivity(activity);
-                                  },
-                                  child: ActivityCard(
-                                      key: ValueKey(activities[index].id),
-                                      activity: activities[index])));
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }
-          if (state is ActivitiesLoaded) {}
-          return const Center(
-            child: Loading(),
-          );
-        },
-      ),
-    );
-  }
-}
+//   Future getWords() async {
+//     var words = await _apiRepository.fetchActivityWords();
+//     print(words);
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocBuilder<ActivitiesBloc, ActivitiesState>(
+//       builder: (context, state) {
+//         if (state is ActivityLoading) {
+//           return const Expanded(
+//             child: Center(
+//               child: Loading(),
+//             ),
+//           );
+//         }
+//         if (state is ActivityLoaded) {
+//           var activity = state.activityResponse.activity;
+
+//           return SizedBox(
+//             height: 300,
+//             child: Swiper(
+//               itemCount: 5,
+//               itemWidth: SizeConfig.screenWidth,
+//               itemHeight: SizeConfig.screenHeight,
+//               layout: SwiperLayout.TINDER,
+//               pagination: const SwiperPagination(
+//                 builder: DotSwiperPaginationBuilder(
+//                   color: COLOR_CONST.activeColor,
+//                   activeColor: Colors.white,
+//                   activeSize: 12,
+//                   space: 4,
+//                 ),
+//               ),
+//               itemBuilder: (context, index) {
+//                 return InkWell(
+//                   onTap: () {},
+//                   child: Stack(
+//                     children: [
+//                       Column(
+//                         children: [
+//                           const SizedBox(height: 100),
+//                           ChallengeCard(
+//                             activity: activity!, //state.[index].word!,
+//                           ),
+//                         ],
+//                       ),
+//                       Padding(
+//                         padding: const EdgeInsets.only(left: 20),
+//                         child: Hero(
+//                           tag: _words[index].word!,
+//                           child: Text(_words[index].definition!),
+//                         ),
+//                       )
+//                     ],
+//                   ),
+//                 );
+//               },
+//             ),
+//           );
+//         }
+//         return const Center(
+//           child: Loading(),
+//         );
+//       },
+//     );
+//   }
+// }
