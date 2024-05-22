@@ -32,10 +32,10 @@ class MyTextField extends StatelessWidget {
         ),
         labelText: Translate.of(context).translate('add_definition'),
         labelStyle: const TextStyle(color: COLOR_CONST.textColor),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: COLOR_CONST.primaryColor),
         ),
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: COLOR_CONST.primaryColor),
         ),
       ),

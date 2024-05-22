@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:vocab_app/configs/config.dart';
 import 'package:vocab_app/constants/constants.dart';
 import 'package:vocab_app/presentation/screens/home/bloc/home_bloc.dart';
 import 'package:vocab_app/presentation/screens/home/bloc/home_event.dart';
@@ -39,22 +38,6 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                ),
-              ),
-              floatingActionButton: Padding(
-                padding: EdgeInsets.only(
-                  bottom: SizeConfig.defaultPadding * 7,
-                  right: SizeConfig.defaultPadding,
-                ),
-                child: FloatingActionButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(SizeConfig.defaultSize *
-                        .7), // Set the border radius here
-                  ),
-                  onPressed: () =>
-                      Navigator.of(context).pushNamed(AppRouter.WORD),
-                  backgroundColor: COLOR_CONST.primaryColor,
-                  child: const Icon(Icons.add),
                 ),
               ),
             );

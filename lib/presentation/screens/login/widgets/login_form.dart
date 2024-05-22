@@ -188,9 +188,9 @@ class _LoginFormState extends State<LoginForm> {
           labelText: Translate.of(context).translate("email"),
           labelStyle: const TextStyle(color: COLOR_CONST.textColor),
           // prefixIcon: const Icon(Icons.email_outlined, color: Colors.white),
-          focusedBorder: OutlineInputBorder(
+          focusedBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
-          enabledBorder: OutlineInputBorder(
+          enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: COLOR_CONST.primaryColor))),
     );
   }
@@ -229,9 +229,9 @@ class _LoginFormState extends State<LoginForm> {
               setState(() => _isShowPassword = !_isShowPassword);
             },
           ),
-          focusedBorder: OutlineInputBorder(
+          focusedBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
-          enabledBorder: OutlineInputBorder(
+          enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: COLOR_CONST.primaryColor))),
     );
   }

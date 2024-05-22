@@ -1,14 +1,12 @@
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
 import 'package:vocab_app/configs/router.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/user_model.dart';
 import 'package:vocab_app/data/models/word_model.dart';
-import 'package:vocab_app/data/repository/auth_repository/auth_repo.dart';
 import 'package:vocab_app/presentation/common_blocs/profile/profile_state.dart';
 import 'package:vocab_app/presentation/widgets/buttons/play_button.dart';
 import 'package:vocab_app/presentation/widgets/buttons/volume_icon.dart';
@@ -57,9 +55,9 @@ class UtilDialog {
               children: [
                 TextFormField(
                   controller: username,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Username',
-                    labelStyle: const TextStyle(color: COLOR_CONST.textColor),
+                    labelStyle: TextStyle(color: COLOR_CONST.textColor),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: COLOR_CONST.primaryColor,
@@ -73,9 +71,9 @@ class UtilDialog {
                 SizedBox(height: SizeConfig.defaultSize * 2),
                 TextFormField(
                   controller: email,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Email',
-                    labelStyle: const TextStyle(color: COLOR_CONST.textColor),
+                    labelStyle: TextStyle(color: COLOR_CONST.textColor),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: COLOR_CONST.primaryColor,
@@ -89,9 +87,9 @@ class UtilDialog {
                 SizedBox(height: SizeConfig.defaultSize * 2),
                 TextFormField(
                   controller: firstName,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'First Name',
-                    labelStyle: const TextStyle(color: COLOR_CONST.textColor),
+                    labelStyle: TextStyle(color: COLOR_CONST.textColor),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: COLOR_CONST.primaryColor,
@@ -105,9 +103,9 @@ class UtilDialog {
                 SizedBox(height: SizeConfig.defaultSize * 2),
                 TextFormField(
                   controller: lastName,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Last Name',
-                    labelStyle: const TextStyle(color: COLOR_CONST.textColor),
+                    labelStyle: TextStyle(color: COLOR_CONST.textColor),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: COLOR_CONST.primaryColor,

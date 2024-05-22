@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:vocab_app/configs/size_config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
-import 'package:vocab_app/presentation/screens/activity/activity_screen.dart';
 import 'package:vocab_app/presentation/screens/home/home_screen.dart';
 import 'package:vocab_app/presentation/screens/settings/setting_screen.dart';
 import 'package:vocab_app/presentation/screens/word/word_screen.dart';

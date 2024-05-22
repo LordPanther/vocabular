@@ -1,13 +1,13 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
+import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vocab_app/configs/config.dart';
 import 'package:vocab_app/constants/color_constant.dart';
 import 'package:vocab_app/constants/font_constant.dart';
-import 'package:vocab_app/data/ai/ai_service.dart';
 import 'package:vocab_app/data/models/collections_model.dart';
 import 'package:vocab_app/data/models/word_model.dart';
 import 'package:vocab_app/data/repository/repository.dart';
@@ -38,7 +38,7 @@ class _WordBodyState extends State<WordBody> {
   late WordModel word;
   late WordModel oldWord;
   late CollectionModel collection;
-  final AIService aiService = AIService();
+  final APIRepository _apiRepository = AppRepository.apiRepository;
   final AudioManager audioManager = AudioManager();
   final recordButtonState = GlobalKey<RecordButtonState>();
   final AuthRepository _authRepository = AppRepository.authRepository;
@@ -107,7 +107,7 @@ class _WordBodyState extends State<WordBody> {
 
     String timeStamp = "${DateTime.now().millisecondsSinceEpoch}";
     try {
-      if (recordButtonState.currentState!.path != null) {
+      if (isAudioRecorded) {
         _audioUrl =
             await audioManager.uploadAudioData(user, timeStamp, _audioUrl);
       }
@@ -151,12 +151,26 @@ class _WordBodyState extends State<WordBody> {
         _isGenerating = true;
       });
 
-      String response = await aiService.getAiResponse(_word);
+      String response = await _apiRepository.generateDefinition(_word.text);
 
       if (response == "error") {
         _definition.text = "Gemini could not generate response";
       } else {
-        _definition.text = response;
+        var wordList = response.trim().split(" ");
+        _definition.text = "";
+        var random = Random();
+
+        for (var word in wordList) {
+          int randomDelay = 100 + random.nextInt(600);
+          await Future.delayed(Duration(milliseconds: randomDelay));
+          setState(() {
+            _definition.text += "$word ";
+          });
+        }
+
+        setState(() {
+          _definition.text = "${_definition.text.trim()}\n";
+        });
       }
     } else {
       bool keepRecording =
@@ -288,7 +302,7 @@ class _WordBodyState extends State<WordBody> {
           MyTextField(controller: _definition),
           Positioned(
             bottom: SizeConfig.defaultSize * -3,
-            right: SizeConfig.defaultSize * 14.5,
+            right: SizeConfig.defaultSize * 12,
             child: Container(
               width: 110,
               height: 55,

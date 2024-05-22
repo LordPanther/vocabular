@@ -20,9 +20,9 @@ class SignInButton extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         height: SizeConfig.defaultSize * 4,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             color: COLOR_CONST.primaryColor,
-            borderRadius: const BorderRadius.all(Radius.circular(5))),
+            borderRadius: BorderRadius.all(Radius.circular(5))),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(

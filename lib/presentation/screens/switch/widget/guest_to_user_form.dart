@@ -159,9 +159,9 @@ class _GuestToUserFormState extends State<GuestToUserForm> {
       decoration: InputDecoration(
         labelStyle: const TextStyle(color: COLOR_CONST.textColor),
         labelText: Translate.of(context).translate('email'),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
         // suffixIcon: Icon(Icons.email_outlined),
       ),
@@ -202,9 +202,9 @@ class _GuestToUserFormState extends State<GuestToUserForm> {
             });
           },
         ),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
       ),
     );
@@ -247,9 +247,9 @@ class _GuestToUserFormState extends State<GuestToUserForm> {
             });
           },
         ),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
       ),
     );

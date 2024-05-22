@@ -121,9 +121,9 @@ class _InitializeInfoFormState extends State<InitializeInfoForm> {
           labelText: Translate.of(context).translate("first_name"),
           labelStyle: const TextStyle(color: COLOR_CONST.textColor),
           // suffixIcon: const Icon(Icons.person_outline),
-          focusedBorder: OutlineInputBorder(
+          focusedBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
-          enabledBorder: OutlineInputBorder(
+          enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: COLOR_CONST.primaryColor))),
     );
   }
@@ -151,9 +151,9 @@ class _InitializeInfoFormState extends State<InitializeInfoForm> {
           labelText: Translate.of(context).translate("last_name"),
           labelStyle: const TextStyle(color: COLOR_CONST.textColor),
           // suffixIcon: const Icon(Icons.person_outline),
-          focusedBorder: OutlineInputBorder(
+          focusedBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
-          enabledBorder: OutlineInputBorder(
+          enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: COLOR_CONST.primaryColor))),
     );
   }

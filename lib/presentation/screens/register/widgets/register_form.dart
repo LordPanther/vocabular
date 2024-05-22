@@ -163,9 +163,9 @@ class _RegisterFormState extends State<RegisterForm> {
       decoration: InputDecoration(
         labelStyle: const TextStyle(color: COLOR_CONST.textColor),
         labelText: Translate.of(context).translate('email'),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
         // suffixIcon: Icon(Icons.email_outlined),
       ),
@@ -195,7 +195,7 @@ class _RegisterFormState extends State<RegisterForm> {
         suffixIcon: IconButton(
           icon: isShowPassword
               ? Icon(Icons.visibility_outlined,
-                  color: COLOR_CONST.textColor,
+                  color: COLOR_CONST.primaryColor,
                   size: SizeConfig.defaultSize * 2)
               : Icon(Icons.visibility_off_outlined,
                   color: COLOR_CONST.textColor,
@@ -207,9 +207,9 @@ class _RegisterFormState extends State<RegisterForm> {
           },
         ),
         focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: COLOR_CONST.textColor)),
+            borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
         enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: COLOR_CONST.textColor)),
+            borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
       ),
     );
   }
@@ -240,7 +240,7 @@ class _RegisterFormState extends State<RegisterForm> {
         suffixIcon: IconButton(
           icon: isShowConfirmPassword
               ? Icon(Icons.visibility_outlined,
-                  color: COLOR_CONST.textColor,
+                  color: COLOR_CONST.primaryColor,
                   size: SizeConfig.defaultSize * 2)
               : Icon(Icons.visibility_off_outlined,
                   color: COLOR_CONST.textColor,
@@ -252,9 +252,9 @@ class _RegisterFormState extends State<RegisterForm> {
           },
         ),
         focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: COLOR_CONST.textColor)),
+            borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
         enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: COLOR_CONST.textColor)),
+            borderSide: BorderSide(color: COLOR_CONST.primaryColor)),
       ),
     );
   }

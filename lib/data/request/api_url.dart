@@ -1,22 +1,27 @@
-// ignore_for_file: constant_identifier_names
+// ignore_for_file: constant_identifier_names, non_constant_identifier_names
+
+import 'package:google_generative_ai/google_generative_ai.dart';
 
 class DevEnvironment {
   final receiveTimeout = 2 * 60 * 1000;
   final connectTimeout = 2 * 60 * 1000;
 }
 
-class OpenAiApi {
-  static String BASE_URL = "https://api.openai.com/v1";
-  static String API_KEY =
-      "sk-proj-dEshB6kmCLKJwOuxu5rsT3BlbkFJbuiOu7B2rOViB4fiOIST";
-}
-
-class Propmts {
-  static String activityWords = "https://api.openai.com/v1";
-  static String word =
-      "";
+class AiModel {
+  static String MODEL = "gemini-pro";
+  static String API_KEY = "AIzaSyAKOloyTWbkHgSRIlQHKKynKRyOKw6PxCU";
+  static GenerationConfig GENERATION_CONFIG = GenerationConfig(
+    candidateCount: 1,
+    stopSequences: ["END"],
+    maxOutputTokens: 50,
+    temperature: 1.0,
+    topK: 16,
+    topP: 0.5,
+  );
+  static List<SafetySetting> SAFETY_SETTINGS = [
+    SafetySetting(HarmCategory.dangerousContent, HarmBlockThreshold.high),
+    SafetySetting(HarmCategory.hateSpeech, HarmBlockThreshold.high),
+  ];
 }
 
 final environment = DevEnvironment();
-
-enum MethodType { GET, POST }

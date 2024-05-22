@@ -1,33 +1,24 @@
-import 'package:vocab_app/data/models/word_model.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:vocab_app/data/models/error_model.dart';
 import 'package:vocab_app/data/request/api_url.dart';
 import 'package:vocab_app/data/request/request.dart';
 
 class APIRepository {
-  final Request _request =
-      Request(baseUrl: OpenAiApi.BASE_URL, apiKey: OpenAiApi.API_KEY);
+  final Request _request = Request(
+    model: AiModel.MODEL,
+    apiKey: AiModel.API_KEY,
+    generationConfig: AiModel.GENERATION_CONFIG,
+    safetySettings: AiModel.SAFETY_SETTINGS,
+  );
 
-  Future fetchActivityWords() async {
-    String url = "/completions";
-    String prompt =
-        "generate 10 randon basic english words and their definitions separated by a semicolon";
-    var result = await _request.requestApi(url: url, prompt: prompt);
+  Future generateDefinition(String word) async {
+    var content = [
+      Content.text(
+          "Generate a definition or explanation of the below word using basic english\nWord:$word")
+    ];
+    var result = await _request.requestApi(content: content);
 
     if (result is ErrorModel) return [];
-
-    // var data = (result as Map<String, dynamic>);
-    // WordModel wordModel = WordModel.fromMap(data);
     return result;
-  }
-
-  Future generateDefinition(String prompt) async {
-    String url = "/completions";
-    var result = await _request.requestApi(url: url, prompt: prompt);
-
-    if (result is ErrorModel) return [];
-
-    var data = (result as Map<String, dynamic>);
-    WordModel wordModel = WordModel.fromMap(data);
-    return wordModel;
   }
 }

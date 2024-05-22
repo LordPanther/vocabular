@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:vocab_app/configs/config.dart';
 import 'package:vocab_app/configs/size_config.dart';

@@ -1,88 +1,39 @@
 import 'dart:async';
-import 'dart:convert';
-import 'package:dio/dio.dart';
-import 'package:vocab_app/constants/key_constant.dart';
-import 'package:vocab_app/data/models/error_model.dart';
-import 'package:vocab_app/utils/logger.dart';
-
-import 'api_url.dart';
+import 'package:flutter/foundation.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 
 class Request {
-  Dio _dio = Dio();
+  final String model;
+  final String apiKey;
+  final GenerationConfig generationConfig;
+  final List<SafetySetting> safetySettings;
 
-  Request({required String baseUrl, required String apiKey}) {
-    _dio = Dio(BaseOptions(
-      baseUrl: baseUrl,
-      receiveTimeout: environment.receiveTimeout as Duration,
-      connectTimeout: environment.connectTimeout as Duration,
-      headers: {
-        "Authorization": "Bearer $apiKey",
-        "Content-Type": "application/json",
-      },
-    ));
-  }
+  Request({
+    required this.model,
+    required this.apiKey,
+    required this.generationConfig,
+    required this.safetySettings,
+  });
 
-  Future<Object> requestApi({
-    required String url,
-    required String prompt,
-  }) async {
-    Logger.info("URL: $url");
+  Future<String> requestApi({required List<Content> content}) async {
+    GenerativeModel generativeModel =
+        GenerativeModel(model: model, apiKey: apiKey);
     try {
-      var response = await _dio.post(
-        url,
-        data: json.encode({
-          'model': 'text-davinci-003',
-          'prompt': prompt,
-          'max_tokens': 100,
-        }),
+      var response = await generativeModel.generateContent(
+        content,
+        generationConfig: generationConfig,
+        safetySettings: safetySettings,
       );
 
-      if (response.statusCode == 200) {
-        return response.data['choices'][0]['text'];
-      } else {
-        throw Exception('Failed to generate text');
+      if (response.text != null) {
+        return "${response.text!}\n";
       }
-    } on DioException catch (e) {
-      Logger.error(e.toString());
-      return handleError(e);
-    }
-  }
-
-  Future<ErrorModel> handleError(dynamic error) async {
-    ErrorModel errorModel = ErrorModel();
-    errorModel.message = error.toString();
-    if (error is DioException) {
-      switch (error.error) {
-        case DioExceptionType.sendTimeout:
-          errorModel.description = KEY_CONST.request_send_timeout;
-          break;
-        case DioExceptionType.cancel:
-          errorModel.description = KEY_CONST.request_cancelled;
-          break;
-        case DioExceptionType.connectionTimeout:
-          errorModel.description = KEY_CONST.request_connect_timeout;
-          break;
-        case DioExceptionType.unknown:
-          errorModel.description = KEY_CONST.no_internet;
-          break;
-        case DioExceptionType.receiveTimeout:
-          errorModel.description = KEY_CONST.request_receive_timeout;
-          break;
-        case DioExceptionType.badCertificate:
-          errorModel.description = KEY_CONST.request_bad_certificate;
-          break;
-        case DioExceptionType.badResponse:
-          Logger.error(error.response!.toString());
-          try {
-            errorModel.code = error.response?.statusCode ?? errorModel.code;
-            errorModel.description =
-                error.response?.data ?? errorModel.description;
-          } catch (e) {
-            Logger.error(e.toString());
-          }
-          break;
+      return "";
+    } on Exception catch (error) {
+      if (kDebugMode) {
+        print(error);
       }
+      return (error.toString());
     }
-    return errorModel;
   }
 }

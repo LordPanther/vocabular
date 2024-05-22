@@ -58,7 +58,7 @@ class AppTheme {
     fontFamily: "Roboto",
     appBarTheme: _appBarTheme,
     textTheme: _textTheme,
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: COLOR_CONST.primaryColor,
     ),
     visualDensity: VisualDensity.adaptivePlatformDensity,

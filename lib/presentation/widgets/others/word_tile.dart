@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:vocab_app/constants/font_constant.dart';
 import 'package:vocab_app/data/models/word_model.dart';

@@ -32,7 +32,6 @@ class CollectionTile extends StatefulWidget {
 class _CollectionTileState extends State<CollectionTile> {
   late CollectionModel _collection;
   final List<WordModel> _words = [];
-  bool _isSelected = false;
 
   @override
   void initState() {
