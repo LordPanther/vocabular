@@ -1,42 +1,102 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-name: Dart
+## Github Actions CI workflow to deploy to Internal testing in the Play Store
+name: CI_STORE_DEPLOY_ANDROID
 
 on:
+  # Run this workflow when any new code is pushed into the main branch
   push:
-    branches: [ "main" ]
+    branches: [ "deploy" ]
   pull_request:
     branches: [ "main" ]
 
+  workflow_dispatch:
+
 jobs:
-  build:
+
+  store_deploy_android:
+    # Only run this job if the branch name starts with 'release/'
+    if:  startsWith(github.head_ref, 'release/')
+    name: android store release
     runs-on: ubuntu-latest
-
+    env:
+      # Setup env variables that will be used throughout the workflow
+      JAVA_VERSION: 11.0
+      FLUTTER_VERSION: 3.13.1
+      AAB_PATH: build/app/outputs/bundle/release/app-release.aab
+      KEYSTORE_PATH: android/upload-keystore.jks
+      KEY_PROPS_PATH: android/key.properties
+      SERVICE_ACCOUNT_PATH: android/app/gogle-services.json
     steps:
-      - uses: actions/checkout@v3
+      # Checkout repository codebase
+      - name: Checkout the code
+        uses: actions/checkout@v3
 
-      # Note: This workflow uses the latest stable version of the Dart SDK.
-      # You can specify other versions if desired, see documentation here:
-      # https://github.com/dart-lang/setup-dart/blob/main/README.md
-      # - uses: dart-lang/setup-dart@v1
-      - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
+      # Setup Java in the VM
+      - name: Setup Java to compile the Android project
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: ${{ env.JAVA_VERSION }}
+      
+      # Setup Flutter in the VM
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
 
-      - name: Install dependencies
-        run: dart pub get
+      # Decode Android env variables
+      - name: Decode Android keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 -d > ${{ env.KEYSTORE_PATH }}
+
+      - name: Decode Android key properties
+        run: echo "${{ secrets.ANDROID_KEY_PROPERTIES }}" | base64 -d > ${{ env.KEY_PROPS_PATH }}
+
+      # Decode Android release Service Account
+      - name: Decode Android Service Account
+        run: echo "${{ secrets.ANDROID_RELEASE_SERVICE_ACCOUNT }}" | base64 -d > ${{ env.SERVICE_ACCOUNT_PATH }}
+
+      - run: echo $SECRETS_FILE_CONTENT | base64 -d > lib/auth/secrets.dart
+        env:
+          SECRETS_FILE_CONTENT: ${{ secrets.SECRETS_FILE_CONTENT }}
+      
+      - run: echo $PLATFORM_OPTION_SECRET | base64 -d > lib/firebase_files/firebase_options.dart
+        env:
+          PLATFORM_OPTION_SECRET: ${{ secrets.PLATFORM_OPTION_SECRET }}
+
+      # Run flutter commands
+      - name: Run flutter pub get
+        run: flutter pub get
+
+      - name: 📦 Install dependencies
+        run: flutter pub get
 
       # Uncomment this step to verify the use of 'dart format' on each commit.
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed .
 
-      # Consider passing '--fatal-infos' for slightly stricter analysis.
-      - name: Analyze project source
-        run: dart analyze
+      - name: 🕵️ Analyze to check for bad Dart/Flutter practices
+        run: flutter analyze
 
-      # Your project will need to have tests in test/ and a dependency on
-      # package:test for this step to succeed. Note that Flutter projects will
-      # want to change this to 'flutter test'.
-      - name: Run tests
-        run: flutter test test
+      - name: 📉 Run all app tests
+        run: flutter test
+
+      # Build Android Bundle release file
+      - name: Build aab
+        run: |
+          flutter build appbundle 
+          --release
+
+      # Upload generated aab to project artifacts
+      - name: Upload generated aab to the artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: aab-stores
+          path: {{ env.AAB_PATH }}
+
+      # Deploy bundle to Google Play internal testing
+      - name: Deploy to Play Store (Internal testing)
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: {{ env.SERVICE_ACCOUNT_PATH }}
+          packageName: za.co.blackworks.vocab_app
+          releaseFiles: {{ env.AAB_PATH }}
+          track: internal

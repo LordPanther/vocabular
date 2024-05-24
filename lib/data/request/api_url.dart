@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names, non_constant_identifier_names
 
 import 'package:google_generative_ai/google_generative_ai.dart';
+import '../../auth/secrets.dart';
 
 class DevEnvironment {
   final receiveTimeout = 2 * 60 * 1000;
@@ -8,8 +9,8 @@ class DevEnvironment {
 }
 
 class AiModel {
-  static String MODEL = "gemini-pro";
-  static String API_KEY = "AIzaSyAKOloyTWbkHgSRIlQHKKynKRyOKw6PxCU";
+  static String MODEL = model;
+  static String API_KEY = apiKey;
   static GenerationConfig GENERATION_CONFIG = GenerationConfig(
     candidateCount: 1,
     stopSequences: ["END"],

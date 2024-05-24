@@ -22,6 +22,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
           child: Builder(
             builder: (context) {
               return const Scaffold(
+                extendBodyBehindAppBar: true,
                 body: SafeArea(
                   child: SingleChildScrollView(
                     child: Column(

@@ -141,6 +141,16 @@ class _WordBodyState extends State<WordBody> {
   }
 
   void fetchAiResponse() async {
+    if (user!.isAnonymous) {
+      bool signUp = await UtilDialog.showGuestDialog(
+          context: context, content: Translate.of(context).translate('switch'));
+
+      if (signUp) {
+        Navigator.of(context).pushNamed(AppRouter.SWITCH_USER);
+      }
+      return;
+    }
+
     if (!isWordPopulated) {
       SnackContent.showCheckFlag(context, "word_checker");
       return;

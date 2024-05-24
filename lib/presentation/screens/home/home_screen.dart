@@ -18,6 +18,7 @@ class HomeScreen extends StatelessWidget {
         child: Builder(
           builder: (context) {
             return Scaffold(
+              extendBodyBehindAppBar: true,
               body: Container(
                 decoration: const BoxDecoration(
                   image: DecorationImage(
