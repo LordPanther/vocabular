@@ -227,6 +227,13 @@ class FirebaseHomeRepository implements HomeRepository {
           .collection("collections")
           .doc(collection.name)
           .delete();
+
+      List<List<String>> recentWords = await getList();
+      recentWords.removeWhere((list) => list.contains(collection.name));
+
+      String updatedRecentWords = jsonEncode(recentWords);
+      await LocalPref.setString("recentWords", updatedRecentWords);
+      
     } catch (error) {
       if (kDebugMode) {
         print(error);
